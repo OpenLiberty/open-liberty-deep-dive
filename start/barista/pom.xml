@@ -1,0 +1,105 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.sebastian-daschner</groupId>
+    <artifactId>barista</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <parent>
+        <groupId>net.wasdev.wlp.maven.parent</groupId>
+        <artifactId>liberty-maven-app-parent</artifactId>
+        <version>2.6.2</version>
+    </parent>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <testServerHttpPort>9081</testServerHttpPort>
+        <testServerHttpsPort>9444</testServerHttpsPort>
+
+        <packaging.type>usr</packaging.type>
+        <package.file>defaultServer.zip</package.file>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+        <liberty.version>[18.0.0.3,19.0.0.8]</liberty.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.openliberty.features</groupId>
+                <artifactId>features-bom</artifactId>
+                <version>RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+      <!--Open Liberty features -->
+        <dependency>
+            <groupId>io.openliberty.features</groupId>
+            <artifactId>jaxrs-2.1</artifactId>
+            <type>esa</type>
+        </dependency>  
+        <dependency>
+            <groupId>io.openliberty.features</groupId>
+            <artifactId>mpOpenAPI-1.1</artifactId>
+            <type>esa</type>
+        </dependency>   
+        <dependency>
+            <groupId>io.openliberty.features</groupId>
+            <artifactId>mpHealth-2.0</artifactId>
+            <type>esa</type>
+        </dependency>  
+    </dependencies>
+
+    <build>
+        <finalName>barista</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
+
+            <plugin>
+                <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <configuration>
+                    <assemblyArtifact>
+                        <groupId>io.openliberty</groupId>
+                        <artifactId>openliberty-kernel</artifactId>
+                        <version>${liberty.version}</version>
+                        <type>zip</type>
+                    </assemblyArtifact>
+                    <configFile>src/main/liberty/config/server.xml</configFile>
+                    <include>${packaging.type}</include>
+                    <packageFile>${project.build.directory}/${package.file}</packageFile>                    
+                    <bootstrapProperties>
+                        <war.name>${artifactId}.war</war.name>
+                        <env.default.http.port>${testServerHttpPort}</env.default.http.port>
+                        <env.default.https.port>${testServerHttpsPort}</env.default.https.port>
+                    </bootstrapProperties>
+                    <looseApplication>false</looseApplication>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

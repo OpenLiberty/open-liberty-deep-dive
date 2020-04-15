@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="Coffee Shop Server">
+
+    <featureManager>
+        <feature>mpMetrics-2.0</feature>
+    </featureManager>
+    
+    <mpMetrics authentication="true" />
+
+     <!-- 
+     Note, this configuration is
+     for demo purposes only and MUST NOT BE USED IN PRODUCTION
+     AS IT IS INSECURE. -->  
+    <variable name="admin.password" value="change_it" />
+    <variable name="keystore.password" value="change_it" />
+    
+    <quickStartSecurity userName="admin" userPassword="${admin.password}"/>
+    <keyStore id="defaultKeyStore" password="${keystore.password}"/>    
+     
+</server>
