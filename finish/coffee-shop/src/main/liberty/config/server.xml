@@ -7,10 +7,10 @@
         <feature>cdi-2.0</feature>
         <feature>beanValidation-2.0</feature>
         <feature>mpOpenAPI-1.1</feature>
-        <feature>mpHealth-2.0</feature>
-        <feature>mpConfig-1.3</feature>
-        <feature>mpRestClient-1.3</feature>
-        <feature>mpMetrics-2.0</feature>
+        <feature>mpHealth-2.2</feature>
+        <feature>mpConfig-1.4</feature>
+        <feature>mpRestClient-1.4</feature>
+        <feature>mpMetrics-2.3</feature>
         <feature>jsonp-1.1</feature>
     </featureManager>
 
