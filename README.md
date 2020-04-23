@@ -82,7 +82,7 @@ cd open-liberty-masterclass/start/barista
 Build and run the barista service:
 
 ```
-mvn install liberty:run
+mvn install liberty:dev
 ```
 
 Visit: http://localhost:9081/openapi/ui
@@ -183,7 +183,7 @@ This entry lists all the features to be loaded by the server.  Add the following
 Build and run the coffee-shop service:
 
 ```
-mvn install liberty:run
+mvn install liberty:dev
 ```
 
 Visit: http://localhost:9080/openapi/ui
@@ -296,7 +296,7 @@ Add the following inside the `<featureManager/>` element to include the `mpMetri
 In the `open-liberty-masterclass/start/coffee-shop` directory, build the updated application and start the server:
 
 ```
-mvn install liberty:run
+mvn install liberty:dev
 ```
 
 You should now see a message for a new metrics endpoint that looks like:
