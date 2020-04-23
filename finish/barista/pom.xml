@@ -91,12 +91,12 @@
         </dependency>  
         <dependency>
             <groupId>io.openliberty.features</groupId>
-            <artifactId>mpOpenAPI-1.0</artifactId>
+            <artifactId>mpOpenAPI-1.1</artifactId>
             <type>esa</type>
         </dependency>   
         <dependency>
             <groupId>io.openliberty.features</groupId>
-            <artifactId>mpHealth-2.0</artifactId>
+            <artifactId>mpHealth-2.2</artifactId>
             <type>esa</type>
         </dependency>  
     </dependencies>
