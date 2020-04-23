@@ -168,9 +168,9 @@ Near the top of the file, you'll see the following `<featureManager/>` entry:
         <feature>ejbLite-3.2</feature>
         <feature>cdi-2.0</feature>
         <feature>beanValidation-2.0</feature>
-        <feature>mpHealth-2.0</feature>
-        <feature>mpConfig-1.3</feature>
-        <feature>mpRestClient-1.3</feature>
+        <feature>mpHealth-2.2</feature>
+        <feature>mpConfig-1.4</feature>
+        <feature>mpRestClient-1.4</feature>
         <feature>jsonp-1.1</feature>
     </featureManager>
 ```
@@ -216,7 +216,7 @@ Which depends on the Metrics API from Eclipse MicroProfile:
     <dependency>
       <groupId>org.eclipse.microprofile.metrics</groupId>
       <artifactId>microprofile-metrics-api</artifactId>
-      <version>2.0.0</version>
+      <version>2.3.0</version>
     </dependency>
 ```
 
@@ -227,7 +227,7 @@ We're now going to add Metrics to the `coffee-shop`.  Edit the `open-liberty-mas
 ```XML
         <dependency>
             <groupId>io.openliberty.features</groupId>
-            <artifactId>mpMetrics-2.0</artifactId>
+            <artifactId>mpMetrics-2.3</artifactId>
             <type>esa</type>
         </dependency>
 ```
@@ -279,9 +279,9 @@ Near the top of the file, you'll see the following `<featureManager/>` entry:
         <feature>ejbLite-3.2</feature>
         <feature>cdi-2.0</feature>
         <feature>beanValidation-2.0</feature>
-        <feature>mpHealth-2.0</feature>
-        <feature>mpConfig-1.3</feature>
-        <feature>mpRestClient-1.3</feature>
+        <feature>mpHealth-2.2</feature>
+        <feature>mpConfig-1.4</feature>
+        <feature>mpRestClient-1.4</feature>
         <feature>jsonp-1.1</feature>
         <feature>mpOpenAPI-2.0</feature>
     </featureManager>
@@ -753,7 +753,7 @@ Take a look at the file `open-liberty-masterclass/start/coffee-shop/configDropin
 <server description="Coffee Shop Server">
 
     <featureManager>
-        <feature>mpMetrics-2.0</feature>
+        <feature>mpMetrics-2.3</feature>
     </featureManager>
     
     <mpMetrics authentication="true" />
