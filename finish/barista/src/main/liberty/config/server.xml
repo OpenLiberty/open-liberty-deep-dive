@@ -5,7 +5,7 @@
         <feature>jaxrs-2.1</feature>
         <feature>cdi-2.0</feature>
         <feature>mpOpenAPI-1.1</feature>
-        <feature>mpHealth-2.0</feature>
+        <feature>mpHealth-2.2</feature>
     </featureManager>
 
     <httpEndpoint host="*" httpPort="${env.default.http.port}" httpsPort="${env.default.https.port}" id="defaultHttpEndpoint"/>
