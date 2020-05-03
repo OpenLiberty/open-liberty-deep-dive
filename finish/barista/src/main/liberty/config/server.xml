@@ -8,6 +8,6 @@
         <feature>mpHealth-2.2</feature>
     </featureManager>
 
-    <httpEndpoint host="*" httpPort="${env.default.http.port}" httpsPort="${env.default.https.port}" id="defaultHttpEndpoint"/>
+    <httpEndpoint host="*" httpPort="9081" httpsPort="9444" id="defaultHttpEndpoint"/>
 
 </server>

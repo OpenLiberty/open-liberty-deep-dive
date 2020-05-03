@@ -11,7 +11,7 @@ This document contains the hands-on lab modules for the Open Liberty Masterclass
     - [Prime Maven and Docker Caches](#prime-maven-and-docker-caches)
   - [The Application](#the-application)
   - [Module 1: Build](#module-1-build)
-  - [Module 2: Feature-based Build](#module-2-feature-based-build)
+  - [Module 2: Dev Mode](#module-2-dev-mode)
   - [Module 3: Application APIs](#module-3-application-apis)
   - [Module 4: Server Configuration](#module-4-server-configuration)
   - [Module 5: Externalizing Configuration](#module-5-externalizing-configuration)
@@ -26,7 +26,7 @@ This document contains the hands-on lab modules for the Open Liberty Masterclass
 
 ### Install Pre-requisites
 
-* A Java 8 JDK (e.g. https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=openj9)
+* A Java 8/11 JDK (e.g. https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=openj9)
 * Apache Maven (https://maven.apache.org/)
 * A git client (https://git-scm.com/downloads)
 * An editor with Java support (e.g. Eclipse, VS Code, IntelliJ)
@@ -82,7 +82,7 @@ cd open-liberty-masterclass/start/barista
 Build and run the barista service:
 
 ```
-mvn install liberty:dev
+mvn install liberty:run
 ```
 
 Visit: http://localhost:9081/openapi/ui
@@ -101,60 +101,59 @@ Under `Example Value` specify:
 
 Click on `Execute`
 
-Scroll down and you should see the server response code of `201`.  This says that the barista request to make an `ESPRESSO` was successfully `Created`.
+Scroll down and you should see the server response code of `200`.  This says that the barista request to make an `ESPRESSO` was successfully `Created`.
 
 
-## Module 2: Feature-based Build
+## Module 2: Dev Mode
 
-The `liberty-maven-plugin` lets you specify which Liberty features you want to build against.
+The Open Liberty Maven plug-in includes a dev goal that listens for any changes in the project, including application source code or configuration. The Open Liberty server automatically reloads the configuration without restarting. This goal allows for quicker turnarounds and an improved developer experience.
+
+Lets start our server up in dev mode and make some changes to the configuration so that it will need to install new features while the server is still running:
+
+```
+mvn install liberty:dev
+```
+
+
 
 Take a look at the maven build file for the coffee-shop project: `open-liberty-masterclass/start/coffee-shop/pom.xml`
 
-In order for the plugin to know what features are available, we need to tell it where to find the feature information.  This is done with the following `<dependencyManagement/>` section:
+The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We define the versions of our plugins at the top of our pom:
 
 ```XML
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.openliberty.features</groupId>
-                <artifactId>features-bom</artifactId>
-                <version>RELEASE</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <!-- Plugin Versions-->
+       <version.liberty-maven-plugin>3.2</version.liberty-maven-plugin>
+       <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
+       <version.maven-failsafe-plugin>3.0.0-M4</version.maven-failsafe-plugin>
+       <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
 ```
-We can now specify which features we want to build against.  
+ 
 
-In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  You'll see, for example, that we're depending on `jaxrs-2.1` because we're using this feature to implement the REST service:
+In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  All the features we are using in this Masterclass are part of Jakarta EE and MicroProfile. By having the two dependencies below means that at build time these are available for Maven to use and then it will install any of the features you requests in your server.xml but we will get to that shortly.
 
 ``` XML
     <dependencies>
       <!--Open Liberty features -->
         <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>jaxrs-2.1</artifactId>
-            <type>esa</type>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-web-api</artifactId>
+            <version>8.0.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>3.3</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency> 
         ...
     </dependencies>
 ```
 
 Let's add add dependency on the `MicroProfile OpenAPI` feature so we can try the `coffee-shop` service out.
 
-Add the following dependency to the `coffee-shop/pom.xml`
-
-```XML
-        <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>mpOpenAPI-1.1</artifactId>
-            <type>esa</type>
-            <scope>provided</scope>
-        </dependency> 
-```
-The above dependency will cause the feature to be installed during the build, but we also need to tell the server to load it at runtime.
+We have already loaded the MicroProfile 3.3 feature in the pom that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Libetty server.
 
 Open the file `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml`
 
@@ -180,11 +179,9 @@ This entry lists all the features to be loaded by the server.  Add the following
         <feature>mpOpenAPI-1.1</feature>
 ```
 
-Build and run the coffee-shop service:
+If you now go back to your terminal you should notice Open Liberty installing the new features without shutting down. You can also re-run tests by simply pressing enter in the Terminal. 
 
-```
-mvn install liberty:dev
-```
+Lets go have a look at the new application you installed due to installing the Open API feature:
 
 Visit: http://localhost:9080/openapi/ui
 
@@ -194,11 +191,11 @@ For a full list of all the features available, see https://openliberty.io/docs/r
 
 ## Module 3: Application APIs
 
-Open Liberty has support for many standard APIs out of the box, including all the latest Java EE 8 APIs and the latest MicroProfile APIs.  To lead in the delivery of new APIs, a new version of Liberty is released every 4 weeks and aims to provide MicroProfile implementations soon after they are finalized.
+Open Liberty has support for many standard APIs out of the box, including all the latest Java EE 8/11 APIs and the latest MicroProfile APIs.  To lead in the delivery of new APIs, a new version of Liberty is released every 4 weeks and aims to provide MicroProfile implementations soon after they are finalized.
 
 As we've seen, to use a new feature, we need to add them to the build.  There is no need to add a dependency on the APIs for the feature because each feature depends on the APIs.  That means during build, the API dependencies are automatically added from maven central.
 
-For example, take a look at: https://search.maven.org/artifact/io.openliberty.features/mpMetrics-2.0/19.0.0.8/esa
+For example, take a look at: https://search.maven.org/artifact/io.openliberty.features/mpMetrics-2.0/20.0.0.4/esa
 
 You'll see in the XML on the left that this feature depends on:
 
@@ -222,26 +219,16 @@ Which depends on the Metrics API from Eclipse MicroProfile:
 
 And so during build, this API will be added for you.
 
-We're now going to add Metrics to the `coffee-shop`.  Edit the `open-liberty-masterclass/start/coffee-shop/pom.xml` file and add the following dependency:
+We're now going to add Metrics to the `coffee-shop`.  Edit the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml` file and add the following dependency in the featureManager section like we did above:
 
 ```XML
-        <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>mpMetrics-2.3</artifactId>
-            <type>esa</type>
-        </dependency>
+        <feature>mpMetrics-2.3</feature>
 ```
 
-Build the project:
+You should see that the server has been automatically updates, the following features are installed, and include mpMetrics-2.3:
 
 ```
-mvn install
-```
-
-You should see that during the build, the following features are installed, and include mpMetrics-2.0:
-
-```
-[INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [beanValidation-2.0, cdi-2.0, distributedMap-1.0, ejbLite-3.2, el-3.0, jaxrs-2.1, jaxrsClient-2.1, jndi-1.0, json-1.0, jsonp-1.1, mpConfig-1.3, mpHealth-2.0, mpMetrics-2.0, mpOpenAPI-1.1, mpRestClient-1.3, servlet-4.0, ssl-1.0].
+[INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [beanValidation-2.0, cdi-2.0, distributedMap-1.0, ejbLite-3.2, el-3.0, jaxrs-2.1, jaxrsClient-2.1, jndi-1.0, json-1.0, jsonp-1.1, mpConfig-1.3, mpHealth-2.2, mpMetrics-2.0, mpOpenAPI-1.1, mpRestClient-1.3, servlet-4.0, ssl-1.0].
 ```
 Now we have the API available, we can update the application to include a metric which will count the number of times a coffee order is requested. In the file `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/OrdersResource.java`, add the following `@Counted` annotation to the `orderCoffee` method:
 
@@ -259,47 +246,9 @@ import org.eclipse.microprofile.metrics.annotation.Counted;
 ```
 
 
-Rebuild the project:
-
-```
-mvn install
-```
-
 ## Module 4: Server Configuration
 
-In the previous module you added the `mpMetrics-2.0` feature to the Liberty build.  This makes the feature available for use by the Liberty runtime, but as we saw with the `mpOpenAPI` feature loading the feature at runtime is a separate explicit choice.
-
-Open the file `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml`
-
-Near the top of the file, you'll see the following `<featureManager/>` entry:
-
-```XML
-    <featureManager>
-        <feature>jaxrs-2.1</feature>
-        <feature>ejbLite-3.2</feature>
-        <feature>cdi-2.0</feature>
-        <feature>beanValidation-2.0</feature>
-        <feature>mpHealth-2.2</feature>
-        <feature>mpConfig-1.4</feature>
-        <feature>mpRestClient-1.4</feature>
-        <feature>jsonp-1.1</feature>
-        <feature>mpOpenAPI-2.0</feature>
-    </featureManager>
-```
-
-Add the following inside the `<featureManager/>` element to include the `mpMetrics-2.0` feature:
-
-```XML
-        <feature>mpMetrics-2.0</feature>
-```
-
-In the `open-liberty-masterclass/start/coffee-shop` directory, build the updated application and start the server:
-
-```
-mvn install liberty:dev
-```
-
-You should now see a message for a new metrics endpoint that looks like:
+From your previous addition of the MicroProfile Metrics feature in the server.xml you should now see a message for a new metrics endpoint in the terminal that looks like:
 
 ```
 [INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://localhost:9080/metrics/
@@ -331,7 +280,7 @@ Add the following to the `open-liberty-masterclass/start/coffee-shop/src/main/li
 Rebuild, restart the server and visit the metrics endpoint, you should see a number of metrics automatically generated by the JVM:
 
 ```
- TYPE base:classloader_total_loaded_class_count counter
+TYPE base:classloader_total_loaded_class_count counter
 # HELP base:classloader_total_loaded_class_count Displays the total number of classes that have been loaded since the Java virtual machine has started execution.
 base:classloader_total_loaded_class_count 10616
 ...
@@ -354,6 +303,7 @@ Reload the metrics page and at the bottom of the metrics results you should see:
 # HELP application:com_sebastian_daschner_coffee_shop_boundary_orders_resource_order Number of times orders requested.
 application:com_sebastian_daschner_coffee_shop_boundary_orders_resource_order 3
 ```
+Now go to the terminal and type `q` followed by `Enter` to shut down the server.
 
 ## Module 5: Externalizing Configuration
 
@@ -379,12 +329,12 @@ This `<properties/>` element is where the property values are set that can then 
 In the `<bootstrapProperties/>` section of the `liberty-maven-plugin` configuration, add the following:
 
 ```XML
-                    <bootstrapProperties>
-                        ...
-                        <env.default_http_port>${testServerHttpPort}</env.default_http_port>
-                        <env.default_https_port>${testServerHttpsPort}</env.default_https_port>
-                        <default_barista_base_url>${baristaBaseURL}</default_barista_base_url>
-                    </bootstrapProperties>
+    <bootstrapProperties>
+    ...
+    <env.default_http_port>${testServerHttpPort}</env.default_http_port>
+    <env.default_https_port>${testServerHttpsPort}</env.default_https_port>
+    <default_barista_base_url>${baristaBaseURL}</default_barista_base_url>
+    </bootstrapProperties>
 ```
 The above takes the properties we defined in the maven project and passes them to Liberty as bootstrap properties.
 
@@ -402,7 +352,7 @@ The `liberty-maven-plugin` generated the following file `target/liberty/wlp/usr/
 default_barista_base_url=http://localhost:9081
 env.default_http_port=9080
 env.default_https_port=9443
-war.name=coffee-shop.war
+
 ```
 We now need to change the server configuration to use these values.  In the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml` file, change this line:
 
@@ -477,9 +427,9 @@ Because we're going to be testing a REST `POST` request, we need JAX-RS client s
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.4.2</version>
+            <version>5.6.2</version>
             <scope>test</scope>
-        </dependency>    
+        </dependency>     
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
@@ -491,7 +441,7 @@ Because we're going to be testing a REST `POST` request, we need JAX-RS client s
             <artifactId>jackson-jaxrs-json-provider</artifactId>
             <version>2.9.3</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>   
 ```
 
 Note, the later `Testing in Containers` module requires the JUnit 5 Jupiter API so we're using the same API here.
@@ -506,7 +456,7 @@ Next add `maven-failsafe-plugin` configuration at the end of the `<plugins/>` se
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <version>${version.maven-failsafe-plugin}</version>
                 <executions>
                     <execution>
                         <phase>integration-test</phase>
@@ -516,10 +466,6 @@ Next add `maven-failsafe-plugin` configuration at the end of the `<plugins/>` se
                         </goals>
                         <configuration>
                             <trimStackTrace>false</trimStackTrace>
-                            <!-- Starting in version 3.0 of the liberty-maven-plugin these will be set automatically -->
-                            <systemProperties>
-                                <liberty.test.port>${testServerHttpPort}</liberty.test.port>
-                            </systemProperties>
                         </configuration>
                     </execution>
                     <execution>
@@ -529,7 +475,8 @@ Next add `maven-failsafe-plugin` configuration at the end of the `<plugins/>` se
                         </goals>
                     </execution>
                 </executions>
-            </plugin>                        
+            </plugin>   
+        </plugins>                      
         </plugins>
 ```
 Note, this configuration makes the port of the server available to the test as a system property called `liberty.test.port`.
@@ -632,30 +579,14 @@ We're now going to dockerize the two services and show how we can override the d
 Take a look at the `open-liberty-masterclass/start/coffee-shop/Dockerfile`:
 
 ```Dockerfile
-FROM open-liberty:kernel-java8-ibm as server-setup
-COPY /target/defaultServer.zip /config/
+FROM openliberty/open-liberty:full-java8-openj9-ubi
 
-USER 0
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends unzip \
-    && unzip /config/defaultServer.zip \
-    && mv /wlp/usr/servers/defaultServer/* /config/ \
-    && rm -rf /config/wlp \
-    && rm -rf /config/defaultServer.zip \
-    && apt-get remove -y unzip
-USER 1001
-
-RUN rm /opt/ol/wlp/usr/servers/defaultServer/bootstrap.properties
-
-FROM open-liberty
-LABEL maintainer="Graham Charters" vendor="IBM" github="https://github.com/WASdev/ci.maven"
-COPY --from=server-setup /config/ /config/
-EXPOSE 9080 9443
+COPY src/main/liberty/config /config/
+ADD target/barista.war /config/dropins
 ```
+ 
 
-This Dockerfile uses Docker build stages.  The first stage gets all the application and server configuration contents into the right location and the second builds the actual final image.  Using stages means any temporary files from the first stage don't end up in the final image, so it's smaller.  
-
-The `FROM` statement is building this image using the Open Liberty kernel image (see https://hub.docker.com/_/open-liberty/ for the available images).  The second `RUN` removes the `bootstrap.properties` file to avoid accidentally using it and avoid conflicts with the environment variables we will pass in later through Docker.  The `EXPOSE` makes the two server ports available outside the container.
+The `FROM` statement is building this image using the Open Liberty kernel image (see https://hub.docker.com/_/open-liberty/ for the available images).
 
 Let's build the docker image.  In the `open-liberty-masterclass/start/coffee-shop` directory, run (note the period (`.`) at the end of the line is important):
 
@@ -801,34 +732,20 @@ We saw in an earlier module, how to perform Integration Tests against the applic
 Let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the follow dependencies to the `pom.xml` file in the `<dependencies>` element:
 
 ```XML
-        <!-- For MicroShed Testing -->        
+       <!-- For MicroShed Testing -->      
         <dependency>
-            <groupId>com.github.microshed.microshed-testing</groupId>
+            <groupId>org.microshed</groupId>
             <artifactId>microshed-testing-liberty</artifactId>
-            <version>0.4.1-beta</version>
-            <scope>test</scope>
+            <version>0.8</version>
+        <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.26</version>
+            <version>1.7.30</version>
             <scope>test</scope>
         </dependency>
 ```
-
-Add the following `<repository>` element to the `pom.xml`.  This should be as a peer of the `<properties>` element:
-
-```XML
-    <repositories>
-        <!-- https://jitpack.io/#microshed/microshed-testing -->
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-```
-
-The MicroShed Testing project is not released to Maven Central at the moment and so this entries tells maven about the repository from where it can be downloaded.
 
 Create a new Integration Test called `BaristaContainerIT.java` in the directory `start/barista/src/test/java/com/sebastian_daschner/barista/it` and add the following code:
 
@@ -838,12 +755,12 @@ package com.sebastian_daschner.barista.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Test;
+import org.microshed.testing.jaxrs.RESTClient;
 import org.microshed.testing.jupiter.MicroShedTest;
-import org.microshed.testing.testcontainers.MicroProfileApplication;
+import org.microshed.testing.testcontainers.ApplicationContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 import com.sebastian_daschner.barista.boundary.BrewsResource;
@@ -854,12 +771,12 @@ import com.sebastian_daschner.barista.entity.CoffeeType;
 public class BaristaContainerIT {
 
     @Container
-    public static MicroProfileApplication app = new MicroProfileApplication()
+    public static ApplicationContainer app = new ApplicationContainer()
                     .withAppContextRoot("/barista")
-                    .withExposedPorts(9081, 9444)
-                    .withReadinessPath("/health");
+                    .withExposedPorts(9081)
+                    .withReadinessPath("/health/ready");
     
-    @Inject
+    @RESTClient
     public static BrewsResource brews;
 
     @Test
@@ -879,6 +796,7 @@ public class BaristaContainerIT {
         }
     }
 }
+
 ```
 
 You'll see that the class is marked as a MicroShed test with the `@MicroShedTest` annotation.
@@ -889,7 +807,7 @@ The test also contains the following Container configuration:
     @Container
     public static MicroProfileApplication app = new MicroProfileApplication()
                     .withAppContextRoot("/barista")
-                    .withExposedPorts(9081, 9444)
+                    .withExposedPorts(9081)
                     .withReadinessPath("/health");
 ```
 
