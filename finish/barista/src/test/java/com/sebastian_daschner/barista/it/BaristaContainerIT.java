@@ -3,12 +3,12 @@ package com.sebastian_daschner.barista.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Test;
+import org.microshed.testing.jaxrs.RESTClient;
 import org.microshed.testing.jupiter.MicroShedTest;
-import org.microshed.testing.testcontainers.MicroProfileApplication;
+import org.microshed.testing.testcontainers.ApplicationContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 import com.sebastian_daschner.barista.boundary.BrewsResource;
@@ -19,12 +19,12 @@ import com.sebastian_daschner.barista.entity.CoffeeType;
 public class BaristaContainerIT {
 
     @Container
-    public static MicroProfileApplication app = new MicroProfileApplication()
+    public static ApplicationContainer app = new ApplicationContainer()
                     .withAppContextRoot("/barista")
-                    .withExposedPorts(9081, 9444)
-                    .withReadinessPath("/health");
+                    .withExposedPorts(9081)
+                    .withReadinessPath("/health/ready");
     
-    @Inject
+    @RESTClient
     public static BrewsResource brews;
 
     @Test

@@ -21,68 +21,31 @@
         <testServerHttpPort>9080</testServerHttpPort>
         <testServerHttpsPort>9443</testServerHttpsPort>
         <baristaBaseURL>http://localhost:9081</baristaBaseURL>
-
-        <packaging.type>usr</packaging.type>
-        <package.file>defaultServer.zip</package.file>
         
         <failOnMissingWebXml>false</failOnMissingWebXml>
-        <liberty.version>[18.0.0.3,19.0.0.8]</liberty.version>
-    </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.openliberty.features</groupId>
-                <artifactId>features-bom</artifactId>
-                <version>RELEASE</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+        <!-- Plugin Versions-->
+        <version.liberty-maven-plugin>3.2</version.liberty-maven-plugin>
+        <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
+        <version.maven-failsafe-plugin>3.0.0-M4</version.maven-failsafe-plugin>
+        <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
+    </properties>
 
     <dependencies>
       <!--Open Liberty features -->
         <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>jaxrs-2.1</artifactId>
-            <type>esa</type>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-web-api</artifactId>
+            <version>8.0.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
-            <version>1.1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>jsonp-1.1</artifactId>
-            <type>esa</type>
-        </dependency>
-        <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>ejbLite-3.2</artifactId>
-            <type>esa</type>
-        </dependency>  
-        <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>beanValidation-2.0</artifactId>
-            <type>esa</type>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>3.3</version>
+            <type>pom</type>
+            <scope>provided</scope>
         </dependency> 
-        <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>mpHealth-2.2</artifactId>
-            <type>esa</type>
-        </dependency>                      
-        <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>mpConfig-1.4</artifactId>
-            <type>esa</type>
-        </dependency>
-        <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>mpRestClient-1.4</artifactId>
-            <type>esa</type>
-        </dependency>
     </dependencies>
 
     <build>
@@ -92,7 +55,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>${version.maven-compiler-plugin}</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -101,20 +64,14 @@
 
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>${version.maven-war-plugin}</version>
             </plugin>
 
             <plugin>
-                <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
+                <version>${version.liberty-maven-plugin}</version>
                 <configuration>
-                    <assemblyArtifact>
-                        <groupId>io.openliberty</groupId>
-                        <artifactId>openliberty-kernel</artifactId>
-                        <version>${liberty.version}</version>
-                        <type>zip</type>
-                    </assemblyArtifact>
-                    <configFile>src/main/liberty/config/server.xml</configFile>
                     <include>${packaging.type}</include>
                     <packageFile>${project.build.directory}/${package.file}</packageFile>
                     <bootstrapProperties>
