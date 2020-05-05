@@ -39,13 +39,14 @@ This document contains the hands-on lab modules for the Open Liberty Masterclass
 If you will be taking the Masterclass at a location with limited network bandwidth, it is recommended you do the following beforehand in order to populate your local .m2 repo and Docker cache.
 
 ```
-git clone https://github.com/gcharters/open-liberty-masterclass.git
+git clone https://github.com/OpenLiberty/open-liberty-masterclass.git
 cd open-liberty-masterclass/finish/coffee-shop
 mvn install
 docker build -t masterclass:coffee-shop .
 cd ../barista
 mvn install
 docker build -t masterclass:barista .
+cd ..
 ```
 ## The Application
 
@@ -191,29 +192,29 @@ For a full list of all the features available, see https://openliberty.io/docs/r
 
 ## Module 3: Application APIs
 
-Open Liberty has support for many standard APIs out of the box, including all the latest Java EE 8/11 APIs and the latest MicroProfile APIs.  To lead in the delivery of new APIs, a new version of Liberty is released every 4 weeks and aims to provide MicroProfile implementations soon after they are finalized.
+Open Liberty has support for many standard APIs out of the box, including all the latest Java EE 8/11 APIs and the latest MicroProfile APIs. To lead in the delivery of new APIs, a new version of Liberty is released every 4 weeks and aims to provide MicroProfile implementations soon after they are finalized.
 
 As we've seen, to use a new feature, we need to add them to the build.  There is no need to add a dependency on the APIs for the feature because each feature depends on the APIs.  That means during build, the API dependencies are automatically added from maven central.
 
-For example, take a look at: https://search.maven.org/artifact/io.openliberty.features/mpMetrics-2.0/20.0.0.4/esa
+For example, take a look at: https://search.maven.org/artifact/io.openliberty.features/mpMetrics-2.3/20.0.0.4/esa
 
 You'll see in the XML on the left that this feature depends on:
 
 ```XML
     <dependency>
-      <groupId>io.openliberty.features</groupId>
-      <artifactId>com.ibm.websphere.appserver.org.eclipse.microprofile.metrics-2.0</artifactId>
-      <version>19.0.0.8</version>
-      <type>esa</type>
-    </dependency>
+        <groupId>io.openliberty.features</groupId>
+        <artifactId>mpMetrics-2.3</artifactId>
+        <version>20.0.0.4</version>
+        <type>esa</type>
+</dependency>
 ```
 Which depends on the Metrics API from Eclipse MicroProfile:
 
 ```XML
     <dependency>
-      <groupId>org.eclipse.microprofile.metrics</groupId>
-      <artifactId>microprofile-metrics-api</artifactId>
-      <version>2.3.0</version>
+        <groupId>org.eclipse.microprofile.metrics</groupId>
+        <artifactId>microprofile-metrics-api</artifactId>
+        <version>2.3.0</version>
     </dependency>
 ```
 
@@ -588,6 +589,10 @@ ADD target/barista.war /config/dropins
 
 The `FROM` statement is building this image using the Open Liberty kernel image (see https://hub.docker.com/_/open-liberty/ for the available images).
 
+The `COPY` statement is copying over the server.xml file we mentioned earlier to the Docker image.
+
+The `ADD` statement is copying our application into the Docker image.
+
 Let's build the docker image.  In the `open-liberty-masterclass/start/coffee-shop` directory, run (note the period (`.`) at the end of the line is important):
 
 ```
@@ -729,7 +734,11 @@ You will see that the browser complains about the certificate.  This is a self-s
 
 We saw in an earlier module, how to perform Integration Tests against the application running in the server.  We then showed how to package the application and server and run them inside a Docker container.  Assuming we're going to deploy our application in production inside Containers it would be a good idea to actually performs tests against that configuration.  The more we can make our development and test environments the same as production, the less likely we are to encounter issues in production.  MicroShed Testing (microshed.org) is a project that enables us to do just that.
 
-Let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the follow dependencies to the `pom.xml` file in the `<dependencies>` element:
+Firstly let's start by deleting the tests we created earlier. We would not normally have intergration tests done with microshed testing and the way we previously looked at. This can be acheived but it is not best practice. The reason for deleting the old tests is becuase without extra configuration maven will try to run those tests against microshed but as these tests run in a container the configuration for connecting to our application will be different.
+
+Delete the file `open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java`
+
+Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the follow dependencies to the `pom.xml` file in the `<dependencies>` element:
 
 ```XML
        <!-- For MicroShed Testing -->      

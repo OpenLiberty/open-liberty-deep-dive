@@ -2,7 +2,11 @@
 
 We saw in an earlier module, how to perform Integration Tests against the application running in the server.  We then showed how to package the application and server and run them inside a Docker container.  Assuming we're going to deploy our application in production inside Containers it would be a good idea to actually performs tests against that configuration.  The more we can make our development and test environments the same as production, the less likely we are to encounter issues in production.  MicroShed Testing (microshed.org) is a project that enables us to do just that.
 
-Let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the follow dependencies to the `pom.xml` file in the `<dependencies>` element:
+Firstly let's start by deleting the tests we created earlier. We would not normally have intergration tests done with microshed testing and the way we previously looked at. This can be acheived but it is not best practice. The reason for deleting the old tests is becuase without extra configuration maven will try to run those tests against microshed but as these tests run in a container the configuration for connecting to our application will be different.
+
+Delete the file `open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java`
+
+Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the follow dependencies to the `pom.xml` file in the `<dependencies>` element:
 
 ```XML
        <!-- For MicroShed Testing -->      
@@ -20,7 +24,6 @@ Let's create a new Integration Test that will perform the same test, but inside 
         </dependency>
 ```
 {: codeblock}
-
 
 Create a new Integration Test called `BaristaContainerIT.java` in the directory `start/barista/src/test/java/com/sebastian_daschner/barista/it` and add the following code:
 
@@ -104,14 +107,12 @@ log4j.appender.stdout.layout.ConversionPattern=%r %p %c %x - %m%n
 
 log4j.logger.org.microshed=DEBUG
 ```
-{: codeblock}
 
 Build and run the test:
 
 ```
 mvn install
 ```
-{: codeblock}
 
 You should see the following output:
 
