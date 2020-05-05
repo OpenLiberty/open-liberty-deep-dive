@@ -39,13 +39,14 @@ This document contains the hands-on lab modules for the Open Liberty Masterclass
 If you will be taking the Masterclass at a location with limited network bandwidth, it is recommended you do the following beforehand in order to populate your local .m2 repo and Docker cache.
 
 ```
-git clone https://github.com/gcharters/open-liberty-masterclass.git
+git clone https://github.com/OpenLiberty/open-liberty-masterclass.git
 cd open-liberty-masterclass/finish/coffee-shop
 mvn install
 docker build -t masterclass:coffee-shop .
 cd ../barista
 mvn install
 docker build -t masterclass:barista .
+cd ..
 ```
 ## The Application
 
@@ -191,29 +192,29 @@ For a full list of all the features available, see https://openliberty.io/docs/r
 
 ## Module 3: Application APIs
 
-Open Liberty has support for many standard APIs out of the box, including all the latest Java EE 8/11 APIs and the latest MicroProfile APIs.  To lead in the delivery of new APIs, a new version of Liberty is released every 4 weeks and aims to provide MicroProfile implementations soon after they are finalized.
+Open Liberty has support for many standard APIs out of the box, including all the latest Java EE 8/11 APIs and the latest MicroProfile APIs. To lead in the delivery of new APIs, a new version of Liberty is released every 4 weeks and aims to provide MicroProfile implementations soon after they are finalized.
 
 As we've seen, to use a new feature, we need to add them to the build.  There is no need to add a dependency on the APIs for the feature because each feature depends on the APIs.  That means during build, the API dependencies are automatically added from maven central.
 
-For example, take a look at: https://search.maven.org/artifact/io.openliberty.features/mpMetrics-2.0/20.0.0.4/esa
+For example, take a look at: https://search.maven.org/artifact/io.openliberty.features/mpMetrics-2.3/20.0.0.4/esa
 
 You'll see in the XML on the left that this feature depends on:
 
 ```XML
     <dependency>
-      <groupId>io.openliberty.features</groupId>
-      <artifactId>com.ibm.websphere.appserver.org.eclipse.microprofile.metrics-2.0</artifactId>
-      <version>19.0.0.8</version>
-      <type>esa</type>
-    </dependency>
+        <groupId>io.openliberty.features</groupId>
+        <artifactId>mpMetrics-2.3</artifactId>
+        <version>20.0.0.4</version>
+        <type>esa</type>
+</dependency>
 ```
 Which depends on the Metrics API from Eclipse MicroProfile:
 
 ```XML
     <dependency>
-      <groupId>org.eclipse.microprofile.metrics</groupId>
-      <artifactId>microprofile-metrics-api</artifactId>
-      <version>2.3.0</version>
+        <groupId>org.eclipse.microprofile.metrics</groupId>
+        <artifactId>microprofile-metrics-api</artifactId>
+        <version>2.3.0</version>
     </dependency>
 ```
 
@@ -587,6 +588,10 @@ ADD target/barista.war /config/dropins
  
 
 The `FROM` statement is building this image using the Open Liberty kernel image (see https://hub.docker.com/_/open-liberty/ for the available images).
+
+The `COPY` statement is copying over the server.xml file we mentioned earlier to the Docker image.
+
+The `ADD` statement is copying our application into the Docker image.
 
 Let's build the docker image.  In the `open-liberty-masterclass/start/coffee-shop` directory, run (note the period (`.`) at the end of the line is important):
 

@@ -45,7 +45,7 @@ Take a look at the maven build file for the coffee-shop project: `open-liberty-m
 Go to the barista project:
 
 ```
-cd open-liberty-masterclass/start/barista
+cd start/barista
 ```
 {: codeblock}
 
