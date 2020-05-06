@@ -38,16 +38,14 @@ TYPE base:classloader_total_loaded_class_count counter
 base:classloader_total_loaded_class_count 10616
 ...
 ```
-This doesn't contain the metrics you added because the service hasn't been called and so no application metrics have been recorded. Use the OpenAPI UI (http://localhost:9080/openapi/ui/) to send a few requests to the service.
+This doesn't contain the metrics you added because the service hasn't been called and so no application metrics have been recorded. Use curl to `POST` some json to the application in order to generate some metircs by brewing a coffee.
 
-As with the `barista` service, you'll need to specify the following payload for the `POST` request:
-
-```JSON
-{
-  "type": "ESPRESSO"
-}
 ```
-{: codeblock}
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"type": "ESPRESSO"}' \
+  http://localhost:9081/barista/resources/brews
+```
 
 Reload the metrics page and at the bottom of the metrics results you should see:
 

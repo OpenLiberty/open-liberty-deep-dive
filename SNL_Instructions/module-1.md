@@ -56,25 +56,6 @@ mvn install liberty:run
 ```
 {: codeblock}
 
-Visit: http://localhost:9081/openapi/ui by clicking the `launch application` tab above the IDE and type in the port 9081 to open a proxy to your web browser.
-
-This page is an OpenAPI UI that lets you try out the barista service.  
-
-Click on `POST` and then `Try it out`
-
-Under `Example Value` specify:
-
-```JSON
-{
-  "type": "ESPRESSO"
-}
-```
-{: codeblock}
-
-Click on `Execute`
-
-Scroll down and you should see the server response code of `201`.  This says that the barista request to make an `ESPRESSO` was successfully `Created`.
-
 # Next Steps
 
 Congratulations on completing your first excercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.

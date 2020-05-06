@@ -75,12 +75,6 @@ This entry lists all the features to be loaded by the server.  Add the following
 
 If you now go back to your terminal you should notice Open Liberty installing the new features without shutting down. You can also re-run tests by simply pressing enter in the Terminal. 
 
-Lets go have a look at the new application you installed due to installing the Open API feature:
-
-Visit: http://localhost:9080/openapi/ui
-
-As with the barista service, this is an Open API UI page that lets to try out the service API for the coffee-shop service.
-
 For a full list of all the features available, see https://openliberty.io/docs/ref/feature/.
 
 # Next Steps
