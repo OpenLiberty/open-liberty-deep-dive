@@ -395,7 +395,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 ```
 This is using the MicroProfile Config specification to inject the configuration value.  Configuration can come from a number of sources, including `bootstrap.properties`.
 
-We also need to make the same changes to the CoffeeShopHealth of the `coffee-shop` service. Edit the file: `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/CoffeeShopHealth.java`
+We also need to make the same changes to the CoffeeShopHealth of the `coffee-shop` service. Edit the file: `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/HealthResource.java`
 
 Change:
 
@@ -486,59 +486,43 @@ Next add `maven-failsafe-plugin` configuration at the end of the `<plugins/>` se
 ```
 Note, this configuration makes the port of the server available to the test as a system property called `liberty.test.port`.
 
-Finally, add the test code.  Create a file called, `open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java` and add the following:
+Finally, add the test code.  Create a file called, `open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaContainerIT.java` and add the following:
 
 ```Java
 package com.sebastian_daschner.barista.it;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import org.junit.BeforeClass;
 
-import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.MediaType;
-
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import org.microshed.testing.jaxrs.RESTClient;
+import org.microshed.testing.jupiter.MicroShedTest;
+import org.microshed.testing.testcontainers.ApplicationContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import com.sebastian_daschner.barista.boundary.BrewsResource;
 import com.sebastian_daschner.barista.entity.CoffeeBrew;
 import com.sebastian_daschner.barista.entity.CoffeeType;
 
-public class BaristaIT {
-    private static String URL;
+@MicroShedTest
+public class BaristaContainerIT {
 
-    @BeforeAll
-    public static void init() {
-        String port = System.getProperty("liberty.test.port");
-        URL = "http://localhost:" + port + "/barista/resources/brews";
-    }
+    @Container
+    public static ApplicationContainer app = new ApplicationContainer()
+                    .withAppContextRoot("/barista")
+                    .withExposedPorts(9081)
+                    .withReadinessPath("/health/ready");
+    
+    @RESTClient
+    public static BrewsResource brews;
+
     @Test
     public void testService() throws Exception {
-
-        Client client = null;
-        WebTarget target = null;
-        try {
-            client = ClientBuilder.newClient().register(JacksonJsonProvider.class);
-            target = client.target(URL);
-
-        } catch (Exception e) {
-            client.close();
-            throw e;
-        }
-
         CoffeeBrew brew = new CoffeeBrew();
         brew.setType(CoffeeType.POUR_OVER);
-
-        Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.json(brew));
+        Response response = brews.startCoffeeBrew(brew);
 
         try {
             if (response == null) {
@@ -546,7 +530,6 @@ public class BaristaIT {
             } else {
                 assertEquals("Response must be 200 OK", 200, response.getStatus());
             }
-
         } finally {
             response.close();
         }
@@ -557,11 +540,13 @@ public class BaristaIT {
 
 This test sends a `json` request to the `barista` service and checks for a `200 OK` response. 
 
-Re-build and run the tests:
+Start the liberty server in Dev mode:
 
 ```
-mvn install
+mvn liberty:dev
 ```
+
+Run the tests by pressing `enter`.
 
 In the output of the build, you should see:
 
