@@ -109,9 +109,12 @@ Scroll down and you should see the server response code of `200`.  This says tha
 
 The Open Liberty Maven plug-in includes a dev goal that listens for any changes in the project, including application source code or configuration. The Open Liberty server automatically reloads the configuration without restarting. This goal allows for quicker turnarounds and an improved developer experience.
 
-Lets start our server up in dev mode and make some changes to the configuration so that it will need to install new features while the server is still running:
+We are going to make changes to the coffee-shop project.
+
+Navigate to the coffee-shop project and start the server up in dev mode and make some changes to the configuration. This will need to install new features while the server is still running:
 
 ```
+cd ../coffee-shop
 mvn install liberty:dev
 ```
 
@@ -152,7 +155,7 @@ In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  All the
     </dependencies>
 ```
 
-Let's add add dependency on the `MicroProfile OpenAPI` feature so we can try the `coffee-shop` service out.
+Let's add the dependency on the `MicroProfile OpenAPI` feature so we can try the `coffee-shop` service out.
 
 We have already loaded the MicroProfile 3.3 feature in the pom that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Libetty server.
 
@@ -272,7 +275,8 @@ It's one thing to configure the server to load a feature, but many Liberty featu
 
 The error message suggests we need to add a `keyStore` and one route to solve this would be to add a `keyStore` and user registry (e.g. a `basicRegistry` for test purposes).  However, if we take a look at the configuration for mpMetrics (https://openliberty.io/docs/ref/config/#mpMetrics.html) we can see that it has an option to turn the metrics endpoint authentication off.
 
-Add the following to the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml`
+Add the following below the `</featureManager>` in the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml`
+
 
 ```XML
     <mpMetrics authentication="false" />
@@ -314,7 +318,7 @@ Liberty lets your application pick up configuration from a number of sources, su
 
 Bootstrap.properties lets you provide simple configuration values to substitute in the server configuration and also to use within the application.  The following example replaces the hard-coded base URL the `coffee-shop` service uses to talk to the `barista` service, as well as the ports it exposes.
 
-In the `open-liberty-masterclass/start/coffee-shop/pom.xml` file, in the existing `<properties/>` element, add the following port and url values:
+In the `open-liberty-masterclass/start/coffee-shop/pom.xml` file, in the existing `<properties/>` element, you will see the following port and url values:
 
 ```XML
     <properties>
