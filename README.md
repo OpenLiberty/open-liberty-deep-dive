@@ -67,12 +67,12 @@ The completed code for the Masterclass is provided in the `open-liberty-mastercl
 ## Module 1: Build
 
 Liberty has support for building and deploying applications using Maven and Gradle.  The source and documentation for these plugins can be found here:
-* https://github.com/wasdev/ci.maven
-* https://github.com/wasdev/ci.gradle
+* https://github.com/OpenLiberty/ci.maven
+* https://github.com/OpenLiberty/ci.gradle
 
 The Masterclass will make use of the `liberty-maven-plugin`.
 
-Take a look at the maven build file for the coffee-shop project: `open-liberty-masterclass/start/barista/pom.xml`
+Take a look at the Maven build file for the coffee-shop project: `open-liberty-masterclass/start/barista/pom.xml`
 
 Go to the barista project:
 
@@ -107,7 +107,7 @@ Scroll down and you should see the server response code of `200`.  This says tha
 
 ## Module 2: Dev Mode
 
-The Open Liberty Maven plug-in includes a dev goal that listens for any changes in the project, including application source code or configuration. The Open Liberty server automatically reloads the configuration without restarting. This goal allows for quicker turnarounds and an improved developer experience.
+The Open Liberty Maven plug-in includes a dev goal that listens for any changes in the project, including application source code or configuration. The Open Liberty server automatically reloads the configuration without restarting. This goal -- dev mode -- allows for quicker turnarounds and an improved developer experience by providing hot deploy, hot testing and hot debug capabilities.
 
 We are going to make changes to the coffee-shop project.
 
@@ -115,12 +115,10 @@ Navigate to the coffee-shop project and start the server up in dev mode and make
 
 ```
 cd ../coffee-shop
-mvn install liberty:dev
+mvn liberty:dev
 ```
 
-
-
-Take a look at the maven build file for the coffee-shop project: `open-liberty-masterclass/start/coffee-shop/pom.xml`
+Take a look at the Maven build file for the coffee-shop project: `open-liberty-masterclass/start/coffee-shop/pom.xml`
 
 The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We define the versions of our plugins at the top of our pom:
 
@@ -132,7 +130,6 @@ The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We d
        <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
 ```
  
-
 In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  All the features we are using in this Masterclass are part of Jakarta EE and MicroProfile. By having the two dependencies below means that at build time these are available for Maven to use and then it will install any of the features you requests in your server.xml but we will get to that shortly.
 
 ``` XML
@@ -157,7 +154,7 @@ In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  All the
 
 Let's add the dependency on the `MicroProfile OpenAPI` feature so we can try the `coffee-shop` service out.
 
-We have already loaded the MicroProfile 3.3 feature in the pom that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Libetty server.
+We have already loaded the MicroProfile 3.3 feature in the pom that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Liberty server.
 
 Open the file `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml`
 
@@ -197,31 +194,9 @@ For a full list of all the features available, see https://openliberty.io/docs/r
 
 Open Liberty has support for many standard APIs out of the box, including all the latest Java EE 8/11 APIs and the latest MicroProfile APIs. To lead in the delivery of new APIs, a new version of Liberty is released every 4 weeks and aims to provide MicroProfile implementations soon after they are finalized.
 
-As we've seen, to use a new feature, we need to add them to the build.  There is no need to add a dependency on the APIs for the feature because each feature depends on the APIs.  That means during build, the API dependencies are automatically added from maven central.
+As you have seen in the previous section, the API dependencies that you need to use MicroProfile or Jakarta EE APIs have been added as dependencies to the POM file. You are all set to use these APIs as you need as you write your code.
 
-For example, take a look at: https://search.maven.org/artifact/io.openliberty.features/mpMetrics-2.3/20.0.0.4/esa
-
-You'll see in the XML on the left that this feature depends on:
-
-```XML
-    <dependency>
-        <groupId>io.openliberty.features</groupId>
-        <artifactId>mpMetrics-2.3</artifactId>
-        <version>20.0.0.4</version>
-        <type>esa</type>
-</dependency>
-```
-Which depends on the Metrics API from Eclipse MicroProfile:
-
-```XML
-    <dependency>
-        <groupId>org.eclipse.microprofile.metrics</groupId>
-        <artifactId>microprofile-metrics-api</artifactId>
-        <version>2.3.0</version>
-    </dependency>
-```
-
-And so during build, this API will be added for you.
+Then, we need to enable the corresponding features in Liberty's server configuration for Liberty to load and use what you have chosen for your application. With Liberty's modular and composable architecture, only the features specified in the server configuration will be loaded giving you a lightweight and performant runtime.
 
 We're now going to add Metrics to the `coffee-shop`.  Edit the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml` file and add the following dependency in the featureManager section like we did above:
 
@@ -277,7 +252,6 @@ The error message suggests we need to add a `keyStore` and one route to solve th
 
 Add the following below the `</featureManager>` in the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml`
 
-
 ```XML
     <mpMetrics authentication="false" />
 ```
@@ -309,6 +283,7 @@ Reload the metrics page and at the bottom of the metrics results you should see:
 application:com_sebastian_daschner_coffee_shop_boundary_orders_resource_order 3
 ```
 Now go to the terminal and type `q` followed by `Enter` to shut down the server.
+
 
 ## Module 5: Externalizing Configuration
 
@@ -350,6 +325,7 @@ Build the project:
 ```
 mvn install
 ```
+
 The `liberty-maven-plugin` generated the following file `target/liberty/wlp/usr/servers/defaultServer/bootstrap.properties` which contains the configuration that will be loaded and applied to the server configuration.  If you view the file you'll see the values you specified:
 
 ```YAML
@@ -357,14 +333,15 @@ The `liberty-maven-plugin` generated the following file `target/liberty/wlp/usr/
 default_barista_base_url=http://localhost:9081
 env.default_http_port=9080
 env.default_https_port=9443
-
 ```
+
 We now need to change the server configuration to use these values.  In the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml` file, change this line:
 
 ```XML
     <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
 ```
-to 
+
+to
 
 ```XML
     <httpEndpoint host="*" httpPort="${env.default_http_port}" httpsPort="${env.default_https_port}" id="defaultHttpEndpoint"/>
@@ -387,12 +364,14 @@ To:
     @ConfigProperty(name="default_barista_base_url")
     String baristaBaseURL;
 ```
+
 You'll also need to add the following imports:
 
 ```Java
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 ```
+
 This is using the MicroProfile Config specification to inject the configuration value.  Configuration can come from a number of sources, including `bootstrap.properties`.
 
 We also need to make the same changes to the CoffeeShopHealth of the `coffee-shop` service. Edit the file: `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/CoffeeShopHealth.java`
@@ -410,6 +389,7 @@ To:
     @ConfigProperty(name="default_barista_base_url")
     String baristaBaseURL;
 ```
+
 Add the following imports:
 
 ```Java
@@ -421,9 +401,10 @@ For more information on MicroProfile Config see https://openliberty.io/guides/mi
 
 Rebuild the code, start the `coffee-shop` and `barista` servers and try out the endpoint through the Open API UI.  You can also try out the health endpoint at `http://localhost:9080/health`.
 
+
 ## Module 6: Integration Testing
 
-Tests are essential for developing maintainable code.  Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging.  In this section you'll add a `barista` service integration test using the `maven-failsafe-plugin`.  During the build, the Liberty server will be started along with the `barista` application deployed, the test will be run and then the server will be stopped.  The starting and stopping of the Liberty server is configured by the Liberty parent pom (see https://search.maven.org/artifact/net.wasdev.wlp.maven.parent/liberty-maven-app-parent/2.6.3/pom), which is configured as the parent of the Masterclass poms.
+Tests are essential for developing maintainable code.  Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging.  In this section you'll add a `barista` service integration test using the `maven-failsafe-plugin`.  During the build, the Liberty server will be started along with the `barista` application deployed, the test will be run and then the server will be stopped.
 
 Because we're going to be testing a REST `POST` request, we need JAX-RS client support and also support for serializing `json` into the request.  We also need `junit` for writing the test.  Add these dependencies to the `open-liberty-masterclass/start/barista/pom.xml`:
 
@@ -484,6 +465,7 @@ Next add `maven-failsafe-plugin` configuration at the end of the `<plugins/>` se
         </plugins>                      
         </plugins>
 ```
+
 Note, this configuration makes the port of the server available to the test as a system property called `liberty.test.port`.
 
 Finally, add the test code.  Create a file called, `open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java` and add the following:
@@ -589,7 +571,6 @@ FROM openliberty/open-liberty:full-java8-openj9-ubi
 COPY src/main/liberty/config /config/
 ADD target/barista.war /config/dropins
 ```
- 
 
 The `FROM` statement is building this image using the Open Liberty kernel image (see https://hub.docker.com/_/open-liberty/ for the available images).
 
@@ -608,11 +589,13 @@ In the `open-liberty-masterclass/start/barista` directory, run (note the period 
 ```
 docker build -t masterclass:barista .
 ```
+
 Next, create the user-defined bridge network:
 
 ```
 docker network create --driver bridge masterclass-net
 ```
+
 You can now run the two Docker containers and get them to join the same bridge network.  Providing names to the containers makes those names available for DNS resolution within the bridge network so there's no need to use ip addresses.
 
 Run the `barista` container:
@@ -634,6 +617,7 @@ You can take a look at the bridge network using:
 ```
 docker network inspect masterclass-net
 ```
+
 You'll see something like:
 
 ```JSON
@@ -680,6 +664,7 @@ docker container rm <container name>
 ```
 You should now be able to load the `coffee-shop` service's Open API page and call the service.  Give it a try.
 
+
 ### Overriding Dev Server Configuration
 
 The above works fine, but still has a metrics endpoint with authentication turned off.  We'll now show how `configDropins/overrides` can be used to override existing, or add new, server configuration.  For example, this can be used to add server configuration in a production environment.  The approach we're going to take is to use a Docker volume, but in a real-world scenario you would use Kubernetes ConfigMaps and secrets to include the production server configuration, security configuration and environment variables.  
@@ -710,6 +695,7 @@ Take a look at the file `open-liberty-masterclass/start/coffee-shop/configDropin
      
 </server>
 ```
+
 You'll see that this turns metrics authentication on and sets up some simple security required for securing/accessing the metrics endpoint.  Note, this configuration really is **NOT FOR PRODUCTION**, it's simply aiming to show how to override, or provide new, server configuration.
 
 If you're on a unix-based OS, in the `open-liberty-masterclass/start/coffee-shop` directory, run the `coffee-shop` container:
@@ -717,6 +703,7 @@ If you're on a unix-based OS, in the `open-liberty-masterclass/start/coffee-shop
 ```
 docker run -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides  masterclass:coffee-shop
 ```
+
 The above relies on `pwd` to fill in the docker volume source path.  If you're on Windows, replace `$(pwd)` with the absolute path to the `open-liberty-masterclass/start/coffee-shop` directory in the above command.
 
 You should see the following message as the server is starting:
@@ -728,11 +715,13 @@ You should see the following message as the server is starting:
     Value true is set in file:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/metrics-prod.xml.
   Property authentication will be set to true.
 ```
+
 This shows that we have turned metrics authentication back on.
 
 Access the metrics endpoint at: `https://localhost:9445/metrics`
 
 You will see that the browser complains about the certificate.  This is a self-signed certificate generated by Liberty for test purposes.  Accept the exception (note,  Firefox may not allow you to do this in which case you'll need to use a different browser).  You'll be presented with a login prompt.  Sign in with userid `admin` and password `change_it` (the values in the `metrics-prod.xml`).
+
 
 ## Module 8: Testing in Containers
 
@@ -909,11 +898,14 @@ In the `open-liberty-masterclass/start/coffee-shop/pom.xml` change these two lin
                         <groupId>io.openliberty</groupId>
                         <artifactId>openliberty-kernel</artifactId>
 ```
+
 To:
+
 ```XML
                         <groupId>com.ibm.websphere.appserver.runtime</groupId>
                         <artifactId>wlp-kernel</artifactId>
 ```
+
 Rebuild and re-start the `coffee-shop` service:
 
 ```
@@ -922,9 +914,7 @@ mvn install liberty:run
 
 Try the service out using the Open API Web page and you should see the behavior is identical.  Not surprising since the code is identical, from the same build, just built into WebSphere Liberty.
 
+
 ## Conclusion
 
 Thanks for trying the Open Liberty Masterclass. If you're interested in finding out more, please visit http://openliberty.io, and for more hands-on experience, why not try the Open Liberty Guides - http://openliberty.io/guides.
-
-
-
