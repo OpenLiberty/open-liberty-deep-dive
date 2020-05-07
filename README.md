@@ -570,6 +570,8 @@ FROM openliberty/open-liberty:full-java8-openj9-ubi
 
 COPY src/main/liberty/config /config/
 ADD target/barista.war /config/dropins
+
+RUN configure.sh
 ```
 
 The `FROM` statement is building this image using the Open Liberty kernel image (see https://hub.docker.com/_/open-liberty/ for the available images).
@@ -577,6 +579,8 @@ The `FROM` statement is building this image using the Open Liberty kernel image 
 The `COPY` statement is copying over the server.xml file we mentioned earlier to the Docker image.
 
 The `ADD` statement is copying our application into the Docker image.
+
+The `RUN` command runs a script that is already located on the image that will add the requested XML snippets, grow the image to be fit-for-purpose and apply interim fixes.
 
 Let's build the docker image.  In the `open-liberty-masterclass/start/coffee-shop` directory, run (note the period (`.`) at the end of the line is important):
 
