@@ -24,35 +24,21 @@
         <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.openliberty.features</groupId>
-                <artifactId>features-bom</artifactId>
-                <version>RELEASE</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
-      <!--Open Liberty features -->
+        <!--Open Liberty features -->
         <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>jaxrs-2.1</artifactId>
-            <type>esa</type>
-        </dependency>  
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-web-api</artifactId>
+            <version>8.0.0</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>mpOpenAPI-1.1</artifactId>
-            <type>esa</type>
-        </dependency>   
-        <dependency>
-            <groupId>io.openliberty.features</groupId>
-            <artifactId>mpHealth-2.2</artifactId>
-            <type>esa</type>
-        </dependency>  
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>3.3</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
