@@ -1,8 +1,10 @@
 # Module 6: Integration Testing
 
-Tests are essential for developing maintainable code.  Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging.  In this section you'll add a `barista` service integration test using the `maven-failsafe-plugin`.  During the build, the Liberty server will be started along with the `barista` application deployed, the test will be run and then the server will be stopped.  The starting and stopping of the Liberty server is configured by the Liberty parent pom (see https://search.maven.org/artifact/net.wasdev.wlp.maven.parent/liberty-maven-app-parent/2.6.3/pom), which is configured as the parent of the Masterclass poms.
+Tests are essential for developing maintainable code.  Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging.  In this section you'll add a **barista** service integration test using the **maven-failsafe-plugin.**  During the build, the Liberty server will be started along with the **barista** application deployed, the test will be run and then the server will be stopped.  The starting and stopping of the Liberty server is configured by the [Liberty parent pom](https://search.maven.org/artifact/net.wasdev.wlp.maven.parent/liberty-maven-app-parent/2.6.3/pom), which is configured as the parent of the Masterclass poms.
 
-Because we're going to be testing a REST `POST` request, we need JAX-RS client support and also support for serializing `json` into the request.  We also need `junit` for writing the test.  Add these dependencies to the `open-liberty-masterclass/start/barista/pom.xml`:
+Because we're going to be testing a **REST POST** request, we need JAX-RS client support and also support for serializing **json** into the request.  We also need **junit** for writing the test.  Add these dependencies to the **open-liberty-masterclass/start/barista/pom.xml*:
+
+>[File->Open]open-liberty-masterclass/start/barista/pom.xml
 
 ```XML
         <!-- Test dependencies -->  
@@ -27,15 +29,13 @@ Because we're going to be testing a REST `POST` request, we need JAX-RS client s
 ```
 {: codeblock}
 
-Note, the later `Testing in Containers` module requires the JUnit 5 Jupiter API so we're using the same API here.
+Note, the later **Testing in Containers** module requires the JUnit 5 Jupiter API so we're using the same API here.
 
-Note the `<scope/>` of the dependencies is set to `test` because we only want the dependencies to be used during testing.
+Note the **<scope/>** of the dependencies is set to **test** because we only want the dependencies to be used during testing.
 
-Next add `maven-failsafe-plugin` configuration at the end of the `<plugins/>` section:
+Next add `maven-failsafe-plugin` configuration at the end of the **<plugins/>** section:
 
 ```XML
-        <plugins>
-            ...
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -59,14 +59,24 @@ Next add `maven-failsafe-plugin` configuration at the end of the `<plugins/>` se
                     </execution>
                 </executions>
             </plugin>   
-        </plugins>                      
-        </plugins>
 ```
 {: codeblock}
 
-Note, this configuration makes the port of the server available to the test as a system property called `liberty.test.port`.
+Note, this configuration makes the port of the server available to the test as a system property called **liberty.test.port**.
 
-Finally, add the test code.  Create a file called, `open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java` and add the following:
+Finally, add the test code.  Create a file called **BaristaIT.java**.
+Open a new Terminal
+
+> Terminal -> New Terminal
+
+```
+touch open-liberty-masterclass/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristaIT.java
+```
+{: codeblock}
+
+Open the **BaristaIT.java** and add the following:
+
+[File->Open]open-liberty-masterclass/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristaIT.java
 
 ```Java
 package com.sebastian_daschner.barista.it;
@@ -161,4 +171,4 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 
 # Next Steps
 
-Congratulations on completing your next excercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
+Congratulations on completing the excercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
