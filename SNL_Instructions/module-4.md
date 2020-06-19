@@ -7,11 +7,16 @@ From your previous addition of the MicroProfile Metrics feature in the server.xm
 
 ```
 
-Open the metrics endpoint in your browser.  You should see a message like this:
+Open the metrics endpoint in your browser. To do this select **Launch Application**, a box will appear where the port number is required. The application is running on port **9080**. The Open Liberty homepage will load. To access the **metrics** endpoint at the end of the URL type **/metrics**. The URL should look like: 
+```
+-9080.theiadocker-1.proxy.cognitiveclass.ai/metrics
+```
+You should see a message like this:
 
 ```
 Error 403: Resource must be accessed with a secure connection try again using an HTTPS connection.
 ```
+or a **Username** and **Password** will be required
 
 If you take a look at the server output, you should see the following error:
 
@@ -19,9 +24,9 @@ If you take a look at the server output, you should see the following error:
 [INFO] [ERROR   ] CWWKS9113E: The SSL port is not active. The incoming http request cannot be redirected to a secure port. Check the server.xml file for configuration errors. The https port may be disabled. The keyStore element may be missing or incorrectly specified. The SSL feature may not be enabled.
 ```
 
-It's one thing to configure the server to load a feature, but many Liberty features require additional configuration.  The complete set of Liberty features and their configuration can be found here: https://openliberty.io/docs/ref/config/.
+It's one thing to configure the server to load a feature, but many Liberty features require additional configuration. You can view the complete set of Liberty features and their configuration here: https://openliberty.io/docs/ref/config/.
 
-The error message suggests we need to add a `keyStore` and one route to solve this would be to add a `keyStore` and user registry (e.g. a `basicRegistry` for test purposes).  However, if we take a look at the configuration for mpMetrics (https://openliberty.io/docs/ref/config/#mpMetrics.html) we can see that it has an option to turn the metrics endpoint authentication off.
+The error message suggests we need to add a **keyStore** and one route to solve this would be to add a **keyStore** and user registry (e.g. a **basicRegistry** for test purposes).  However, if we take a look at the configuration for [mpMetrics](https://openliberty.io/docs/ref/config/#mpMetrics.html) we can see that it has an option to turn the metrics endpoint authentication off.
 
 Add the following to the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml`
 
@@ -38,7 +43,9 @@ TYPE base:classloader_total_loaded_class_count counter
 base:classloader_total_loaded_class_count 10616
 ...
 ```
-This doesn't contain the metrics you added because the service hasn't been called and so no application metrics have been recorded. Use curl to `POST` some json to the application in order to generate some metircs by brewing a coffee.
+This doesn't contain the metrics you added because the service hasn't been called and so no application metrics have been recorded. 
+
+Open a new terminal and use curl to `POST` some json to the application in order to generate some metircs by brewing a coffee.
 
 ```
 curl --header "Content-Type: application/json" \
