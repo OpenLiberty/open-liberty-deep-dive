@@ -2,29 +2,30 @@
 
 We're now going to dockerize the two services and show how we can override the defaults to re-wire the two services.  We're going to use a Docker user-defined network (see https://docs.docker.com/network/network-tutorial-standalone/#use-user-defined-bridge-networks) because we'll be running them on the same host and it keeps things simple.  For real-world production deployments you would use a Kubernetes environment, such as IBM Cloud Private or the IBM Cloud Kubernetes Service.
 
-Take a look at the `open-liberty-masterclass/start/coffee-shop/Dockerfile`:
+Take a look at the **open-liberty-masterclass/start/coffee-shop/Dockerfile:**
 
 ```Dockerfile
 FROM openliberty/open-liberty:full-java8-openj9-ubi
 
 COPY src/main/liberty/config /config/
-ADD target/barista.war /config/dropins
+ADD target/coffee-shop.war /config/dropins
+
+RUN configure.sh
 ```
-{: codeblock}
 
+The **FROM** statement is building this image using the Open Liberty kernel image (see https://hub.docker.com/_/open-liberty/ for the available images).
 
-The `FROM` statement is building this image using the Open Liberty kernel image (see https://hub.docker.com/_/open-liberty/ for the available images).
-
-Let's build the docker image.  In the `open-liberty-masterclass/start/coffee-shop` directory, run (note the period (`.`) at the end of the line is important):
+Let's build the docker image.  In the **open-liberty-masterclass/start/coffee-shop** directory, run (note the period (`.`) at the end of the line is important):
 
 ```
 docker build -t masterclass:coffee-shop .
 ```
 {: codeblock}
 
-In the `open-liberty-masterclass/start/barista` directory, run (note the period (`.`) at the end of the line is important):
+Navigate to the **bastista** directory and build the docker image: 
 
 ```
+cd ../barista/
 docker build -t masterclass:barista .
 ```
 {: codeblock}
@@ -117,7 +118,7 @@ The above works fine, but still has a metrics endpoint with authentication turne
 
 In fact, unlike what we have done here, the best practice is to build an image that does not contain any environment specific configuration (such as the unsecured endpoint in our example) and then add those things through external configuration in the development, staging and production environments.  The goal is to ensure deployment of the image without configuration doesn't not cause undesirable results such as security vulnerabilities or talking to the wrong data sources.
 
-Take a look at the file `open-liberty-masterclass/start/coffee-shop/configDropins/overrides/metrics-prod.xml`:
+Take a look at the file **open-liberty-masterclass/start/coffee-shop/configDropins/overrides/metrics-prod.xml**:
 
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -169,4 +170,4 @@ You will see that the browser complains about the certificate.  This is a self-s
 
 # Next Steps
 
-Congratulations on completing your next excercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
+Congratulations on completing the excercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.

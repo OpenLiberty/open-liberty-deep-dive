@@ -1,6 +1,6 @@
 # Open Liberty Masterclass
 
-These instructions contains the hands-on lab modules for the Open Liberty Masterclass.  It is intended to be used in conjunction with taught materials, however, feel free to give it a try, even if you're not in a Masterclass.
+These instructions contain the hands-on lab modules for the Open Liberty Masterclass.  It is intended to be used in conjunction with taught materials, however, feel free to give it a try, even if you're not in a Masterclass.
 
 ## The Application
 
@@ -30,7 +30,7 @@ The application consists of two Microservices; `coffee-shop` and `barista`.  The
 │ coffee-shop │---------------------->│   barista   │
 └─────────────┘<----------------------└─────────────┘
 ```
-The completed code for the Masterclass is provided in the `open-liberty-masterclass/finish` directory.  To work through the Masterclass you will develop in the `open-liberty-masterclass/start` directory.
+The completed code for the Masterclass is provided in the `open-liberty-masterclass/finish` directory.  To work through the Masterclass, you will develop in the `open-liberty-masterclass/start` directory.
 
 ## Module 1: Build
 

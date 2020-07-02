@@ -1,15 +1,24 @@
 # Module 2: Dev Mode
 
-The Open Liberty Maven plug-in includes a dev goal that listens for any changes in the project, including application source code or configuration. The Open Liberty server automatically reloads the configuration without restarting. This goal allows for quicker turnarounds and an improved developer experience.
+The Open Liberty Maven plug-in includes a dev goal that listens for any changes in the project, including application source code or configuration. The Open Liberty server automatically reloads the configuration without restarting. This goal allows for quicker turnarounds and improved developer experience.
 
-Lets start our server up in dev mode and make some changes to the configuration so that it will need to install new features while the server is still running:
+Open a new terminal and navigate to the **coffee-shop** service.
+
+> [Terminal -> Split Terminal]
+
+```
+cd open-liberty-masterclass/start/coffee-shop/
+```
+{: codeblock}
+
+Let's start the server in dev mode and make some changes to the configuration so that it will need to install new features while the server is still running:
 
 ```
 mvn install liberty:dev
 ```
 {: codeblock}
 
-Take a look at the maven build file for the coffee-shop project: `open-liberty-masterclass/start/coffee-shop/pom.xml`
+Take a look at the maven build file for the coffee-shop project: **open-liberty-masterclass/start/coffee-shop/pom.xml**
 
 The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We define the versions of our plugins at the top of our pom:
 
@@ -22,7 +31,7 @@ The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We d
 ```
  
 
-In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  All the features we are using in this Masterclass are part of Jakarta EE and MicroProfile. By having the two dependencies below means that at build time these are available for Maven to use and then it will install any of the features you requests in your server.xml but we will get to that shortly.
+In the same **coffee-shop/pom.xml** locate the **<dependencies/>** section.  All the features we are using in this Masterclass are part of Jakarta EE and MicroProfile. By having the two dependencies below means that at build time these are available for Maven to use and then it will install any of the features you request in your **server.xml,** but we will get to that shortly.
 
 ``` XML
     <dependencies>
@@ -44,11 +53,14 @@ In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  All the
     </dependencies>
 ```
 
-Let's add add dependency on the `MicroProfile OpenAPI` feature so we can try the `coffee-shop` service out.
+Let's add the dependency for the **MicroProfile OpenAPI** feature so we can try the **coffee-shop** service out.
 
-We have already loaded the MicroProfile 3.3 feature in the pom that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Libetty server.
+We have already loaded the MicroProfile 3.3 feature in the **pom.xml** that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Libetty server.
 
-Open the file `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml`
+Open the **server.xml**
+
+> [File -> Open]open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml
+
 
 This file is the configuration for the `coffee-shop` server.
 
