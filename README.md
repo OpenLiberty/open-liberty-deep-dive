@@ -358,7 +358,7 @@ to
 
 Next we'll use the `default_barista_base_url` in the code to avoid hard-coding the location of the `barista` service.
 
-Edit the file `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/control/Barista.java`
+Edit the file `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/control/HealthResource.java`
 
 Change:
 
