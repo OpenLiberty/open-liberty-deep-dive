@@ -2,7 +2,7 @@
 <server description="Coffee Shop Server">
 
     <featureManager>
-        <feature>mpMetrics-2.0</feature>
+        <feature>mpMetrics-2.3</feature>
     </featureManager>
     
     <mpMetrics authentication="true" />

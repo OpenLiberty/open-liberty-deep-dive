@@ -8,11 +8,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.health.Health;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 
+@Health
 @ApplicationScoped
-public class CoffeeShopHealth implements HealthCheck {
+public class HealthResource implements HealthCheck {
 
     @Inject
     @ConfigProperty(name="default_barista_base_url")
@@ -36,10 +38,10 @@ public class CoffeeShopHealth implements HealthCheck {
     @Override
     public HealthCheckResponse call() {
         if (!isHealthy()) {
-            return HealthCheckResponse.named(this.getClass().getSimpleName()).withData("barista service", "not available")
+            return HealthCheckResponse.named(this.getClass().getSimpleName()).withData("services", "not available")
                     .down().build();
         }
-        return HealthCheckResponse.named(this.getClass().getSimpleName()).withData("barista service", "available").up()
+        return HealthCheckResponse.named(this.getClass().getSimpleName()).withData("services", "available").up()
                 .build();
     }
 
