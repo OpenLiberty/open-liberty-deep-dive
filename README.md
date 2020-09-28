@@ -192,7 +192,7 @@ For a full list of all the features available, see https://openliberty.io/docs/r
 
 ## Module 3: Application APIs
 
-Open Liberty has support for many standard APIs out of the box, including all the latest Java EE 8/11 APIs and the latest MicroProfile APIs. To lead in the delivery of new APIs, a new version of Liberty is released every 4 weeks and aims to provide MicroProfile implementations soon after they are finalized.
+Open Liberty has support for many standard APIs out of the box, including Java EE 7 & 8, Jakarta EE 8 and the latest MicroProfile APIs.
 
 As you have seen in the previous section, the API dependencies that you need to use MicroProfile or Jakarta EE APIs have been added as dependencies to the POM file. You are all set to use these APIs, as you need as you write your code.
 

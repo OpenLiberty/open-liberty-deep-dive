@@ -1,6 +1,6 @@
 # Module 8: Testing in Containers
 
-We saw in an earlier module, how to perform Integration Tests against the application running in the server.  We then showed how to package the application and server and run them inside a Docker container.  Assuming we're going to deploy our application to production inside Containers, it would be a good idea to perform tests against that configuration.  The more we can make our development and test environments the same as production, the less likely we are to encounter issues in production. MicroShed Testing [(microshed.org)](microshed.org) is a project that enables us to do just that.
+We saw in an earlier module, how to perform Integration Tests against the application running in the server.  We then showed how to package the application and server and run them inside a Docker container.  Assuming we're going to deploy our application in production inside Containers it would be a good idea to actually perform tests against that configuration.  The more we can make our development and test environments the same as production, the less likely we are to encounter issues in production. [MicroShed Testing](microshed.org) is a project that enables us to do just that.
 
 Firstly let's start by deleting the tests we created earlier. We would not normally have intergration tests done with microshed testing and the way we previously looked at. This can be acheived but it is not best practice. The reason for deleting the old tests is becuase without extra configuration maven will try to run those tests against microshed but as these tests run in a container the configuration for connecting to our application will be different.
 
@@ -10,7 +10,7 @@ rm -f /home/project/open-liberty-masterclass/start/barista/src/test/java/com/seb
 ```
 {: codeblock}
 
-Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the follow dependencies to the `pom.xml` file in the `<dependencies>` element:
+Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the following dependencies to the `pom.xml` file in the `<dependencies>` element:
 
 ```XML
        <!-- For MicroShed Testing -->      

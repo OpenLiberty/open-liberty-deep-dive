@@ -1,33 +1,10 @@
 # Module 3: Application APIs
 
-Open Liberty has support for many standard APIs out of the box, including all the latest Java EE 8/11 APIs and the latest MicroProfile APIs. A new version of Liberty is released every four weeks and aims to provide MicroProfile implementations soon after they are finalized while leading the delivery of new APIs.
+Open Liberty has support for many standard APIs out of the box, including Java EE 7 & 8, Jakarta EE 8 and the latest MicroProfile APIs.
 
-As we've seen, to use a new feature, we need to add them to the **server.xml.**  When adding a new feature, a dependency does not need to be added because each feature depends on the APIs. That means during a build, the API dependencies are automatically added from maven central.
+As you have seen in the previous section, the API dependencies that you need to use MicroProfile or Jakarta EE APIs have been added as dependencies to the POM file. You are all set to use these APIs as you need as you write your code.
 
-
-For an example, take a look at: https://search.maven.org/artifact/io.openliberty.features/mpMetrics-2.0/20.0.0.4/esa
-
-You'll see in the XML on the left that this feature depends on:
-
-```XML
-    <dependency>
-      <groupId>io.openliberty.features</groupId>
-      <artifactId>com.ibm.websphere.appserver.org.eclipse.microprofile.metrics-2.0</artifactId>
-      <version>19.0.0.8</version>
-      <type>esa</type>
-    </dependency>
-```
-Which depends on the Metrics API from Eclipse MicroProfile:
-
-```XML
-    <dependency>
-      <groupId>org.eclipse.microprofile.metrics</groupId>
-      <artifactId>microprofile-metrics-api</artifactId>
-      <version>2.3.0</version>
-    </dependency>
-```
-
-And so during build, this API will be added for you.
+Then, we need to enable the corresponding features in Liberty's server configuration for Liberty to load and use what you have chosen for your application. With Liberty's modular and composable architecture, only the features specified in the server configuration will be loaded giving you a lightweight and performant runtime.
 
 We're now going to add Metrics to the **coffee-shop.**  Edit **Coffee-Shop server.xml** file and add the following dependency in the featureManager section like we did above:
 
@@ -48,7 +25,12 @@ Now we have the API available, we can update the application to include a metric
 Open the **OrderResource.java** and add the following **@Counted** annotation to the **orderCoffee** method:
 > [File->Open] **open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/OrdersResource.java**
 
-```Java
+```java
+ @Counted(name="order", displayName="Order count", description="Number of times orders requested.")
+ ```
+ It should look like:
+
+ ```Java
     @POST
     @Counted(name="order", displayName="Order count", description="Number of times orders requested.")
     public Response orderCoffee(@Valid @NotNull CoffeeOrder order) {
