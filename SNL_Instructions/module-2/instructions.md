@@ -94,4 +94,4 @@ For a full list of all the features available, see https://openliberty.io/docs/r
 
 # Next Steps
 
-Congratulations on completing your next excercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
+Congratulations on completing your next exercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.

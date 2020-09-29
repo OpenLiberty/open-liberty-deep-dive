@@ -12,7 +12,7 @@ git clone https://github.com/OpenLiberty/open-liberty-masterclass.git
 {: codeblock}
 
 
-Now nvaigate into the project folder:
+Now navigate into the project folder:
 
 ```
 cd open-liberty-masterclass
@@ -58,4 +58,4 @@ mvn install liberty:run
 
 # Next Steps
 
-Congratulations on completing your first excercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
+Congratulations on completing your first exercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.

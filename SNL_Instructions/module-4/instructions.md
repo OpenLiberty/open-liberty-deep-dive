@@ -49,7 +49,7 @@ base:classloader_total_loaded_class_count 10616
 ```
 This doesn't contain the metrics you added because the service hasn't been called and so no application metrics have been recorded. 
 
-Open a new terminal and use curl to `POST` some json to the application in order to generate some metircs by brewing a coffee.
+Open a new terminal and use curl to `POST` some json to the application in order to generate some metrics by brewing a coffee.
 
 ```
 curl --header "Content-Type: application/json" \
@@ -70,4 +70,4 @@ Now go to the terminal and type `q` followed by `Enter` to shut down the server.
 
 # Next Steps
 
-Congratulations on completing your next excercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
+Congratulations on completing your next exercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.

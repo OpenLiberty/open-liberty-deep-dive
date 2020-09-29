@@ -302,7 +302,7 @@ Liberty lets your application pick up configuration from a number of sources, su
 
 Bootstrap.properties lets you provide simple configuration values to substitute in the server configuration and use within the application.  The following example replaces the hard-coded base URL the `coffee-shop` service uses to talk to the `barista` service, as well as the ports it exposes.
 
-In the `open-liberty-masterclass/start/coffee-shop/pom.xml` file, in the existing `<properties/>` element, you will see the following port and url values:
+In the `open-liberty-masterclass/start/coffee-shop/pom.xml` file, in the existing `<properties/>` element, you will see the following port and URL values:
 
 ```XML
     <properties>
@@ -747,7 +747,7 @@ You will see that the browser complains about the certificate.  This is a self-s
 
 We saw in an earlier module, how to perform Integration Tests against the application running in the server.  We then showed how to package the application and server and run them inside a Docker container.  Assuming we're going to deploy our application in production inside Containers it would be a good idea to actually perform tests against that configuration.  The more we can make our development and test environments the same as production, the less likely we are to encounter issues in production. [MicroShed Testing](microshed.org) is a project that enables us to do just that.
 
-Firstly let's start by deleting the tests we created earlier. We would not normally have intergration tests done with microshed testing and the way we previously looked at. This can be acheived but it is not best practice. The reason for deleting the old tests is becuase without extra configuration maven will try to run those tests against microshed but as these tests run in a container the configuration for connecting to our application will be different.
+Firstly let's start by deleting the tests we created earlier. We would not normally have integration tests done with MicroShed testing and the way we previously looked at. This can be achieved but it is not best practice. The reason for deleting the old tests is because without extra configuration maven will try to run those tests against MicroShed but as these tests run in a container the configuration for connecting to our application will be different.
 
 Delete the file `open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java`
 
@@ -897,7 +897,7 @@ You should see the following output:
 
 ## Module 9: Support Licensing
 
-Open Liberty is Open Source under the Eclipse Public License v1, as a result there is no fee to use in production.  Community support is available via StackOverflow, Gitter, or the mail list, and bugs can be raised in [github](https://github.com/openliberty/open-liberty). Commercial support from IBM is available for Open Liberty, you can find out more on the [IBM Marketplace](https://www.ibm.com/uk-en/marketplace/elite-support-for-open-liberty). The WebSphere Liberty product is built on Open Liberty, there is no migration required to use WebSphere Liberty, you simply point to WebSphere Liberty in your build.  Users of WebSphere Liberty get support for the packaged Open Liberty function.
+Open Liberty is Open Source under the Eclipse Public License v1, as a result there is no fee to use in production.  Community support is available via StackOverflow, Gitter, or the mail list, and bugs can be raised in [GitHub](https://github.com/openliberty/open-liberty). Commercial support from IBM is available for Open Liberty, you can find out more on the [IBM Marketplace](https://www.ibm.com/uk-en/marketplace/elite-support-for-open-liberty). The WebSphere Liberty product is built on Open Liberty, there is no migration required to use WebSphere Liberty, you simply point to WebSphere Liberty in your build.  Users of WebSphere Liberty get support for the packaged Open Liberty function.
 
 WebSphere Liberty is also available in [Maven Central](https://search.maven.org/search?q=g:com.ibm.websphere.appserver.runtime).
 

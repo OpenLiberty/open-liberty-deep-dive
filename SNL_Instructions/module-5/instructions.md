@@ -130,8 +130,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 For more information on MicroProfile Config see https://openliberty.io/guides/microprofile-config.html.
 
-Rebuild the code, start the **coffee-shop** and **barista** servers and try out the endpoint through the Open API UI.  You can also try out the health endpoint at `http://localhost:9080/health`. Select **Launch Application** tab, the application is running on **port 9080**. To access the **/health** endpoint add **/health** to the end of the url.
+Rebuild the code, start the **coffee-shop** and **barista** servers and try out the endpoint through the Open API UI.  You can also try out the health endpoint at `http://localhost:9080/health`. Select **Launch Application** tab, the application is running on **port 9080**. To access the **/health** endpoint add **/health** to the end of the URL.
 
 # Next Steps
 
-Congratulations on completing next first excercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
+Congratulations on completing next first exercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
