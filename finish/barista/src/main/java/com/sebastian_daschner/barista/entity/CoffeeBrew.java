@@ -1,5 +1,7 @@
 package com.sebastian_daschner.barista.entity;
 
+import javax.json.bind.annotation.JsonbProperty;
+
 public class CoffeeBrew {
 
     private CoffeeType type;

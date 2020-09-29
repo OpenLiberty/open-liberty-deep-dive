@@ -383,7 +383,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 This is using the MicroProfile Config specification to inject the configuration value.  Configuration can come from a number of sources, including `bootstrap.properties`.
 
-We also need to make the same changes to the CoffeeShopHealth of the `coffee-shop` service. Edit the file: `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/CoffeeShopHealth.java`
+We also need to make the same changes to the HealthResource of the `coffee-shop` service. Edit the file: `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/HealthResource.java`
 
 Change:
 
@@ -751,7 +751,7 @@ Firstly let's start by deleting the tests we created earlier. We would not norma
 
 Delete the file `open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java`
 
-Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the follow dependencies to the `pom.xml` file in the `<dependencies>` element:
+Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the following dependencies to the `pom.xml` file in the `<dependencies>` element:
 
 ```XML
        <!-- For MicroShed Testing -->      
