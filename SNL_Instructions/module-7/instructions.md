@@ -170,4 +170,4 @@ You will see that the browser complains about the certificate.  This is a self-s
 
 # Next Steps
 
-Congratulations on completing the excercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
+Congratulations on completing the exercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
