@@ -1,0 +1,4 @@
+include:
+  - project: "ibm/skills-network/courses/shared-ci"
+    ref: master
+    file: "shared-ci.yml"

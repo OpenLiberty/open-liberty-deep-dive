@@ -1,0 +1,43 @@
+name: Mirror to GitLab Repos
+ 
+# Triggers the workflow on push events but only for the master branch.
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    name: Start Mirror Containers
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: # Uses an array of Json variables to pass the repo names.
+              # The names differ between Github and Gitlab so this is necessary.
+              # Add new quick-labs here to add them to the mirror process.
+              # i.e. {"github":"new-lab-github-url","gitlab":"new-lab-gitlab-url"}
+        repo:
+          - {"github":"module-1","gitlab":"ol-masterclass-module-1"}
+          - {"github":"module-2","gitlab":"ol-masterclass-module-2"}
+          - {"github":"module-3","gitlab":"ol-masterclass-module-3"}
+          - {"github":"module-4","gitlab":"ol-masterclass-module-4"}
+          - {"github":"module-5","gitlab":"ol-masterclass-module-5"}
+          - {"github":"module-6","gitlab":"ol-masterclass-module-6"}
+          - {"github":"module-7","gitlab":"ol-masterclass-module-7"}
+          - {"github":"module-8","gitlab":"ol-masterclass-module-8"}
+          - {"github":"module-9","gitlab":"ol-masterclass-module-9"}
+
+    steps:
+
+    # Any prerequisite steps
+    - uses: actions/checkout@master
+
+    # Mirror to Gitlab repo
+    - name: Mirror
+      uses: s0/git-publish-subdir-action@develop
+      env:
+        REPO: git@gitlab.com:ibm/skills-network/quicklabs/${{matrix.repo.gitlab}}.git
+        BRANCH: master
+        FOLDER: SNL_Instructions/${{matrix.repo.github}}
+        MESSAGE: "{msg}" # Sets the commit message on gitlab to be the same as on github.
+        SSH_PRIVATE_KEY: ${{secrets.DEPLOY_KEY_QUICK_LABS}}
+        KNOWN_HOSTS_FILE: .github/workflows/known_hosts # Needed if target repo is not on github.com.
+        SKIP_EMPTY_COMMITS: "true"
