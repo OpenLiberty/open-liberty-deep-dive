@@ -35,12 +35,12 @@ The completed code for the Masterclass is provided in the `open-liberty-mastercl
 ## Module 1: Build
 
 Liberty has support for building and deploying applications using Maven and Gradle.  The source and documentation for these plugins can be found here:
-* https://github.com/wasdev/ci.maven
-* https://github.com/wasdev/ci.gradle
+* https://github.com/OpenLiberty/ci.maven
+* https://github.com/OpenLiberty/ci.gradle
 
 The Masterclass will make use of the `liberty-maven-plugin`.
 
-Take a look at the maven build file for the coffee-shop project: `open-liberty-masterclass/start/barista/pom.xml`
+Take a look at the Maven build file for the coffee-shop project: `open-liberty-masterclass/start/barista/pom.xml`
 
 Go to the barista project:
 

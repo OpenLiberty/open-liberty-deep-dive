@@ -36,6 +36,7 @@ public class Barista {
 
     public void startCoffeeBrew(CoffeeBrew brew) {
         // TODO: remove thread when this is fixed - https://github.com/OpenLiberty/open-liberty/issues/6273
+        // and add in MP Fault Tolerance
         new Thread(() -> {
             try {
                 BaristaClient baristaClient = RestClientBuilder.newBuilder()

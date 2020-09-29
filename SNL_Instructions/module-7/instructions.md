@@ -15,14 +15,14 @@ RUN configure.sh
 
 The **FROM** statement is building this image using the Open Liberty kernel image (see https://hub.docker.com/_/open-liberty/ for the available images).
 
-Let's build the docker image.  In the **open-liberty-masterclass/start/coffee-shop** directory, run (note the period (`.`) at the end of the line is important):
+Let's build the docker image.  In the **open-liberty-masterclass/start/coffee-shop** directory:
 
 ```
 docker build -t masterclass:coffee-shop .
 ```
 {: codeblock}
 
-Navigate to the **bastista** directory and build the docker image: 
+Navigate to the **barista** directory and build the docker image: 
 
 ```
 cd ../barista/
@@ -37,7 +37,7 @@ docker network create --driver bridge masterclass-net
 ```
 {: codeblock}
 
-You can now run the two Docker containers and get them to join the same bridge network.  Providing names to the containers makes those names available for DNS resolution within the bridge network so there's no need to use ip addresses.
+You can now run the two Docker containers and get them to join the same bridge network.  Providing names to the containers makes those names available for DNS resolution within the bridge network so there's no need to use IP addresses.
 
 Run the `barista` container:
 
@@ -47,9 +47,9 @@ docker run --network=masterclass-net --name=barista masterclass:barista
 {: codeblock}
 
 
-Note, we don't need map the `barista` service ports outside the container because the bridge network gives access to the other containers on the same network.
+Note, we don't need to map the `barista` service ports outside the container because the bridge network gives access to the other containers on the same network.
 
-Next, we're going to run the `coffee-shop` container.  For it to work we'll need to provide new values for ports and the location of the barista service.  Run the `coffee-shop` container
+Next, we're going to run the `coffee-shop` container. The approach we're going to take is to use a Docker volume, therefore we'll need to provide new values for ports and the location of the barista service.  Run the `coffee-shop` container
 
 ```
 docker run -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 masterclass:coffee-shop
@@ -114,7 +114,7 @@ You should now be able to load the `coffee-shop` service's Open API page and cal
 
 # Overriding Dev Server Configuration
 
-The above works fine, but still has a metrics endpoint with authentication turned off.  We'll now show how `configDropins/overrides` can be used to override existing, or add new, server configuration.  For example, this can be used to add server configuration in a production environment.  The approach we're going to take is to use a Docker volume, but in a real-world scenario you would use Kubernetes ConfigMaps and secrets to include the production server configuration, security configuration and environment variables.  
+The above works fine, but still has a metrics endpoint with authentication turned off.  We'll now show how `configDropins/overrides` can be used to override existing, or add new, server configuration.  For example, this can be used to add server configuration in a production environment.  The approach we're going to take is to use a Docker volume for simplicity, but in a real-world scenario you would use Kubernetes ConfigMaps and secrets to include the production server configuration, security configuration and environment variables. 
 
 In fact, unlike what we have done here, the best practice is to build an image that does not contain any environment specific configuration (such as the unsecured endpoint in our example) and then add those things through external configuration in the development, staging and production environments.  The goal is to ensure deployment of the image without configuration doesn't not cause undesirable results such as security vulnerabilities or talking to the wrong data sources.
 

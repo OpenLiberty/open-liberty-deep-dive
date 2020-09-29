@@ -1,16 +1,16 @@
 # Module 5: Externalizing Configuration
 
-If you're familiar with the concept of 12-factor applications [(12factor.net)](http://12factor.net) you'll know that factor III states that an applications configuration should be stored in the environment.  Config here is referring to things which vary between development, staging and production. In doing so you can build the deployment artefact once and deploy it in the different environments unchanged.
+If you're familiar with the concept of 12-factor applications (see http://12factor.net) you'll know that factor III states that an application's configuration should be stored in the environment. Configuration here, is referring to variables which vary between development, staging and production. In doing so, you can build the deployment artefact once and deploy it in different environments unchanged.
 
 Liberty lets your application pick up configuration from a number of sources, such as environment variables, bootstrap.properties and Kubernetes configuration.
 
-**Bootstrap.properties** lets you provide simple configuration values to substitute in the server configuration and also to use within the application.  The following example replaces the hard-coded base URL the **coffee-shop** service uses to talk to the **barista** service, as well as the ports it exposes.
+**Bootstrap.properties** lets you provide simple configuration values to substitute in the server configuration and use within the application.  The following example replaces the hard-coded base URL the **coffee-shop** service uses to talk to the **barista** service, as well as the ports it exposes.
 
 Open the **coffee-shop/pom.xml** file:
 
 >[File -> Open] **open-liberty-masterclass/start/coffee-shop/pom.xml**
 
-In the existing **<properties/>** element, add the following port and url values:
+In the existing **<properties/>** element, you will see the following port and URL values:
 
 ```XML
     <properties>
@@ -101,9 +101,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 This is using the MicroProfile Config specification to inject the configuration value.  Configuration can come from a number of sources, including **bootstrap.properties.**
 
-We also need to make the same changes to the CoffeeShopHealth of the **coffee-shop** service. 
+We also need to make the same changes to the HealthResource of the **coffee-shop** service. 
 
-Edit the file: **open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/CoffeeShopHealth.java**
+Edit the file: **open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/HealthResource.java**
 
 Change:
 
