@@ -102,7 +102,7 @@ Under `Example Value` specify:
 
 Click on `Execute`
 
-Scroll down and you should see the server response code of `200`.  This says that the barista request to make an `ESPRESSO` was successfully `Created`. If you go back to the terminal you will also see the message `starting to brew: EXPRESSO`. Now leave this Open Liberty server running and open a new terminal to continue this masterclass from their.
+Scroll down and you should see the server response code of `200`.  This says that the barista request to make an `ESPRESSO` was successfully `Created`. If you go back to the terminal you will also see the message `starting to brew: EXPRESSO`. Now leave this Open Liberty server running and open a new terminal to continue this masterclass from there.
 
 
 ## Module 2: Dev Mode
