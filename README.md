@@ -102,7 +102,7 @@ Under `Example Value` specify:
 
 Click on `Execute`
 
-Scroll down and you should see the server response code of `200`.  This says that the barista request to make an `ESPRESSO` was successfully `Created`. If you go back to the terminal you will also see the message `starting to brew: EXPRESSO`. Now press `Ctrl C` to shut down the server.
+Scroll down and you should see the server response code of `200`.  This says that the barista request to make an `ESPRESSO` was successfully `Created`. If you go back to the terminal you will also see the message `starting to brew: EXPRESSO`. Now leave this Open Liberty server running and open a new terminal to continue this masterclass from there.
 
 
 ## Module 2: Dev Mode
@@ -124,7 +124,7 @@ The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We d
 
 ```XML
     <!-- Plugin Versions-->
-       <version.liberty-maven-plugin>3.2</version.liberty-maven-plugin>
+       <version.liberty-maven-plugin>3.3.4</version.liberty-maven-plugin>
        <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
        <version.maven-failsafe-plugin>3.0.0-M4</version.maven-failsafe-plugin>
        <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
