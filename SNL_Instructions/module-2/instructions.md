@@ -52,7 +52,7 @@ In the same **coffee-shop/pom.xml** locate the **<dependencies/>** section.  All
 
 ``` XML
     <dependencies>
-      <!--Open Liberty features -->
+        <!--Open Liberty provided features -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
@@ -62,7 +62,7 @@ In the same **coffee-shop/pom.xml** locate the **<dependencies/>** section.  All
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
-            <version>3.3</version>
+            <version>4.0.1</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency> 
