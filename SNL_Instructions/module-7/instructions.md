@@ -187,11 +187,12 @@ curl -k --user admin:change_it https://localhost:9445/metrics
 {: codeblock}
 
 
-Now, let stop and remove the `barista` and `coffee-shop` containers:
+Now, let stop and remove the `barista` and `coffee-shop` containers and the network:
 
 ```
 docker stop barista coffee-shop
 docker rm barista coffee-shop
+docker network rm masterclass-net
 ```
 {: codeblock}
 
