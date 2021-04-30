@@ -6,7 +6,8 @@ Firstly let's start by deleting the tests we created earlier. We would not norma
 
 Delete the **BaristaIT.java**
 ```
-rm -f /home/project/open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java
+cd /home/project/open-liberty-masterclass/start/barista/
+rm -f src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java
 ```
 {: codeblock}
 
