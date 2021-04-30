@@ -72,7 +72,7 @@ In the same **coffee-shop/pom.xml** locate the **<dependencies/>** section.  All
 
 Let's add the dependency for the **MicroProfile OpenAPI** feature so we can try the **coffee-shop** service out.
 
-We have already loaded the MicroProfile 3.3 feature in the **pom.xml** that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Liberty server.
+We have already loaded the MicroProfile 4.0 feature in the **pom.xml** that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Liberty server.
 
 Open the **server.xml**
 
