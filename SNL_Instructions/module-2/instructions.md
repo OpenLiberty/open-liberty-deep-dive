@@ -22,14 +22,29 @@ mvn liberty:dev
 
 Take a look at the Maven build file for the coffee-shop project: **open-liberty-masterclass/start/coffee-shop/pom.xml**
 
-The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We define the versions of our plugins at the top of our pom:
+The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We define the latest versions of the plugins at the pom.xml:
 
 ```XML
-    <!-- Plugin Versions-->
-       <version.liberty-maven-plugin>3.2</version.liberty-maven-plugin>
-       <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
-       <version.maven-failsafe-plugin>3.0.0-M4</version.maven-failsafe-plugin>
-       <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.1</version>
+    </plugin>
+    <plugin>
+        <groupId>io.openliberty.tools</groupId>
+        <artifactId>liberty-maven-plugin</artifactId>
+        <version>3.3.4</version>
+    </plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.22.2</version>
+    </plugin>   
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.2</version>
+    </plugin>
 ```
  
 
