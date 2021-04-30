@@ -28,7 +28,7 @@ to
 Restart the `barista` service by running the following curl commands:
 ```
 export DEFAULT_HTTP_PORT=9082
-mvn liberty:run
+mvn liberty:dev
 ````
 {: codeblock}
 
