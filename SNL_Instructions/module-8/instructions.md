@@ -13,7 +13,7 @@ rm -f /home/project/open-liberty-masterclass/start/barista/src/test/java/com/seb
 Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the following dependencies to the `pom.xml` file in the `<dependencies>` element:
 
 ```XML
-       <!-- For MicroShed Testing -->      
+        <!-- For MicroShed Testing -->      
         <dependency>
             <groupId>org.microshed</groupId>
             <artifactId>microshed-testing-liberty</artifactId>
