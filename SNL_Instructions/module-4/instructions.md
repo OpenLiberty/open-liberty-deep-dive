@@ -59,6 +59,7 @@ curl -X POST "http://localhost:9080/coffee-shop/resources/orders" \
      -H  "accept: */*" -H  "Content-Type: application/json" \
      -d "{\"status\":\"FINISHED\",\"type\":\"ESPRESSO\"}"
 ```
+{: codeblock}
 
 Reload the metrics page or rerun the curl `/metric` endpoint command. At the bottom of the metrics results, you should see:
 
