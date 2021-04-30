@@ -11,14 +11,16 @@ We're now going to add Metrics to the **coffee-shop.**  Edit **Coffee-Shop serve
 > [File->Open] **open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml**
 
 ```XML
-        <feature>mpMetrics-2.3</feature>
+        <feature>mpMetrics-3.0</feature>
 ```
 {: codeblock}
 
-You should see that the server has been automatically updates, the following features are installed, and include mpMetrics-2.3:
+You should see that the server has been automatically updates, the following features are installed, and include mpMetrics-3.0:
 
 ```
-[INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [beanValidation-2.0, cdi-2.0, distributedMap-1.0, ejbLite-3.2, el-3.0, jaxrs-2.1, jaxrsClient-2.1, jndi-1.0, json-1.0, jsonp-1.1, mpConfig-1.3, mpHealth-2.2, mpMetrics-2.0, mpOpenAPI-1.1, mpRestClient-1.3, servlet-4.0, ssl-1.0].
+[INFO] Installing features: [mpconfig-2.0, mpopenapi-2.0, mpmetrics-3.0, cdi-2.0, mprestclient-2.0, jsonp-1.1, beanvalidation-2.0, ejblite-3.2, mphealth-3.0, jaxrs-2.1]
+...
+[INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [distributedMap-1.0, monitor-1.0, mpMetrics-3.0, ssl-1.0].
 ```
 Now we have the API available, we can update the application to include a metric which will count the number of times a coffee order is requested. 
 
