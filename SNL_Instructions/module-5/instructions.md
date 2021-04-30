@@ -34,13 +34,13 @@ mvn liberty:run
 
 If you take a look at the `barista` server output, you should find out that the `barista` service is running on the port `9082` now:
 ```
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://gilberts-mbp.lan:9082/health/
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://gilberts-mbp.lan:9082/openapi/
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://gilberts-mbp.lan:9082/openapi/ui/
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://gilberts-mbp.lan:9082/barista/
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/health/
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/openapi/
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/openapi/ui/
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/barista/
 ```
 
-Next we'll use the `default_barista_base_url` in the code to avoid hard-coding the location of the `barista` service.
+Next we'll use the `default_barista_base_url` in the code to avoid hard-coding the location of the `barista` service for the `coffee-shop` service.
 
 Edit the file `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/control/Barista.java`
 
@@ -67,11 +67,17 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 ```
 {: codeblock}
 
-This is using the MicroProfile Config specification to inject the configuration value.  Configuration can come from a number of sources, including **bootstrap.properties.**
+This is using the MicroProfile Config specification to inject the configuration value. Configuration can come from a number of sources.
 
-We also need to make the same changes to the HealthResource of the **coffee-shop** service. 
+New the `coffee-shop/src/main/webapp/META-INF/microprofile-config.properties` MicroProfile configuration file. Add the following value:
+```
+default_barista_base_url=http://localhost:9081
+```
+{: codeblock}
 
-Edit the file: **open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/HealthResource.java**
+We also need to make the same changes to the CoffeeShopReadinessCheck of the **coffee-shop** service. 
+
+Edit the file: **open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/health/CoffeeShopReadinessCheck.java**
 
 Change:
 
@@ -98,7 +104,34 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 For more information on MicroProfile Config see https://openliberty.io/guides/microprofile-config.html.
 
-Rebuild the code, start the **coffee-shop** and **barista** servers and try out the endpoint through the Open API UI.  You can also try out the health endpoint at `http://localhost:9080/health`. Select **Launch Application** tab, the application is running on **port 9080**. To access the **/health** endpoint add **/health** to the end of the URL.
+Run the following curl command:
+```
+curl http://localhost:9080/health/ready
+```
+{: codeblock}
+
+You'll find out from the **coffee-shop** service is not ready because the **barista** is not running on the port `9081`:
+```
+{"checks":[{"data":{},"name":"CoffeeShopReadinessCheck Readiness Check","status":"DOWN"}],"status":"DOWN"}
+```
+
+Update the `coffee-shop/src/main/webapp/META-INF/microprofile-config.properties` MicroProfile configuration file. Change the port to 9082 as the following:
+```
+default_barista_base_url=http://localhost:9082
+```
+{: codeblock}
+
+Run the following curl command again:
+```
+curl http://localhost:9080/health/ready
+```
+{: codeblock}
+
+You'll find out from the **coffee-shop** service is ready now:
+```
+{"checks":[{"data":{},"name":"CoffeeShopReadinessCheck Readiness Check","status":"UP"}],"status":"UP"}
+```
+
 
 # Next Steps
 
