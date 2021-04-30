@@ -52,13 +52,12 @@ base_classloader_loadedClasses_count 14053
 
 This doesn't contain the metrics you added because the service hasn't been called and so no application metrics have been recorded. 
 
-Open a new terminal and use curl to `POST` some json to the application in order to generate some metrics by brewing a coffee.
+Open a new terminal and use curl to `POST` some json to the application in order to generate some metrics by making a coffee order.
 
 ```
-curl --header "Content-Type: application/json" \
-  --request POST \
-  --data '{"type": "ESPRESSO"}' \
-  http://localhost:9081/barista/resources/brews
+curl -X POST "http://localhost:9080/coffee-shop/resources/orders" \
+     -H  "accept: */*" -H  "Content-Type: application/json" \
+     -d "{\"status\":\"FINISHED\",\"type\":\"ESPRESSO\"}"
 ```
 
 Reload the metrics page and at the bottom of the metrics results you should see:
