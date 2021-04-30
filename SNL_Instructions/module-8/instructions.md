@@ -130,7 +130,8 @@ log4j.logger.org.microshed=DEBUG
 Build and run the test:
 
 ```
-mvn install
+mvn package
+mvn failsafe:integration-test
 ```
 {: codeblock}
 
