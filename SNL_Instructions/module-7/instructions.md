@@ -186,6 +186,15 @@ curl -k --user admin:change_it https://localhost:9445/metrics
 ```
 {: codeblock}
 
+
+Now, let stop and remove the `barista` and `coffee-shop` containers:
+
+```
+docker stop barista coffee-shop
+docker rm barista coffee-shop
+```
+{: codeblock}
+
 # Next Steps
 
 Congratulations on completing the exercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
