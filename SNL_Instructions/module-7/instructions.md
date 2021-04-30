@@ -44,7 +44,7 @@ You can now run the two Docker containers and get them to join the same bridge n
 Run the `barista` container:
 
 ```
-docker run --network=masterclass-net --name=barista masterclass:barista
+docker run -d --network=masterclass-net --name=barista masterclass:barista
 ```
 {: codeblock}
 
@@ -54,7 +54,7 @@ Note, we don't need to map the `barista` service ports outside the container bec
 Next, we're going to run the `coffee-shop` container. The approach we're going to take is to use a Docker volume, therefore we'll need to provide new values for ports and the location of the barista service.  Run the `coffee-shop` container
 
 ```
-docker run -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 masterclass:coffee-shop
+docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 masterclass:coffee-shop
 ```
 {: codeblock}
 
