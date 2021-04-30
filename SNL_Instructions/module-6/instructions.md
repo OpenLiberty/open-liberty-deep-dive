@@ -11,19 +11,19 @@ Because we're going to be testing a **REST POST** request, we need JAX-RS client
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.6.2</version>
+            <version>5.7.1</version>
             <scope>test</scope>
         </dependency>     
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
-            <version>3.3.0</version>
+            <version>3.4.3</version>
             <scope>test</scope>
         </dependency>      
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>2.9.3</version>
+            <version>2.12.3</version>
             <scope>test</scope>
         </dependency>   
 ```
