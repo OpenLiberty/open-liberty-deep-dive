@@ -105,6 +105,18 @@ You'll see something like:
     }
 ]
 ```
+
+You can run the following curl commands to try out the services running in containers:
+```
+curl http://localhost:9080/health
+curl -X POST "http://localhost:9080/coffee-shop/resources/orders" \
+     -H  "accept: */*" -H  "Content-Type: application/json" \
+     -d "{\"status\":\"FINISHED\",\"type\":\"ESPRESSO\"}"
+curl http://localhost:9080/coffee-shop/resources/orders
+
+```
+{: codeblock}
+
 If you need to remove a container, use:
 
 ```
