@@ -149,10 +149,8 @@ Take a look at the file **open-liberty-masterclass/start/coffee-shop/configDropi
      only and MUST NOT BE USED IN PRODUCTION AS IT 
      IS INSECURE. -->  
     <variable name="admin.password" value="change_it" />
-    <variable name="keystore.password" value="change_it" />
     
     <quickStartSecurity userName="admin" userPassword="${admin.password}"/>
-    <keyStore id="defaultKeyStore" password="${keystore.password}"/>    
      
 </server>
 ```
