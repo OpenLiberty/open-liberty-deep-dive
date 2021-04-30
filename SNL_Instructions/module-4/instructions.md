@@ -38,7 +38,7 @@ Add the following below the `</featureManager>` in the `open-liberty-masterclass
 Revisit the metrics endpoint with the `http://accountname-9080.theiadocker-1.proxy.cognitiveclass.ai/metrics` URL or run the following curl command:
 
 ```
-curl http://localhost:9080/metrics`
+curl http://localhost:9080/metrics
 ```
 {: codeblock}
 
@@ -60,15 +60,14 @@ curl -X POST "http://localhost:9080/coffee-shop/resources/orders" \
      -d "{\"status\":\"FINISHED\",\"type\":\"ESPRESSO\"}"
 ```
 
-Reload the metrics page and at the bottom of the metrics results you should see:
+Reload the metrics page or rerun the curl `/metric` endpoint command. At the bottom of the metrics results, you should see:
 
 ```
 ...
-# TYPE application:com_sebastian_daschner_coffee_shop_boundary_orders_resource_order counter
-# HELP application:com_sebastian_daschner_coffee_shop_boundary_orders_resource_order Number of times orders requested.
-application:com_sebastian_daschner_coffee_shop_boundary_orders_resource_order 3
+# TYPE application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total counter
+# HELP application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total Number of times orders requested.
+application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total 3
 ```
-Now go to the terminal and type `q` followed by `Enter` to shut down the server.
 
 # Next Steps
 
