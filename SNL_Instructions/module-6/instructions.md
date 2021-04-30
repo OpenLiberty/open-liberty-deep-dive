@@ -152,6 +152,9 @@ Results :
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
 
+When you are done checking out the services, exit dev mode by pressing **CTRL+C** in the command-line session
+where you ran the `barista` and `coffee-shop` services, or by typing **q** and then pressing the **enter/return** key.
+
 # Next Steps
 
 Congratulations on completing the exercise. Don't stop now. Move on to the next module in the master class by simply closing this tab and clicking on the next module in the Open Liberty Masterclass landing page.
