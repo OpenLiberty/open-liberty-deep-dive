@@ -6,15 +6,20 @@
         <feature>ejbLite-3.2</feature>
         <feature>cdi-2.0</feature>
         <feature>beanValidation-2.0</feature>
-        <feature>mpOpenAPI-1.1</feature>
-        <feature>mpHealth-2.2</feature>
-        <feature>mpConfig-1.4</feature>
-        <feature>mpRestClient-1.4</feature>
-        <feature>mpMetrics-2.3</feature>
+        <feature>mpOpenAPI-2.0</feature>
+        <feature>mpHealth-3.0</feature>
+        <feature>mpConfig-2.0</feature>
+        <feature>mpRestClient-2.0</feature>
+        <feature>mpMetrics-3.0</feature>
         <feature>jsonp-1.1</feature>
     </featureManager>
 
-    <httpEndpoint host="*" httpPort="${env.default_http_port}" httpsPort="${env.default_https_port}" id="defaultHttpEndpoint"/>
+    <variable name="default.http.port" defaultValue="9080"/>
+    <variable name="default.https.port" defaultValue="9443"/>
+  
+    <httpEndpoint id="defaultHttpEndpoint" host="*" 
+        httpPort="${default.http.port}" 
+        httpsPort="${default.https.port}"/>
 
     <mpMetrics authentication="false" />
 

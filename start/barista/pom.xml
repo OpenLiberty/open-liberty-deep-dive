@@ -11,21 +11,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-
-        <testServerHttpPort>9081</testServerHttpPort>
-        <testServerHttpsPort>9444</testServerHttpsPort>
-
-        <failOnMissingWebXml>false</failOnMissingWebXml>
-
-        <!-- Plugin Versions-->
-        <version.liberty-maven-plugin>3.3.4</version.liberty-maven-plugin>
-        <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
-        <version.maven-failsafe-plugin>3.0.0-M4</version.maven-failsafe-plugin>
-        <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
     </properties>
 
     <dependencies>
-        <!--Open Liberty features -->
+        <!--Open Liberty provided features -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
@@ -35,45 +24,35 @@
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
-            <version>3.3</version>
+            <version>4.0.1</version>
             <type>pom</type>
             <scope>provided</scope>
-        </dependency>
+        </dependency> 
     </dependencies>
 
     <build>
-        <finalName>barista</finalName>
-
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${version.maven-compiler-plugin}</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>${version.maven-war-plugin}</version>
+                <version>3.3.1</version>
             </plugin>
-
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
-                <version>${version.liberty-maven-plugin}</version>
-                <configuration>
-                    <bootstrapProperties>
-                        <war.name>${artifactId}.war</war.name>
-                        <env.default.http.port>${testServerHttpPort}</env.default.http.port>
-                        <env.default.https.port>${testServerHttpsPort}</env.default.https.port>
-                    </bootstrapProperties>
-                    <looseApplication>false</looseApplication>
-                </configuration>
+                <version>3.3.4</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.2</version>
+            </plugin>   
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
             </plugin>
         </plugins>
     </build>
-
 </project>

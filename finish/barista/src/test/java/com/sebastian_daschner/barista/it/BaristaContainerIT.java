@@ -1,7 +1,9 @@
 package com.sebastian_daschner.barista.it;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.time.Duration;
 
 import javax.ws.rs.core.Response;
 
@@ -35,9 +37,9 @@ public class BaristaContainerIT {
 
         try {
             if (response == null) {
-                assertNotNull("GreetingService response must not be NULL", response);
+            	assertNotNull(response, "GreetingService response must not be NULL");
             } else {
-                assertEquals("Response must be 200 OK", 200, response.getStatus());
+            	assertEquals( 200, response.getStatus(), "Response must be 200 OK");
             }
         } finally {
             response.close();
