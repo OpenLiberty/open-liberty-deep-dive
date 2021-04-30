@@ -11,7 +11,7 @@ We're now going to add Metrics to the **coffee-shop.**  Edit **Coffee-Shop serve
 > [File->Open] **open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml**
 
 ```XML
-        <feature>mpMetrics-2.3</feature>
+        <feature>mpMetrics-3.0</feature>
 ```
 {: codeblock}
 
