@@ -4,8 +4,9 @@ These instructions contain the hands-on lab modules for the Open Liberty Masterc
 
 ## The Application
 
-Clone the following repo:
+To open a new command-line session, select **Terminal** > **New Terminal** from the menu of the IDE.
 
+Clone the following repo:
 ```
 git clone https://github.com/OpenLiberty/open-liberty-masterclass.git
 ```
