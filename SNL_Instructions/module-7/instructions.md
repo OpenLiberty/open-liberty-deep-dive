@@ -139,7 +139,7 @@ Take a look at the file **open-liberty-masterclass/start/coffee-shop/configDropi
 <server description="Coffee Shop Server">
 
     <featureManager>
-        <feature>mpMetrics-2.3</feature>
+        <feature>mpMetrics-3.0</feature>
     </featureManager>
     
     <mpMetrics authentication="true" />
