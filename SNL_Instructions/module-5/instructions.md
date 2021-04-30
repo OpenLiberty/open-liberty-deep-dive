@@ -6,7 +6,7 @@ Liberty lets your application pick up configuration from a number of sources, su
 
 Stop the `barista` service by pressing **CTRL+C** in the command-line session where you ran it at the module 1.
 
-We now need to change the server configuration to use these values.  
+We now need to change the server configuration to externalize the ports.  
 
 Open the **open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml** file, change this line:
 
