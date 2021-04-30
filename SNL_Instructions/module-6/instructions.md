@@ -116,7 +116,7 @@ public class BaristaIT {
 
         try {
             if (response == null) {
-                assertNotNull( response, "GreetingService response must not be NULL");
+                assertNotNull(response, "GreetingService response must not be NULL");
             } else {
                 assertEquals( 200, response.getStatus(), "Response must be 200 OK");
             }
