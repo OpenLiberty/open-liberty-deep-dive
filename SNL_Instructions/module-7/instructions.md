@@ -167,7 +167,7 @@ docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-
 
 The above relies on `pwd` to fill in the docker volume source path.  If you're on Windows, replace `$(pwd)` with the absolute path to the `open-liberty-masterclass/start/coffee-shop` directory in the above command.
 
-You should see the following message as the server is starting:
+Run the `docker logs coffee-shop` command. You should see the following message as the server is starting:
 
 ```
 [AUDIT   ] CWWKG0102I: Found conflicting settings for mpMetrics configuration.
