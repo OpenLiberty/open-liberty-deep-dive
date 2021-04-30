@@ -117,10 +117,11 @@ curl http://localhost:9080/coffee-shop/resources/orders
 ```
 {: codeblock}
 
-Now, let stop the `coffee-shop` container for the following section:
+Now, let stop and remove the `coffee-shop` container for the following section:
 
 ```
 docker stop coffee-shop
+docker rm coffee-shop
 ```
 {: codeblock}
 
