@@ -9,7 +9,7 @@ From your previous addition of the MicroProfile Metrics feature in the server.xm
 
 Open the metrics endpoint in your browser. To do this select **Launch Application**, a box will appear where the port number is required. The application is running on port **9080**. The Open Liberty homepage will load. To access the **metrics** endpoint at the end of the URL type **/metrics**. The URL should look like: 
 ```
--9080.theiadocker-1.proxy.cognitiveclass.ai/metrics
+http://accountname-9080.theiadocker-1.proxy.cognitiveclass.ai/metrics
 ```
 You should see a message like this:
 
