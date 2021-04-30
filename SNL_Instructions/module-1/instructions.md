@@ -53,7 +53,7 @@ cd start/barista
 Build and run the barista service:
 
 ```
-mvn install liberty:run
+mvn liberty:run
 ```
 {: codeblock}
 
