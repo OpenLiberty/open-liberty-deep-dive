@@ -29,38 +29,7 @@ Because we're going to be testing a **REST POST** request, we need JAX-RS client
 ```
 {: codeblock}
 
-Note, the later **Testing in Containers** module requires the JUnit 5 Jupiter API so we're using the same API here.
-
 Note the **<scope/>** of the dependencies is set to **test** because we only want the dependencies to be used during testing.
-
-Next add `maven-failsafe-plugin` configuration at the end of the **<plugins/>** section:
-
-```XML
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${version.maven-failsafe-plugin}</version>
-                <executions>
-                    <execution>
-                        <phase>integration-test</phase>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                        <configuration>
-                            <trimStackTrace>false</trimStackTrace>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>verify-results</id>
-                        <goals>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>   
-```
-{: codeblock}
 
 Note, this configuration makes the port of the server available to the test as a system property called **liberty.test.port**.
 
