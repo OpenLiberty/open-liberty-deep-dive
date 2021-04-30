@@ -18,6 +18,7 @@ The **FROM** statement is building this image using the Open Liberty kernel imag
 Let's build the docker image.  In the **open-liberty-masterclass/start/coffee-shop** directory:
 
 ```
+mvn package
 docker build -t masterclass:coffee-shop .
 ```
 {: codeblock}
@@ -26,6 +27,7 @@ Navigate to the **barista** directory and build the docker image:
 
 ```
 cd ../barista/
+mvn package
 docker build -t masterclass:barista .
 ```
 {: codeblock}
