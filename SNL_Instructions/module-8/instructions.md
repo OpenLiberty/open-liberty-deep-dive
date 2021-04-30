@@ -17,7 +17,7 @@ Now let's create a new Integration Test that will perform the same test, but ins
         <dependency>
             <groupId>org.microshed</groupId>
             <artifactId>microshed-testing-liberty</artifactId>
-            <version>0.8</version>
+            <version>0.9.1</version>
         <scope>test</scope>
         </dependency>
         <dependency>
