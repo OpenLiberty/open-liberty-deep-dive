@@ -32,7 +32,7 @@ mvn liberty:run
 ````
 {: codeblock}
 
-You will know from the output that the  `barista` service is running on the port `9082`:
+If you take a look at the `barista` server output, you should find out that the `barista` service is running on the port `9082` now:
 ```
 [INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://gilberts-mbp.lan:9082/health/
 [INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://gilberts-mbp.lan:9082/openapi/
