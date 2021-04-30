@@ -22,7 +22,7 @@ To:
 Rebuild and re-start the `coffee-shop` service:
 
 ```
-mvn install liberty:run
+mvn liberty:dev
 ```
 {: codeblock}
 
