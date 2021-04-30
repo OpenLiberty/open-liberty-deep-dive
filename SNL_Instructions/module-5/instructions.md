@@ -4,7 +4,7 @@ If you're familiar with the concept of 12-factor applications (see http://12fact
 
 Liberty lets your application pick up configuration from a number of sources, such as environment variables, bootstrap.properties and Kubernetes configuration.
 
-Stop the `barista` service by pressing **CTRL+C** in the command-line session where you ran it.
+Stop the `barista` service by pressing **CTRL+C** in the command-line session where you ran it at the module 1.
 
 We now need to change the server configuration to use these values.  
 
