@@ -106,7 +106,7 @@ You'll see something like:
 ]
 ```
 
-You can run the following curl commands to try out the services running in containers:
+You should now be able to load the `coffee-shop` service's Open API page `http://accountname-9080.theiadocker-1.proxy.cognitiveclass.ai/openapi/ui` and call the service.  Give it a try. Or, you can run the following curl commands to try out the services running in containers:
 ```
 curl http://localhost:9080/health
 curl -X POST "http://localhost:9080/coffee-shop/resources/orders" \
@@ -117,14 +117,13 @@ curl http://localhost:9080/coffee-shop/resources/orders
 ```
 {: codeblock}
 
-If you need to remove a container, use:
+Now, let stop the `coffee-shop` container for the following section:
 
 ```
-docker container rm <container name>
+docker stop coffee-shop
 ```
 {: codeblock}
 
-You should now be able to load the `coffee-shop` service's Open API page and call the service.  Give it a try.
 
 # Overriding Dev Server Configuration
 
