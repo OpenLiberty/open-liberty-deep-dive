@@ -89,16 +89,17 @@ Near the top of the file, you'll see the following `<featureManager/>` entry:
         <feature>ejbLite-3.2</feature>
         <feature>cdi-2.0</feature>
         <feature>beanValidation-2.0</feature>
-        <feature>mpHealth-2.2</feature>
-        <feature>mpConfig-1.4</feature>
-        <feature>mpRestClient-1.4</feature>
+        <feature>mpHealth-3.0</feature>
+        <feature>mpConfig-2.0</feature>
+        <feature>mpRestClient-2.0</feature>
+        <feature>mpMetrics-3.0</feature>
         <feature>jsonp-1.1</feature>
     </featureManager>
 ```
 This entry lists all the features to be loaded by the server.  Add the following entry inside the `<featureManager/>` element:
 
 ```XML
-        <feature>mpOpenAPI-1.1</feature>
+        <feature>mpOpenAPI-2.0</feature>
 ```
 {: codeblock}
 
