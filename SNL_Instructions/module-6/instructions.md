@@ -137,15 +137,9 @@ You'll see the following information from the `barista` service output:
 [INFO] Tests compilation was successful.
 ```
 
-Re-build and run the tests:
+Because you started Open Liberty in dev mode, press the **enter/return** key to run the tests.
 
-```
-mvn install
-```
-{: codeblock}
-
-In the output of the build, you should see:
-
+If the tests pass, you see a similar output to the following example:
 ```
 -------------------------------------------------------
  T E S T S
