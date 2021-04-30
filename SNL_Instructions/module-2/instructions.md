@@ -13,8 +13,8 @@ cd open-liberty-masterclass/start/coffee-shop/
 
 We are going to make changes to the coffee-shop project.
 
-Navigate to the coffee-shop project and start the server up in dev mode and make some changes to the configuration. This will need to install new features while the server is still running:
-
+Navigate to the coffee-shop project and start the server up in dev mode and make some changes to the configuration. 
+Dev mode can help to install features automatically when adding new features to the server configuration file server.xml when the server is still running:
 ```
 cd ../coffee-shop
 mvn liberty:dev
