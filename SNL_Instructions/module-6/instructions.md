@@ -39,7 +39,7 @@ Add the following `<configuration>...</configuration>` to the `maven-failsafe-pl
                 <version>2.22.2</version>
                 <configuration>
                     <systemPropertyVariables>
-                        <http.port>${liberty.var.default.http.port}</http.port>
+                        <liberty.test.port>9082</liberty.test.port>
                     </systemPropertyVariables>
                 </configuration>
             </plugin> 
