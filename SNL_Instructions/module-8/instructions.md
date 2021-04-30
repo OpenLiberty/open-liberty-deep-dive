@@ -95,10 +95,10 @@ The test also contains the following Container configuration:
 
 ```Java
     @Container
-    public static MicroProfileApplication app = new MicroProfileApplication()
+    public static ApplicationContainer app = new ApplicationContainer()
                     .withAppContextRoot("/barista")
                     .withExposedPorts(9081)
-                    .withReadinessPath("/health");
+                    .withReadinessPath("/health/ready");
 ```
 {: codeblock}
 
