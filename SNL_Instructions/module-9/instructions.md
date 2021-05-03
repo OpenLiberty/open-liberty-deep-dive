@@ -29,7 +29,8 @@ Rebuild and re-start the **barista** service:
 
 ```
 cd /home/project/open-liberty-masterclass/start/barista
-export DEFAULT_HTTP_PORT=9082 
+export DEFAULT_HTTP_PORT=9082
+mvn clean
 mvn liberty:dev
 ```
 {: codeblock}
@@ -38,6 +39,7 @@ and the **coffee-shop** service:
 ```
 cd /home/project/open-liberty-masterclass/start/coffee-shop
 export DEFAULT_HTTP_PORT=
+mvn clean
 mvn liberty:dev
 ```
 {: codeblock}
