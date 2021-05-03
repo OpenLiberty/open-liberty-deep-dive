@@ -11,7 +11,7 @@ rm -f src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java
 ```
 {: codeblock}
 
-Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the following dependencies to the `pom.xml` file in the `<dependencies>` element:
+Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the **barista** project, add the following dependencies to the `/home/project/open-liberty-masterclass/start/barista/pom.xml` file in the `<dependencies>` element:
 
 ```XML
         <!-- For MicroShed Testing -->      
