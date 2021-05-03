@@ -127,7 +127,7 @@ log4j.appender.stdout.layout.ConversionPattern=%r %p %c %x - %m%n
 log4j.logger.org.microshed=DEBUG
 ```
 
-Build and run the test:
+Rebuild and run the test:
 
 ```
 mvn clean package
