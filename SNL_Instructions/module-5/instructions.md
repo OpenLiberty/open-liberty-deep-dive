@@ -132,7 +132,7 @@ You'll find out from the **coffee-shop** service is ready now:
 {"checks":[{"data":{},"name":"CoffeeShopReadinessCheck Readiness Check","status":"UP"}],"status":"UP"}
 ```
 
-You can set the `default_barista_base_url` value through environment variable but you'll need to restart the **coffee-shop** service.
+You can set the `default_barista_base_url` value through the `DEFAULT_BARISTA_BASE_URL` environment variable but you'll need to restart the **coffee-shop** service.
 
 # Next Steps
 
