@@ -20,7 +20,7 @@ cd open-liberty-masterclass
 ```
 {: codeblock}
 
-The application consists of two Microservices; `coffee-shop` and `barista`.  The `coffee-shop` service allows you to place an order and the `barista` service services the making of the coffee.
+The application consists of two Microservices; **coffee-shop** and **barista**.  The **coffee-shop** service allows you to place an order and the **barista** service services the making of the coffee.
 
 ```
     ^|
