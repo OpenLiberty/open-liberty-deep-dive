@@ -18,6 +18,7 @@ The **FROM** statement is building this image using the Open Liberty kernel imag
 Let's build the docker image.  In the **open-liberty-masterclass/start/coffee-shop** directory:
 
 ```
+mvn package
 docker build -t masterclass:coffee-shop .
 ```
 {: codeblock}
@@ -26,6 +27,7 @@ Navigate to the **barista** directory and build the docker image:
 
 ```
 cd ../barista/
+mvn package
 docker build -t masterclass:barista .
 ```
 {: codeblock}
@@ -39,20 +41,23 @@ docker network create --driver bridge masterclass-net
 
 You can now run the two Docker containers and get them to join the same bridge network.  Providing names to the containers makes those names available for DNS resolution within the bridge network so there's no need to use IP addresses.
 
-Run the `barista` container:
+Run the **barista** container:
 
 ```
-docker run --network=masterclass-net --name=barista masterclass:barista
+docker run -d --network=masterclass-net --name=barista masterclass:barista
 ```
 {: codeblock}
 
 
-Note, we don't need to map the `barista` service ports outside the container because the bridge network gives access to the other containers on the same network.
+Note, we don't need to map the **barista** service ports outside the container because the bridge network gives access to the other containers on the same network.
 
-Next, we're going to run the `coffee-shop` container. The approach we're going to take is to use a Docker volume, therefore we'll need to provide new values for ports and the location of the barista service.  Run the `coffee-shop` container
+Next, we're going to run the **coffee-shop** container. The approach we're going to take is to use a Docker volume, therefore we'll need to provide new values for ports and the location of the barista service.  Run the **coffee-shop** container
 
 ```
-docker run -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 masterclass:coffee-shop
+docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop \
+  -e default_barista_base_url='http://barista:9081' \
+  -e default_http_port=9080 \
+  -e default_https_port=9443 masterclass:coffee-shop
 ```
 {: codeblock}
 
@@ -103,14 +108,26 @@ You'll see something like:
     }
 ]
 ```
-If you need to remove a container, use:
 
+You should now be able to load the **coffee-shop**  service's Open API page `http://accountname-9080.theiadocker-1.proxy.cognitiveclass.ai/openapi/ui` and call the service.  Give it a try. Or, you can run the following curl commands to try out the services running in containers:
 ```
-docker container rm <container name>
+curl http://localhost:9080/health
+curl -X POST "http://localhost:9080/coffee-shop/resources/orders" \
+     -H  "accept: */*" -H  "Content-Type: application/json" \
+     -d "{\"status\":\"FINISHED\",\"type\":\"ESPRESSO\"}"
+curl http://localhost:9080/coffee-shop/resources/orders
+
 ```
 {: codeblock}
 
-You should now be able to load the `coffee-shop` service's Open API page and call the service.  Give it a try.
+Now, let stop and remove the **coffee-shop**  container for the following section:
+
+```
+docker stop coffee-shop
+docker rm coffee-shop
+```
+{: codeblock}
+
 
 # Overriding Dev Server Configuration
 
@@ -125,7 +142,7 @@ Take a look at the file **open-liberty-masterclass/start/coffee-shop/configDropi
 <server description="Coffee Shop Server">
 
     <featureManager>
-        <feature>mpMetrics-2.3</feature>
+        <feature>mpMetrics-3.0</feature>
     </featureManager>
     
     <mpMetrics authentication="true" />
@@ -135,25 +152,28 @@ Take a look at the file **open-liberty-masterclass/start/coffee-shop/configDropi
      only and MUST NOT BE USED IN PRODUCTION AS IT 
      IS INSECURE. -->  
     <variable name="admin.password" value="change_it" />
-    <variable name="keystore.password" value="change_it" />
     
     <quickStartSecurity userName="admin" userPassword="${admin.password}"/>
-    <keyStore id="defaultKeyStore" password="${keystore.password}"/>    
      
 </server>
 ```
 You'll see that this turns metrics authentication on and sets up some simple security required for securing/accessing the metrics endpoint.  Note, this configuration really is **NOT FOR PRODUCTION**, it's simply aiming to show how to override, or provide new, server configuration.
 
-If you're on a unix-based OS, in the `open-liberty-masterclass/start/coffee-shop` directory, run the `coffee-shop` container:
+If you're on a unix-based OS, in the `open-liberty-masterclass/start/coffee-shop` directory, run the **coffee-shop** container:
 
 ```
-docker run -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides  masterclass:coffee-shop
+cd /home/project/open-liberty-masterclass/start/coffee-shop
+docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop \
+  -e default_barista_base_url='http://barista:9081' \
+  -e default_http_port=9080 \
+  -e default_https_port=9443 \
+  -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides masterclass:coffee-shop
 ```
 {: codeblock}
 
 The above relies on `pwd` to fill in the docker volume source path.  If you're on Windows, replace `$(pwd)` with the absolute path to the `open-liberty-masterclass/start/coffee-shop` directory in the above command.
 
-You should see the following message as the server is starting:
+Run the `docker logs coffee-shop` command. You should see the following message as the server is starting:
 
 ```
 [AUDIT   ] CWWKG0102I: Found conflicting settings for mpMetrics configuration.
@@ -164,9 +184,25 @@ You should see the following message as the server is starting:
 ```
 This shows that we have turned metrics authentication back on.
 
-Access the metrics endpoint at: `https://localhost:9445/metrics` via the `launch application` tab above the IDE and enter the port `9445`
+Access the `/metrics` metrics endpoint at: `https://accountname-9080.theiadocker-1.proxy.cognitiveclass.ai/metrics` via the **Launch application** tab above the IDE and enter the port `9445`.
 
 You will see that the browser complains about the certificate.  This is a self-signed certificate generated by Liberty for test purposes.  Accept the exception (note,  Firefox may not allow you to do this in which case you'll need to use a different browser).  You'll be presented with a login prompt.  Sign in with userid `admin` and password `change_it` (the values in the `metrics-prod.xml`).
+
+Or, you can run the following curl command to retrieve the metrics:
+```
+curl -k --user admin:change_it https://localhost:9445/metrics
+```
+{: codeblock}
+
+
+Now, let stop and remove the **barista** and **coffee-shop** containers and the network:
+
+```
+docker stop barista coffee-shop
+docker rm barista coffee-shop
+docker network rm masterclass-net
+```
+{: codeblock}
 
 # Next Steps
 

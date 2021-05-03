@@ -1,8 +1,8 @@
 # Module 6: Integration Testing
 
-Tests are essential for developing maintainable code. Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging. In this section you'll add a `barista` service integration test using the `maven-failsafe-plugin`. During the build, the Liberty server will be started along with the `barista` application deployed, the test will be run and then the server will be stopped.
+Tests are essential for developing maintainable code. Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging. In this section you'll add a **barista** service integration test using the `maven-failsafe-plugin`. During the build, the Liberty server will be started along with the **barista** application deployed, the test will be run and then the server will be stopped.
 
-Because we're going to be testing a **REST POST** request, we need JAX-RS client support and also support for serializing **json** into the request.  We also need **junit** for writing the test.  Add these dependencies to the **open-liberty-masterclass/start/barista/pom.xml*:
+Because we're going to be testing a **REST POST** request, we need JAX-RS client support and also support for serializing **json** into the request.  We also need **junit** for writing the test.  Add these dependencies to the **open-liberty-masterclass/start/barista/pom.xml**:
 
 >[File->Open]open-liberty-masterclass/start/barista/pom.xml
 
@@ -11,54 +11,38 @@ Because we're going to be testing a **REST POST** request, we need JAX-RS client
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.6.2</version>
+            <version>5.7.1</version>
             <scope>test</scope>
         </dependency>     
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
-            <version>3.3.0</version>
+            <version>3.4.3</version>
             <scope>test</scope>
         </dependency>      
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>2.9.3</version>
+            <version>2.12.3</version>
             <scope>test</scope>
         </dependency>   
 ```
 {: codeblock}
 
-Note, the later **Testing in Containers** module requires the JUnit 5 Jupiter API so we're using the same API here.
-
 Note the **<scope/>** of the dependencies is set to **test** because we only want the dependencies to be used during testing.
 
-Next add `maven-failsafe-plugin` configuration at the end of the **<plugins/>** section:
-
-```XML
+Add the following `<configuration>...</configuration>` to the `maven-failsafe-plugin` plugin:
+```
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${version.maven-failsafe-plugin}</version>
-                <executions>
-                    <execution>
-                        <phase>integration-test</phase>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                        <configuration>
-                            <trimStackTrace>false</trimStackTrace>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>verify-results</id>
-                        <goals>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>   
+                <version>2.22.2</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <liberty.test.port>9082</liberty.test.port>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin> 
 ```
 {: codeblock}
 
@@ -81,14 +65,13 @@ Open the **BaristaIT.java** and add the following:
 ```Java
 package com.sebastian_daschner.barista.it;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.junit.BeforeClass;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import javax.inject.Inject;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;;
+import org.junit.jupiter.api.BeforeAll;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -132,9 +115,9 @@ public class BaristaIT {
 
         try {
             if (response == null) {
-                assertNotNull("GreetingService response must not be NULL", response);
+                assertNotNull(response, "GreetingService response must not be NULL");
             } else {
-                assertEquals("Response must be 200 OK", 200, response.getStatus());
+                assertEquals( 200, response.getStatus(), "Response must be 200 OK");
             }
 
         } finally {
@@ -146,17 +129,16 @@ public class BaristaIT {
 ```
 {: codeblock}
 
-This test sends a `json` request to the `barista` service and checks for a `200 OK` response. 
+This test sends a `json` request to the **barista** service and checks for a `200 OK` response. 
 
-Re-build and run the tests:
-
+You'll see the following information from the **barista** service output:
 ```
-mvn install
+[INFO] Tests compilation was successful.
 ```
-{: codeblock}
 
-In the output of the build, you should see:
+Because you started Open Liberty in dev mode, press the **enter/return** key to run the tests.
 
+If the tests pass, you see a similar output to the following example:
 ```
 -------------------------------------------------------
  T E S T S
@@ -168,6 +150,9 @@ Results :
 
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
+
+When you are done checking out the services, exit dev mode by pressing **CTRL+C** in the command-line sessions
+where you ran the **barista** and **coffee-shop** services, or by typing **q** and then pressing the **enter/return** key.
 
 # Next Steps
 

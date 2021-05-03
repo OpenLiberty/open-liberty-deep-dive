@@ -13,24 +13,38 @@ cd open-liberty-masterclass/start/coffee-shop/
 
 We are going to make changes to the coffee-shop project.
 
-Navigate to the coffee-shop project and start the server up in dev mode and make some changes to the configuration. This will need to install new features while the server is still running:
-
+Navigate to the coffee-shop project and start the server up in dev mode and make some changes to the configuration. 
+Dev mode can help to install features automatically if adding new features to the server configuration file server.xml when the server is still running:
 ```
-cd ../coffee-shop
 mvn liberty:dev
 ```
 {: codeblock}
 
 Take a look at the Maven build file for the coffee-shop project: **open-liberty-masterclass/start/coffee-shop/pom.xml**
 
-The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We define the versions of our plugins at the top of our pom:
+The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We define the latest versions of the plugins at the pom.xml:
 
 ```XML
-    <!-- Plugin Versions-->
-       <version.liberty-maven-plugin>3.2</version.liberty-maven-plugin>
-       <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
-       <version.maven-failsafe-plugin>3.0.0-M4</version.maven-failsafe-plugin>
-       <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.1</version>
+    </plugin>
+    <plugin>
+        <groupId>io.openliberty.tools</groupId>
+        <artifactId>liberty-maven-plugin</artifactId>
+        <version>3.3.4</version>
+    </plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.22.2</version>
+    </plugin>   
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.2</version>
+    </plugin>
 ```
  
 
@@ -38,7 +52,7 @@ In the same **coffee-shop/pom.xml** locate the **<dependencies/>** section.  All
 
 ``` XML
     <dependencies>
-      <!--Open Liberty features -->
+        <!--Open Liberty provided features -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
@@ -48,7 +62,7 @@ In the same **coffee-shop/pom.xml** locate the **<dependencies/>** section.  All
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
-            <version>3.3</version>
+            <version>4.0.1</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency> 
@@ -58,7 +72,7 @@ In the same **coffee-shop/pom.xml** locate the **<dependencies/>** section.  All
 
 Let's add the dependency for the **MicroProfile OpenAPI** feature so we can try the **coffee-shop** service out.
 
-We have already loaded the MicroProfile 3.3 feature in the **pom.xml** that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Liberty server.
+We have already loaded the MicroProfile 4.0 feature in the **pom.xml** that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Liberty server.
 
 Open the **server.xml**
 
@@ -75,20 +89,24 @@ Near the top of the file, you'll see the following `<featureManager/>` entry:
         <feature>ejbLite-3.2</feature>
         <feature>cdi-2.0</feature>
         <feature>beanValidation-2.0</feature>
-        <feature>mpHealth-2.2</feature>
-        <feature>mpConfig-1.4</feature>
-        <feature>mpRestClient-1.4</feature>
+        <feature>mpHealth-3.0</feature>
+        <feature>mpConfig-2.0</feature>
+        <feature>mpRestClient-2.0</feature>
         <feature>jsonp-1.1</feature>
     </featureManager>
 ```
 This entry lists all the features to be loaded by the server.  Add the following entry inside the `<featureManager/>` element:
 
 ```XML
-        <feature>mpOpenAPI-1.1</feature>
+        <feature>mpOpenAPI-2.0</feature>
 ```
 {: codeblock}
 
 If you now go back to your terminal you should notice Open Liberty installing the new features without shutting down. You can also re-run tests by simply pressing enter in the Terminal. 
+
+```
+[INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [mpOpenAPI-2.0].
+```
 
 For a full list of all the features available, see https://openliberty.io/docs/ref/feature/.
 

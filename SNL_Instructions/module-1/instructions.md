@@ -4,8 +4,9 @@ These instructions contain the hands-on lab modules for the Open Liberty Masterc
 
 ## The Application
 
-Clone the following repo:
+To open a new command-line session, select **Terminal** > **New Terminal** from the menu of the IDE.
 
+Clone the following repo:
 ```
 git clone https://github.com/OpenLiberty/open-liberty-masterclass.git
 ```
@@ -19,7 +20,7 @@ cd open-liberty-masterclass
 ```
 {: codeblock}
 
-The application consists of two Microservices; `coffee-shop` and `barista`.  The `coffee-shop` service allows you to place an order and the `barista` service services the making of the coffee.
+The application consists of two Microservices; **coffee-shop** and **barista**.  The **coffee-shop** service allows you to place an order and the **barista** service services the making of the coffee.
 
 ```
     ^|
@@ -52,7 +53,7 @@ cd start/barista
 Build and run the barista service:
 
 ```
-mvn install liberty:run
+mvn liberty:dev
 ```
 {: codeblock}
 

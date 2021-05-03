@@ -6,18 +6,19 @@ Firstly let's start by deleting the tests we created earlier. We would not norma
 
 Delete the **BaristaIT.java**
 ```
-rm -f /home/project/open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java
+cd /home/project/open-liberty-masterclass/start/barista/
+rm -f src/test/java/com/sebastian_daschner/barista/it/BaristaIT.java
 ```
 {: codeblock}
 
-Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the following dependencies to the `pom.xml` file in the `<dependencies>` element:
+Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the **barista** project, add the following dependencies to the `/home/project/open-liberty-masterclass/start/barista/pom.xml` file in the `<dependencies>` element:
 
 ```XML
-       <!-- For MicroShed Testing -->      
+        <!-- For MicroShed Testing -->      
         <dependency>
             <groupId>org.microshed</groupId>
             <artifactId>microshed-testing-liberty</artifactId>
-            <version>0.8</version>
+            <version>0.9.1</version>
         <scope>test</scope>
         </dependency>
         <dependency>
@@ -32,7 +33,7 @@ Now let's create a new Integration Test that will perform the same test, but ins
 Create a new Integration Test called `BaristaContainerIT.java`:
 
 ```
-touch /home/project/open-liberty-masterclass/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristerContainerIT.java
+touch /home/project/open-liberty-masterclass/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristaContainerIT.java
 ```
 {: codeblock}
 
@@ -41,8 +42,8 @@ Add the following
 ```Java
 package com.sebastian_daschner.barista.it;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import javax.ws.rs.core.Response;
 
@@ -76,9 +77,9 @@ public class BaristaContainerIT {
 
         try {
             if (response == null) {
-                assertNotNull("GreetingService response must not be NULL", response);
+                assertNotNull(response, "GreetingService response must not be NULL");
             } else {
-                assertEquals("Response must be 200 OK", 200, response.getStatus());
+                assertEquals( 200, response.getStatus(), "Response must be 200 OK");
             }
         } finally {
             response.close();
@@ -95,10 +96,10 @@ The test also contains the following Container configuration:
 
 ```Java
     @Container
-    public static MicroProfileApplication app = new MicroProfileApplication()
+    public static ApplicationContainer app = new ApplicationContainer()
                     .withAppContextRoot("/barista")
                     .withExposedPorts(9081)
-                    .withReadinessPath("/health");
+                    .withReadinessPath("/health/ready");
 ```
 {: codeblock}
 
@@ -126,10 +127,11 @@ log4j.appender.stdout.layout.ConversionPattern=%r %p %c %x - %m%n
 log4j.logger.org.microshed=DEBUG
 ```
 
-Build and run the test:
+Rebuild and run the test:
 
 ```
-mvn install
+mvn clean package
+mvn failsafe:integration-test
 ```
 {: codeblock}
 
@@ -170,12 +172,10 @@ You should see the following output:
 3273 DEBUG org.microshed.testing.jupiter.MicroShedTestExtension  - Injecting rest client for public static com.sebastian_daschner.barista.boundary.BrewsResource com.sebastian_daschner.barista.it.BaristaContainerIT.brews
 3419 INFO org.microshed.testing.jaxrs.JsonBProvider  - Sending data to server: {"type":"POUR_OVER"}
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.93 s - in com.sebastian_daschner.barista.it.BaristaContainerIT
-[INFO] Running com.sebastian_daschner.barista.it.BaristaIT
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.271 s - in com.sebastian_daschner.barista.it.BaristaIT
 [INFO] 
 [INFO] Results:
 [INFO] 
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 [INFO] 
 [INFO] 
 ```
