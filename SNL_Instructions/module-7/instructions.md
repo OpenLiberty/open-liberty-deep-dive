@@ -162,6 +162,7 @@ You'll see that this turns metrics authentication on and sets up some simple sec
 If you're on a unix-based OS, in the `open-liberty-masterclass/start/coffee-shop` directory, run the **coffee-shop** container:
 
 ```
+cd /home/project/open-liberty-masterclass/start/coffee-shop
 docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop \
   -e default_barista_base_url='http://barista:9081' \
   -e default_http_port=9080 \
