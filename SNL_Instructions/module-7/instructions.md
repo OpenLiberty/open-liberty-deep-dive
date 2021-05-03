@@ -41,7 +41,7 @@ docker network create --driver bridge masterclass-net
 
 You can now run the two Docker containers and get them to join the same bridge network.  Providing names to the containers makes those names available for DNS resolution within the bridge network so there's no need to use IP addresses.
 
-Run the `barista` container:
+Run the **barista** container:
 
 ```
 docker run -d --network=masterclass-net --name=barista masterclass:barista
@@ -49,12 +49,15 @@ docker run -d --network=masterclass-net --name=barista masterclass:barista
 {: codeblock}
 
 
-Note, we don't need to map the `barista` service ports outside the container because the bridge network gives access to the other containers on the same network.
+Note, we don't need to map the **barista** service ports outside the container because the bridge network gives access to the other containers on the same network.
 
-Next, we're going to run the `coffee-shop` container. The approach we're going to take is to use a Docker volume, therefore we'll need to provide new values for ports and the location of the barista service.  Run the `coffee-shop` container
+Next, we're going to run the **coffee-shop** container. The approach we're going to take is to use a Docker volume, therefore we'll need to provide new values for ports and the location of the barista service.  Run the **coffee-shop** container
 
 ```
-docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 masterclass:coffee-shop
+docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop \
+  -e default_barista_base_url='http://barista:9081' \
+  -e default_http_port=9080 \
+  -e default_https_port=9443 masterclass:coffee-shop
 ```
 {: codeblock}
 
@@ -106,7 +109,7 @@ You'll see something like:
 ]
 ```
 
-You should now be able to load the `coffee-shop` service's Open API page `http://accountname-9080.theiadocker-1.proxy.cognitiveclass.ai/openapi/ui` and call the service.  Give it a try. Or, you can run the following curl commands to try out the services running in containers:
+You should now be able to load the **coffee-shop**  service's Open API page `http://accountname-9080.theiadocker-1.proxy.cognitiveclass.ai/openapi/ui` and call the service.  Give it a try. Or, you can run the following curl commands to try out the services running in containers:
 ```
 curl http://localhost:9080/health
 curl -X POST "http://localhost:9080/coffee-shop/resources/orders" \
@@ -117,7 +120,7 @@ curl http://localhost:9080/coffee-shop/resources/orders
 ```
 {: codeblock}
 
-Now, let stop and remove the `coffee-shop` container for the following section:
+Now, let stop and remove the **coffee-shop**  container for the following section:
 
 ```
 docker stop coffee-shop
@@ -156,7 +159,7 @@ Take a look at the file **open-liberty-masterclass/start/coffee-shop/configDropi
 ```
 You'll see that this turns metrics authentication on and sets up some simple security required for securing/accessing the metrics endpoint.  Note, this configuration really is **NOT FOR PRODUCTION**, it's simply aiming to show how to override, or provide new, server configuration.
 
-If you're on a unix-based OS, in the `open-liberty-masterclass/start/coffee-shop` directory, run the `coffee-shop` container:
+If you're on a unix-based OS, in the `open-liberty-masterclass/start/coffee-shop` directory, run the **coffee-shop** container:
 
 ```
 docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides  masterclass:coffee-shop
@@ -187,7 +190,7 @@ curl -k --user admin:change_it https://localhost:9445/metrics
 {: codeblock}
 
 
-Now, let stop and remove the `barista` and `coffee-shop` containers and the network:
+Now, let stop and remove the **barista** and **coffee-shop** containers and the network:
 
 ```
 docker stop barista coffee-shop
