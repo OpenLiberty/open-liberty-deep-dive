@@ -28,11 +28,11 @@ Open the **OrderResource.java** and add the following **@Counted** annotation to
 > [File->Open] **open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/OrdersResource.java**
 
 ```java
- @Counted(name="order", displayName="Order count", description="Number of times orders requested.")
- ```
+@Counted(name="order", displayName="Order count", description="Number of times orders requested.")
+```
  It should look like:
 
- ```Java
+```Java
     @POST
     @Counted(name="order", displayName="Order count", description="Number of times orders requested.")
     public Response orderCoffee(@Valid @NotNull CoffeeOrder order) {
