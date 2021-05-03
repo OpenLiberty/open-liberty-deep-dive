@@ -47,6 +47,17 @@ mvn liberty:dev
 The **barista** service should be started at the port `9082` and the **coffee-shop** service at the port `9080`. 
 Then, try the service out using the Open API Web page and you should see the behavior is identical.  Not surprising since the code is identical, from the same build, just built into WebSphere Liberty.
 
+Or, you can run the following curl commands to try out the services running in containers:
+```
+curl http://localhost:9080/health
+curl -X POST "http://localhost:9080/coffee-shop/resources/orders" \
+     -H  "accept: */*" -H  "Content-Type: application/json" \
+     -d "{\"status\":\"FINISHED\",\"type\":\"ESPRESSO\"}"
+curl http://localhost:9080/coffee-shop/resources/orders
+
+```
+{: codeblock}
+
 ## Conclusion
 
 Thanks for trying the Open Liberty Masterclass. If you're interested in finding out more, please visit the [Open Liberty website](http://openliberty.io), and for more hands-on experience, why not try the [Open Liberty Guides](http://openliberty.io/guides).
