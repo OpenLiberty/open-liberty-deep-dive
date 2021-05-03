@@ -8,7 +8,7 @@ Stop the `barista` service by pressing **CTRL+C** in the command-line session wh
 
 We now need to change the server configuration to externalize the ports.  
 
-Open the **open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml** file, change this line:
+Open the **open-liberty-masterclass/start/barista/src/main/liberty/config/server.xml** file, change this line:
 
 ```XML
     <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
