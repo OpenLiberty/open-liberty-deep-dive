@@ -67,7 +67,7 @@ Reload the metrics page or rerun the curl `/metric` endpoint command. At the bot
 ...
 # TYPE application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total counter
 # HELP application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total Number of times orders requested.
-application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total 3
+application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total 1
 ```
 
 # Next Steps
