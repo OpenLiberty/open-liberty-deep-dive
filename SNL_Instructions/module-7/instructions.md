@@ -166,7 +166,7 @@ docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-
   -e default_barista_base_url='http://barista:9081' \
   -e default_http_port=9080 \
   -e default_https_port=9443 \
-  -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides  masterclass:coffee-shop
+  -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides masterclass:coffee-shop
 ```
 {: codeblock}
 
