@@ -69,7 +69,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 This is using the MicroProfile Config specification to inject the configuration value. Configuration can come from a number of sources.
 
-New the `coffee-shop/src/main/webapp/META-INF/microprofile-config.properties` MicroProfile configuration file. Add the following value:
+Open the `coffee-shop/src/main/webapp/META-INF/microprofile-config.properties` MicroProfile configuration file. Add the following value:
 ```
 default_barista_base_url=http://localhost:9081
 ```
