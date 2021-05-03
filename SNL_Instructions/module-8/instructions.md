@@ -33,7 +33,7 @@ Now let's create a new Integration Test that will perform the same test, but ins
 Create a new Integration Test called `BaristaContainerIT.java`:
 
 ```
-touch /home/project/open-liberty-masterclass/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristerContainerIT.java
+touch /home/project/open-liberty-masterclass/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristaContainerIT.java
 ```
 {: codeblock}
 
