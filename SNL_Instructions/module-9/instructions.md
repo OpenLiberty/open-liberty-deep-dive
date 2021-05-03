@@ -17,7 +17,7 @@ In the `open-liberty-masterclass/start/barista/pom.xml` and `open-liberty-master
                   <runtimeArtifact>
                       <groupId>com.ibm.websphere.appserver.runtime</groupId>
                       <artifactId>wlp-kernel</artifactId>
-                      <version>[20.0.0.4,)</version>
+                      <version>[21.0.0.4,)</version>
                       <type>zip</type>
                   </runtimeArtifact>
                 </configuration>
