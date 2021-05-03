@@ -1,6 +1,6 @@
 # Module 6: Integration Testing
 
-Tests are essential for developing maintainable code. Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging. In this section you'll add a `barista` service integration test using the `maven-failsafe-plugin`. During the build, the Liberty server will be started along with the `barista` application deployed, the test will be run and then the server will be stopped.
+Tests are essential for developing maintainable code. Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging. In this section you'll add a **barista** service integration test using the `maven-failsafe-plugin`. During the build, the Liberty server will be started along with the **barista** application deployed, the test will be run and then the server will be stopped.
 
 Because we're going to be testing a **REST POST** request, we need JAX-RS client support and also support for serializing **json** into the request.  We also need **junit** for writing the test.  Add these dependencies to the **open-liberty-masterclass/start/barista/pom.xml*:
 
@@ -130,9 +130,9 @@ public class BaristaIT {
 ```
 {: codeblock}
 
-This test sends a `json` request to the `barista` service and checks for a `200 OK` response. 
+This test sends a `json` request to the **barista** service and checks for a `200 OK` response. 
 
-You'll see the following information from the `barista` service output:
+You'll see the following information from the **barista** service output:
 ```
 [INFO] Tests compilation was successful.
 ```
@@ -153,7 +153,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
 
 When you are done checking out the services, exit dev mode by pressing **CTRL+C** in the command-line sessions
-where you ran the `barista` and `coffee-shop` services, or by typing **q** and then pressing the **enter/return** key.
+where you ran the **barista** and **coffee-shop** services, or by typing **q** and then pressing the **enter/return** key.
 
 # Next Steps
 
