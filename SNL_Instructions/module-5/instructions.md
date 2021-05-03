@@ -4,7 +4,7 @@ If you're familiar with the concept of 12-factor applications (see http://12fact
 
 Liberty lets your application pick up configuration from a number of sources, such as environment variables, bootstrap.properties and Kubernetes configuration.
 
-Stop the `barista` service by pressing **CTRL+C** in the command-line session where you ran it at the module 1.
+Stop the **barista** service by pressing **CTRL+C** in the command-line session where you ran it at the module 1.
 
 We now need to change the server configuration to externalize the ports.  
 
@@ -25,14 +25,14 @@ to
 ```
 {: codeblock}
 
-Restart the `barista` service by running the following curl commands:
+Restart the **barista** service by running the following curl commands:
 ```
 export DEFAULT_HTTP_PORT=9082
 mvn liberty:dev
 ````
 {: codeblock}
 
-If you take a look at the `barista` server output, you should find out that the `barista` service is running on the port `9082` now:
+If you take a look at the **barista** server output, you should find out that the **barista** service is running on the port `9082` now:
 ```
 [INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/health/
 [INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/openapi/
@@ -40,7 +40,7 @@ If you take a look at the `barista` server output, you should find out that the 
 [INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/barista/
 ```
 
-Next we'll use the `default_barista_base_url` in the code to avoid hard-coding the location of the `barista` service for the `coffee-shop` service.
+Next we'll use the `default_barista_base_url` in the code to avoid hard-coding the location of the **barista** service for the **coffee-shop** service.
 
 Edit the file `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/control/Barista.java`
 
