@@ -6,26 +6,39 @@ WebSphere Liberty is also available in Maven Central[https://search.maven.org/se
 
 You can use WebSphere Liberty for development even if you haven't purchased it, but if you have production entitlement you can easily change to use it, as follows:
 
-In the `open-liberty-masterclass/start/coffee-shop/pom.xml` change these two lines from:
+In the `open-liberty-masterclass/start/barista/pom.xml` and `open-liberty-masterclass/start/coffee-shop/pom.xml`, add the `<configuration>...</configuration>` as the following:
 
 ```XML
-    <groupId>io.openliberty</groupId>
-    <artifactId>openliberty-kernel</artifactId>
-```
-To:
-```XML
-    <groupId>com.ibm.websphere.appserver.runtime</groupId>
-    <artifactId>wlp-kernel</artifactId>
+            <plugin>
+                <groupId>io.openliberty.tools</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <version>3.3.4</version>
+                <configuration>
+                  <runtimeArtifact>
+                      <groupId>com.ibm.websphere.appserver.runtime</groupId>
+                      <artifactId>wlp-kernel</artifactId>
+                      <version>[20.0.0.4,)</version>
+                      <type>zip</type>
+                  </runtimeArtifact>
+                </configuration>
+            </plugin>
 ```
 {: codeblock}
 
-Rebuild and re-start the `coffee-shop` service:
+Rebuild and re-start the **barista** service:
 
 ```
+cd /home/project/open-liberty-masterclass/start/barista
 mvn liberty:dev
 ```
 {: codeblock}
 
+and the **coffee-shop** service:
+```
+cd /home/project/open-liberty-masterclass/start/coffee-shop
+mvn liberty:dev
+```
+{: codeblock}
 
 Try the service out using the Open API Web page and you should see the behavior is identical.  Not surprising since the code is identical, from the same build, just built into WebSphere Liberty.
 
