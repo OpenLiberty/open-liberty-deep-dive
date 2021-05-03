@@ -35,7 +35,7 @@ Add the following below the `</featureManager>` in the `open-liberty-masterclass
 ```
 {: codeblock}
 
-Revisit the metrics endpoint with the `http://accountname-9080.theiadocker-1.proxy.cognitiveclass.ai/metrics` URL or run the following curl command:
+Revisit the metrics endpoint with the `http://accountname-9080.theiadocker-1.proxy.cognitiveclass.ai/metrics` URL or run the following curl command by another terminal:
 
 ```
 curl http://localhost:9080/metrics
