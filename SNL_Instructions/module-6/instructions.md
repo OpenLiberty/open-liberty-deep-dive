@@ -67,12 +67,11 @@ package com.sebastian_daschner.barista.it;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.junit.BeforeClass;
 
 import javax.inject.Inject;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;;
+import org.junit.jupiter.api.BeforeAll;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
