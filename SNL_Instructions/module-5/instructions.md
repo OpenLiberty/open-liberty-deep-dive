@@ -88,9 +88,9 @@ Change:
 To:
 
 ```Java
-    @Inject
-    @ConfigProperty(name="default_barista_base_url")
-    String baristaBaseURL;
+  @Inject
+  @ConfigProperty(name="default_barista_base_url")
+  String baristaBaseURL;
 ```
 {: codeblock}
 
