@@ -92,7 +92,6 @@ Near the top of the file, you'll see the following `<featureManager/>` entry:
         <feature>mpHealth-3.0</feature>
         <feature>mpConfig-2.0</feature>
         <feature>mpRestClient-2.0</feature>
-        <feature>mpMetrics-3.0</feature>
         <feature>jsonp-1.1</feature>
     </featureManager>
 ```
