@@ -42,7 +42,8 @@ mvn liberty:dev
 ```
 {: codeblock}
 
-Try the service out using the Open API Web page and you should see the behavior is identical.  Not surprising since the code is identical, from the same build, just built into WebSphere Liberty.
+The **barista** service should be started at the port `9082` and the **coffee-shop** service at the port `9080`. 
+Then, try the service out using the Open API Web page and you should see the behavior is identical.  Not surprising since the code is identical, from the same build, just built into WebSphere Liberty.
 
 ## Conclusion
 
