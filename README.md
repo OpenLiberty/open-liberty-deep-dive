@@ -295,7 +295,6 @@ Reload the metrics page and at the bottom of the metrics results you should see:
 # HELP application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total Number of times orders requested.
 application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total 1
 ```
-Now go to the terminal and type `q` followed by `Enter` to shut down the server.
 
 
 ## Module 5: Externalizing Configuration
