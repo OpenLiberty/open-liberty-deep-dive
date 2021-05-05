@@ -698,11 +698,7 @@ Take a look at the file `open-liberty-masterclass/start/coffee-shop/configDropin
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
 <server description="Coffee Shop Server">
-
-    <featureManager>
-        <feature>mpMetrics-3.0</feature>
-    </featureManager>
-    
+   
     <mpMetrics authentication="true" />
 
      <!-- 
