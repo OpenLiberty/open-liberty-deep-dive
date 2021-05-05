@@ -8,8 +8,9 @@ From your previous addition of the MicroProfile Metrics feature in the server.xm
 ```
 
 Open the metrics endpoint in your browser. To do this select **Launch Application**, a box will appear where the port number is required. The application is running on port **9080**. The Open Liberty homepage will load. To access the **metrics** endpoint at the end of the URL type **/metrics**. The URL should look like: 
+
 ```
-http://accountname-9080.theiadocker-1.proxy.cognitiveclass.ai/metrics
+http://ACCOUNTNAME-9080.theiadocker-1.proxy.cognitiveclass.ai/metrics
 ```
 You should see a message like this:
 
@@ -35,7 +36,7 @@ Add the following below the `</featureManager>` in the `open-liberty-masterclass
 ```
 {: codeblock}
 
-Revisit the metrics endpoint with the `http://accountname-9445.theiadocker-1.proxy.cognitiveclass.ai/metrics` URL or run the following curl command by another terminal:
+Revisit the metrics endpoint with the `http://ACCOUNTNAME-9080.theiadocker-1.proxy.cognitiveclass.ai/metrics` URL or run the following curl command by another terminal:
 
 ```
 curl http://localhost:9080/metrics
@@ -61,7 +62,7 @@ curl -X POST "http://localhost:9080/coffee-shop/resources/orders" \
 ```
 {: codeblock}
 
-Reload the metrics page or rerun the curl `/metric` endpoint command. At the bottom of the metrics results, you should see:
+Reload the metrics page or rerun the curl `/metrics` endpoint command. At the bottom of the metrics results, you should see:
 
 ```
 ...

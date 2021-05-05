@@ -203,6 +203,7 @@ We're now going to add Metrics to the `coffee-shop`.  Edit the `open-liberty-mas
 ```XML
         <feature>mpMetrics-2.3</feature>
 ```
+{: codeblock}
 
 You should see that the server has been automatically updates, the following features are installed, and include mpMetrics-2.3:
 

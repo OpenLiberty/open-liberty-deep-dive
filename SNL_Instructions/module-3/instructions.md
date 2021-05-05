@@ -30,7 +30,9 @@ Open the **OrderResource.java** and add the following **@Counted** annotation to
 ```java
 @Counted(name="order", displayName="Order count", description="Number of times orders requested.")
 ```
- It should look like:
+{: codeblock}
+
+ After you add the **@Counted** annotation, the mothod should look like:
 
 ```Java
     @POST
@@ -39,7 +41,6 @@ Open the **OrderResource.java** and add the following **@Counted** annotation to
         ...
     }
 ```
-{: codeblock}
 
 You'll also need to add the following package import:
 ```Java
