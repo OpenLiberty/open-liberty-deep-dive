@@ -899,8 +899,6 @@ You should see the following output:
 [INFO]
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 [INFO]
-[INFO] Integration tests finished.
-[INFO] Press the Enter key to run tests on demand. To stop the server and quit dev mode, use Ctrl-C or type 'q' and press the Enter key.
 ```
 
 ## Module 9: Support Licensing
