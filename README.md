@@ -441,53 +441,39 @@ Because we're going to be testing a REST `POST` request, we need JAX-RS client s
 ```XML
         <!-- Test dependencies -->  
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.6.2</version>
+            <version>5.7.1</version>
             <scope>test</scope>
         </dependency>     
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
-            <version>3.3.0</version>
+            <version>3.4.3</version>
             <scope>test</scope>
         </dependency>      
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>2.9.3</version>
+            <version>2.12.3</version>
             <scope>test</scope>
-        </dependency>   
+        </dependency>  
 ```
-
-Note, the later `Testing in Containers` module requires the JUnit 5 Jupiter API so we're adding the API here.
 
 Note the `<scope/>` of the dependencies is set to `test` because we only want the dependencies to be used during testing.
 
-Next add `maven-failsafe-plugin` configuration at the end of the `<plugins/>` section:
-
+Add the following `<configuration>...</configuration>` to the `maven-failsafe-plugin` plugin:
 ```XML
-        <plugins>
-            ...
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${version.maven-failsafe-plugin}</version>
+                <version>2.22.2</version>
                 <configuration>
-                    <trimStackTrace>false</trimStackTrace>
-                        <systemProperties>
-                        <liberty.test.port>${testServerHttpPort}</liberty.test.port>
-                        <war.name>${artifactId}.war</war.name>
-                    </systemProperties>
+                    <systemPropertyVariables>
+                        <liberty.test.port>9082</liberty.test.port>
+                    </systemPropertyVariables>
                 </configuration>
-            </plugin>  
-        </plugins>                      
+            </plugin> 
 ```
 
 Note, this configuration makes the port of the server available to the test as a system property called `liberty.test.port`.
@@ -572,33 +558,22 @@ mvn install liberty:dev
 In the output of the build, you should see:
 
 ```
-[INFO] Running unit tests...
-[INFO] Unit tests finished.
-[INFO] Waiting up to 30 seconds for the application to start up...
-[INFO] CWWKM2010I: Searching for CWWKZ0001I.* in C:\Users\JAMIEColeman\repo\quicklabs\open-liberty-masterclass\start\barista\target\liberty\wlp\usr\servers\defaultServer\logs\messages.log. This search will timeout after 30 seconds.
-[INFO] CWWKM2015I: Match number: 1 is [20/05/20 10:59:33:921 BST] 00000040 com.ibm.ws.app.manager.AppMessageHelper                      A CWWKZ0001I: Application barista started in 1.666 seconds..
-[INFO] Running integration tests...
-[INFO]
-[INFO] -------------------------------------------------------
-[INFO]  T E S T S
-[INFO] -------------------------------------------------------
-[INFO] Running com.sebastian_daschner.barista.it.BaristaIT
-[INFO] starting to brew: POUR_OVER
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.164 s - in com.sebastian_daschner.barista.it.BaristaIT
-[INFO]
-[INFO] Results:
-[INFO]
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-[INFO]
-[INFO] Integration tests finished.
-[INFO] Press the Enter key to run tests on demand. To stop the server and quit dev mode, use Ctrl-C or type 'q' and press the Enter key.
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.sebastian_daschner.barista.it.BaristaIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.365 sec - in com.sebastian_daschner.barista.it.BaristaIT
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
 
 Once the test has finished, shut down the server by typing `q` then pressing the Enter key.
 
 ## Module 7: Docker
 
-We're now going to dockerize the two services and show how we can override the defaults to re-wire the two services.  We're going to use a Docker user-defined network (see https://docs.docker.com/network/network-tutorial-standalone/#use-user-defined-bridge-networks) because we'll be running them on the same host and it keeps things simple.  For real-world production deployments you would use a Kubernetes environment, such as IBM Cloud Private or the IBM Cloud Kubernetes Service.
+We're now going to dockerize the two services and show how we can override the defaults to re-wire the two services.  We're going to use a Docker user-defined network (see https://docs.docker.com/network/network-tutorial-standalone/#use-user-defined-bridge-networks) because by using Docker user-defined networks we are able to connect the two containers to the same network and have them communicate using only the others IP address or name.  For real-world production deployments you would use a Kubernetes environment, such as the IBM Cloud Kubernetes Service.
 
 Take a look at the `open-liberty-masterclass/start/coffee-shop/Dockerfile`:
 
@@ -650,7 +625,10 @@ Note, we don't need to map the `barista` service ports outside the container bec
 Next, we're going to run the `coffee-shop` container.  For it to work,The approach we're going to take is to use a Docker volume we'll need to provide new values for ports and the location of the barista service.  Run the `coffee-shop` container
 
 ```
-docker run -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 masterclass:coffee-shop
+docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop \
+  -e default_barista_base_url='http://barista:9081' \
+  -e default_http_port=9080 \
+  -e default_https_port=9443 masterclass:coffee-shop
 ```
 
 You can take a look at the bridge network using:
@@ -698,17 +676,21 @@ You'll see something like:
     }
 ]
 ```
-If you need to remove a container, use:
 
-```
-docker container rm <container name>
-```
 You should now be able to load the `coffee-shop` service's Open API page and call the service.  Give it a try.
 
+curl http://localhost:9080/health
+
+Now, let's stop and remove the **coffee-shop**  container for the following section:
+
+```
+docker stop coffee-shop
+docker rm coffee-shop
+```
 
 ### Overriding Dev Server Configuration
 
-The above works fine, but still has a metrics endpoint with authentication turned off.  We'll now show how `configDropins/overrides` can be used to override existing, or add new, server configuration.  For example, this can be used to add server configuration in a production environment.  The approach we're going to take is to use a Docker volume for simplicity, but in a real-world scenario you would use Kubernetes ConfigMaps and secrets to include the production server configuration, security configuration and environment variables. 
+The above works fine, but still has a metrics endpoint with authentication turned off.  We'll now show how `configDropins/overrides` can be used to override existing, or add new, server configuration.  For example, this can be used to add server configuration in a production environment. The approach we're going to take is to use a Docker volume for simplicity. Docker Volumes are the preferred mechanism for persisting data generated by and used by Docker containers. While bind mounts are dependent on the directory structure and OS of the host machine, volumes are completely managed by Docker. .In a real-world scenario you would use Kubernetes ConfigMaps and secrets to include the production server configuration, security configuration and environment variables. 
 
 In fact, unlike what we have done here, the best practice is to build an image that does not contain any environment specific configuration (such as the unsecured endpoint in our example) and then add those things through external configuration in the development, staging and production environments.  The goal is to ensure deployment of the image without configuration doesn't not cause undesirable results such as security vulnerabilities or talking to the wrong data sources.
 
@@ -719,7 +701,7 @@ Take a look at the file `open-liberty-masterclass/start/coffee-shop/configDropin
 <server description="Coffee Shop Server">
 
     <featureManager>
-        <feature>mpMetrics-2.3</feature>
+        <feature>mpMetrics-3.0</feature>
     </featureManager>
     
     <mpMetrics authentication="true" />
@@ -729,10 +711,8 @@ Take a look at the file `open-liberty-masterclass/start/coffee-shop/configDropin
      only and MUST NOT BE USED IN PRODUCTION AS IT 
      IS INSECURE. -->  
     <variable name="admin.password" value="change_it" />
-    <variable name="keystore.password" value="change_it" />
     
     <quickStartSecurity userName="admin" userPassword="${admin.password}"/>
-    <keyStore id="defaultKeyStore" password="${keystore.password}"/>    
      
 </server>
 ```
@@ -742,7 +722,11 @@ You'll see that this turns metrics authentication on and sets up some simple sec
 If you're on a unix-based OS, in the `open-liberty-masterclass/start/coffee-shop` directory, run the `coffee-shop` container:
 
 ```
-docker run -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides  masterclass:coffee-shop
+docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop \
+  -e default_barista_base_url='http://barista:9081' \
+  -e default_http_port=9080 \
+  -e default_https_port=9443 \
+  -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides masterclass:coffee-shop
 ```
 
 The above relies on `pwd` to fill in the docker volume source path.  If you're on Windows, replace `$(pwd)` with the absolute path to the `open-liberty-masterclass/start/coffee-shop` directory in the above command.
@@ -763,6 +747,13 @@ Access the metrics endpoint at: `https://localhost:9445/metrics`
 
 You will see that the browser complains about the certificate.  This is a self-signed certificate generated by Liberty for test purposes.  Accept the exception (note,  Firefox may not allow you to do this in which case you'll need to use a different browser).  You'll be presented with a login prompt.  Sign in with userid `admin` and password `change_it` (the values in the `metrics-prod.xml`).
 
+Now, let's stop and remove the **barista** and **coffee-shop** containers and the network:
+
+```
+docker stop barista coffee-shop
+docker rm barista coffee-shop
+docker network rm masterclass-net
+```
 
 ## Module 8: Testing in Containers
 
@@ -775,11 +766,11 @@ Delete the file `open-liberty-masterclass/start/barista/src/test/java/com/sebast
 Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the following dependencies to the `pom.xml` file in the `<dependencies>` element:
 
 ```XML
-       <!-- For MicroShed Testing -->      
+          <!-- For MicroShed Testing -->      
         <dependency>
             <groupId>org.microshed</groupId>
             <artifactId>microshed-testing-liberty</artifactId>
-            <version>0.8</version>
+            <version>0.9.1</version>
         <scope>test</scope>
         </dependency>
         <dependency>
@@ -881,39 +872,46 @@ mvn install liberty:dev
 You should see the following output:
 
 ```
-[INFO] Running integration tests...
-[INFO]
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.sebastian_daschner.barista.it.BaristaContainerIT
-0 DEBUG org.microshed.testing.ApplicationEnvironment  - Found ApplicationEnvironment class org.microshed.testing.testcontainers.config.TestcontainersConfiguration with priority=-30, available=true
-1 DEBUG org.microshed.testing.ApplicationEnvironment  - Found ApplicationEnvironment class org.microshed.testing.ManuallyStartedConfiguration with priority=-10, available=false
-2 DEBUG org.microshed.testing.ApplicationEnvironment  - Found ApplicationEnvironment class org.microshed.testing.testcontainers.config.HollowTestcontainersConfiguration with priority=-20, available=true
-3 INFO org.microshed.testing.jupiter.MicroShedTestExtension  - Using ApplicationEnvironment class: org.microshed.testing.testcontainers.config.HollowTestcontainersConfiguration
-609 INFO org.microshed.testing.testcontainers.ApplicationContainer  - Discovered ServerAdapter: class org.testcontainers.containers.liberty.LibertyAdapter
-610 INFO org.microshed.testing.testcontainers.ApplicationContainer  - Using ServerAdapter: org.testcontainers.containers.liberty.LibertyAdapter
-619 DEBUG org.microshed.testing.testcontainers.config.TestcontainersConfiguration  - No networks explicitly defined. Using shared network for all containers in class com.sebastian_daschner.barista.it.BaristaContainerIT
-624 INFO org.microshed.testing.testcontainers.config.HollowTestcontainersConfiguration  - Exposing fixed port 9081 for container HollowApplicationContainer
-646 INFO org.microshed.testing.testcontainers.config.TestcontainersConfiguration  - Starting containers [GenericContainer(exposedPorts=[9081], portBindings=[9081:9081/tcp], extraHosts=[], networkMode=null, network=org.testcontainers.containers.Network$1@45e04ab1, networkAliases=[tc-8eivkWyL], image=RemoteDockerImage(imageNameFuture=org.testcontainers.images.RemoteDockerImage$1@f0f0a5e9, imagePullPolicy=DefaultPullPolicy(), dockerClient=LazyDockerClient.INSTANCE), env=[], labels={}, commandParts=[], binds=[], privilegedMode=false, volumesFroms=[], linkedContainers={}, startupCheckStrategy=org.testcontainers.containers.startupcheck.IsRunningStartupCheckStrategy@987f93c8, startupAttempts=1, workingDirectory=null, shmSize=null, copyToFileContainerPathMap={}, dependencies=[], dockerClient=LazyDockerClient.INSTANCE, dockerDaemonInfo=null, containerId=null, containerName=null, containerInfo=HollowContainerInspection[app=GenericContainer(exposedPorts=[9081], portBindings=[9081:9081/tcp], extraHosts=[], networkMode=null, network=org.testcontainers.containers.Network$1@45e04ab1, networkAliases=[tc-8eivkWyL], image=RemoteDockerImage(imageNameFuture=org.testcontainers.images.RemoteDockerImage$1@f0f0a5e9, imagePullPolicy=DefaultPullPolicy(), dockerClient=LazyDockerClient.INSTANCE), env=[], labels={}, commandParts=[], binds=[], privilegedMode=false, volumesFroms=[], linkedContainers={}, startupCheckStrategy=org.testcontainers.containers.startupcheck.IsRunningStartupCheckStrategy@987f93c8, startupAttempts=1, workingDirectory=null, shmSize=null, copyToFileContainerPathMap={}, dependencies=[], dockerClient=LazyDockerClient.INSTANCE, dockerDaemonInfo=null, containerId=null, containerName=null, containerInfo=HollowContainerInspection[app=org.microshed.testing.testcontainers.ApplicationContainer@b2f5dd16,args=<null>,config=<null>,created=<null>,driver=<null>,execDriver=<null>,hostConfig=<null>,hostnamePath=<null>,hostsPath=<null>,logPath=<null>,id=<null>,sizeRootFs=<null>,imageId=<null>,mountLabel=<null>,name=<null>,restartCount=<null>,networkSettings=<null>,path=<null>,processLabel=<null>,resolvConfPath=<null>,execIds=<null>,state=<null>,volumes=<null>,volumesRW=<null>,node=<null>,mounts=<null>,graphDriver=<null>,platform=<null>], waitStrategy=org.testcontainers.containers.wait.strategy.HttpWaitStrategy@76fa79b6, logConsumers=[org.testcontainers.containers.output.Slf4jLogConsumer@6b83ca61], createContainerCmdModifiers=[], tmpFsMapping=null, shouldBeReused=false),args=<null>,config=<null>,created=<null>,driver=<null>,execDriver=<null>,hostConfig=<null>,hostnamePath=<null>,hostsPath=<null>,logPath=<null>,id=<null>,sizeRootFs=<null>,imageId=<null>,mountLabel=<null>,name=<null>,restartCount=<null>,networkSettings=<null>,path=<null>,processLabel=<null>,resolvConfPath=<null>,execIds=<null>,state=<null>,volumes=<null>,volumesRW=<null>,node=<null>,mounts=<null>,graphDriver=<null>,platform=<null>], waitStrategy=org.testcontainers.containers.wait.strategy.HttpWaitStrategy@76fa79b6, logConsumers=[org.testcontainers.containers.output.Slf4jLogConsumer@6b83ca61], createContainerCmdModifiers=[], tmpFsMapping=null, shouldBeReused=false)] in parallel for class com.sebastian_daschner.barista.it.BaristaContainerIT
-648 INFO org.microshed.testing.testcontainers.config.TestcontainersConfiguration  -   RemoteDockerImage(imageNameFuture=org.testcontainers.images.RemoteDockerImage$1@f0f0a5e9, imagePullPolicy=DefaultPullPolicy(), dockerClient=LazyDockerClient.INSTANCE)
-662 INFO org.testcontainers.containers.wait.strategy.HttpWaitStrategy  - HollowApplicationContainer: Waiting for 30 seconds for URL: http://host.docker.internal:9081/health/ready
-874 INFO org.microshed.testing.testcontainers.config.TestcontainersConfiguration  - All containers started in 249ms
-897 DEBUG org.microshed.testing.jaxrs.RestClientBuilder  - no classes implementing Application found in pkg: com.sebastian_daschner.barista.boundary
-897 DEBUG org.microshed.testing.jaxrs.RestClientBuilder  - checking in pkg: com.sebastian_daschner.barista
-1155 DEBUG org.microshed.testing.jaxrs.RestClientBuilder  - Using ApplicationPath of 'resources'
-1224 INFO org.microshed.testing.jaxrs.RestClientBuilder  - Building rest client for class com.sebastian_daschner.barista.boundary.BrewsResource with base path: http://host.docker.internal:9081/barista/resources and providers: [class org.microshed.testing.jaxrs.JsonBProvider]
-1549 DEBUG org.microshed.testing.jupiter.MicroShedTestExtension  - Injected rest client for public static com.sebastian_daschner.barista.boundary.BrewsResource com.sebastian_daschner.barista.it.BaristaContainerIT.brews
-1714 INFO org.microshed.testing.jaxrs.JsonBProvider  - Sending data to server: {"type":"POUR_OVER"}
-[INFO] starting to brew: POUR_OVER
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.049 s - in com.sebastian_daschner.barista.it.BaristaContainerIT
-[INFO]
+0 INFO org.microshed.testing.jupiter.MicroShedTestExtension  - Using ApplicationEnvironment class: org.microshed.testing.testcontainers.config.HollowTestcontainersConfiguration
+70 INFO org.testcontainers.dockerclient.DockerClientProviderStrategy  - Loaded org.testcontainers.dockerclient.UnixSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+710 INFO org.testcontainers.dockerclient.UnixSocketClientProviderStrategy  - Accessing docker with local Unix socket
+710 INFO org.testcontainers.dockerclient.DockerClientProviderStrategy  - Found Docker environment with local Unix socket (unix:///var/run/docker.sock)
+868 INFO org.testcontainers.DockerClientFactory  - Docker host IP address is localhost
+914 INFO org.testcontainers.DockerClientFactory  - Connected to docker: 
+  Server Version: 19.03.1
+  API Version: 1.40
+  Operating System: Docker Desktop
+  Total Memory: 1998 MB
+1638 INFO org.testcontainers.utility.RegistryAuthLocator  - Credential helper/store (docker-credential-desktop) does not have credentials for quay.io
+2627 INFO org.testcontainers.DockerClientFactory  - Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+        ℹ︎ Checking the system...
+        ✔ Docker version should be at least 1.6.0
+        ✔ Docker environment should have more than 2GB free disk space
+2827 INFO org.microshed.testing.testcontainers.MicroProfileApplication  - Discovered ServerAdapter: class org.testcontainers.containers.liberty.LibertyAdapter
+2828 INFO org.microshed.testing.testcontainers.MicroProfileApplication  - Using ServerAdapter: org.testcontainers.containers.liberty.LibertyAdapter
+2834 DEBUG org.microshed.testing.testcontainers.config.TestcontainersConfiguration  - No networks explicitly defined. Using shared network for all containers in class com.sebastian_daschner.barista.it.BaristaContainerIT
+2842 INFO org.microshed.testing.testcontainers.config.HollowTestcontainersConfiguration  - exposing port: 9081 for container alpine:3.5
+2843 INFO org.microshed.testing.testcontainers.config.HollowTestcontainersConfiguration  - exposing port: 9444 for container alpine:3.5
+2844 INFO org.microshed.testing.testcontainers.config.TestcontainersConfiguration  - Starting containers in parallel for class com.sebastian_daschner.barista.it.BaristaContainerIT
+2845 INFO org.microshed.testing.testcontainers.config.TestcontainersConfiguration  -   java.util.concurrent.CompletableFuture@465232e9[Completed normally]
+2848 INFO org.microshed.testing.testcontainers.config.TestcontainersConfiguration  - All containers started in 3ms
+2868 DEBUG org.microshed.testing.jaxrs.RestClientBuilder  - no classes implementing Application found in pkg: com.sebastian_daschner.barista.boundary
+2868 DEBUG org.microshed.testing.jaxrs.RestClientBuilder  - checking in pkg: com.sebastian_daschner.barista
+2873 DEBUG org.microshed.testing.jaxrs.RestClientBuilder  - Using ApplicationPath of 'resources'
+2874 INFO org.microshed.testing.jaxrs.RestClientBuilder  - Building rest client for class com.sebastian_daschner.barista.boundary.BrewsResource with base path: http://localhost:9081/barista/resources and providers: [class org.microshed.testing.jaxrs.JsonBProvider]
+3273 DEBUG org.microshed.testing.jupiter.MicroShedTestExtension  - Injecting rest client for public static com.sebastian_daschner.barista.boundary.BrewsResource com.sebastian_daschner.barista.it.BaristaContainerIT.brews
+3419 INFO org.microshed.testing.jaxrs.JsonBProvider  - Sending data to server: {"type":"POUR_OVER"}
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.93 s - in com.sebastian_daschner.barista.it.BaristaContainerIT
+[INFO] 
 [INFO] Results:
-[INFO]
+[INFO] 
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-[INFO]
-[INFO] Integration tests finished.
-[INFO] Press the Enter key to run tests on demand. To stop the server and quit dev mode, use Ctrl-C or type 'q' and press the Enter key.
+[INFO] 
+[INFO] 
 ```
 
 ## Module 9: Support Licensing
@@ -924,21 +922,25 @@ WebSphere Liberty is also available in [Maven Central](https://search.maven.org/
 
 You can use WebSphere Liberty for development even if you haven't purchased it, but if you have production entitlement you can easily change to use it, as follows:
 
-In the `open-liberty-masterclass/start/coffee-shop/pom.xml` change these two lines from:
+In the `open-liberty-masterclass/start/barista/pom.xml` and `open-liberty-masterclass/start/coffee-shop/pom.xml`, add the `<configuration>...</configuration>` as the following:
 
 ```XML
-                        <groupId>io.openliberty</groupId>
-                        <artifactId>openliberty-kernel</artifactId>
+            <plugin>
+                <groupId>io.openliberty.tools</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <version>3.3.4</version>
+                <configuration>
+                  <runtimeArtifact>
+                      <groupId>com.ibm.websphere.appserver.runtime</groupId>
+                      <artifactId>wlp-kernel</artifactId>
+                      <version>[21.0.0.4,)</version>
+                      <type>zip</type>
+                  </runtimeArtifact>
+                </configuration>
+            </plugin>
 ```
 
-To:
-
-```XML
-                        <groupId>com.ibm.websphere.appserver.runtime</groupId>
-                        <artifactId>wlp-kernel</artifactId>
-```
-
-Rebuild and re-start the `coffee-shop` service:
+Rebuild and re-start the `coffee-shop` and the `basrista` services from bother terminals:
 
 ```
 mvn install liberty:dev
