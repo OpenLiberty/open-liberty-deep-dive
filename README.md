@@ -41,10 +41,10 @@ If you will be taking the Masterclass at a location with limited network bandwid
 ```
 git clone https://github.com/OpenLiberty/open-liberty-masterclass.git
 cd open-liberty-masterclass/finish/coffee-shop
-mvn install
+mvn package
 docker build -t masterclass:coffee-shop .
 cd ../barista
-mvn install
+mvn package
 docker build -t masterclass:barista .
 cd ..
 ```
@@ -83,7 +83,7 @@ cd start/barista
 Build and run the barista service:
 
 ```
-mvn install liberty:run
+mvn liberty:run
 ```
 
 Visit: http://localhost:9081/openapi/ui
@@ -120,21 +120,21 @@ mvn liberty:dev
 
 Take a look at the Maven build file for the coffee-shop project: `open-liberty-masterclass/start/coffee-shop/pom.xml`
 
-The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We define the versions of our plugins at the top of our pom:
+The Open Liberty Maven plugin must be version 3.x or above to use dev mode. 
 
 ```XML
-    <!-- Plugin Versions-->
-       <version.liberty-maven-plugin>3.3.4</version.liberty-maven-plugin>
-       <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
-       <version.maven-failsafe-plugin>3.0.0-M4</version.maven-failsafe-plugin>
-       <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
+    <plugin>
+        <groupId>io.openliberty.tools</groupId>
+        <artifactId>liberty-maven-plugin</artifactId>
+        <version>3.3.4</version>
+    </plugin>
 ```
  
 In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  All the features we are using in this Masterclass are part of Jakarta EE and MicroProfile. By having the two dependencies below means that at build time these are available for Maven to use and then it will install any of the features you requests in your server.xml but we will get to that shortly.
 
 ``` XML
     <dependencies>
-      <!--Open Liberty features -->
+      <!--Open Liberty provided features -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
@@ -144,7 +144,7 @@ In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  All the
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
-            <version>3.3</version>
+            <version>4.0.1</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency> 
@@ -168,19 +168,23 @@ Near the top of the file, you'll see the following `<featureManager/>` entry:
         <feature>ejbLite-3.2</feature>
         <feature>cdi-2.0</feature>
         <feature>beanValidation-2.0</feature>
-        <feature>mpHealth-2.2</feature>
-        <feature>mpConfig-1.4</feature>
-        <feature>mpRestClient-1.4</feature>
+        <feature>mpHealth-3.0</feature>
+        <feature>mpConfig-2.0</feature>
+        <feature>mpRestClient-2.0</feature>
         <feature>jsonp-1.1</feature>
     </featureManager>
 ```
 This entry lists all the features to be loaded by the server.  Add the following entry inside the `<featureManager/>` element:
 
 ```XML
-        <feature>mpOpenAPI-1.1</feature>
+        <feature>mpOpenAPI-2.0</feature>
 ```
 
 If you now go back to your terminal you should notice Open Liberty installing the new features without shutting down. You can also re-run tests by simply pressing enter in the Terminal. 
+
+```
+[INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [mpOpenAPI-2.0].
+```
 
 Lets go have a look at the new application you installed due to installing the Open API feature:
 
@@ -201,13 +205,15 @@ Then, we need to enable the corresponding features in Liberty's server configura
 We're now going to add Metrics to the `coffee-shop`.  Edit the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml` file and add the following dependency in the featureManager section like we did above:
 
 ```XML
-        <feature>mpMetrics-2.3</feature>
+        <feature>mpMetrics-3.0</feature>
 ```
 
-You should see that the server has been automatically updates, the following features are installed, and include mpMetrics-2.3:
+You should see that the server has been automatically updates, the following features are installed, and include mpMetrics-3.0:
 
 ```
-[INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [beanValidation-2.0, cdi-2.0, distributedMap-1.0, ejbLite-3.2, el-3.0, jaxrs-2.1, jaxrsClient-2.1, jndi-1.0, json-1.0, jsonp-1.1, mpConfig-1.3, mpHealth-2.2, mpMetrics-2.0, mpOpenAPI-1.1, mpRestClient-1.3, servlet-4.0, ssl-1.0].
+INFO] Installing features: [mpconfig-2.0, mpopenapi-2.0, mpmetrics-3.0, cdi-2.0, mprestclient-2.0, jsonp-1.1, beanvalidation-2.0, ejblite-3.2, mphealth-3.0, jaxrs-2.1]
+...
+[INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [distributedMap-1.0, monitor-1.0, mpMetrics-3.0, ssl-1.0].
 ```
 Now we have the API available, we can update the application to include a metric which will count the number of times a coffee order is requested. In the file `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/OrdersResource.java`, add the following `@Counted` annotation to the `orderCoffee` method:
 
@@ -268,9 +274,9 @@ Start the server and visit the metrics endpoint:
 You should see a number of metrics automatically generated by the JVM:
 
 ```
-TYPE base:classloader_total_loaded_class_count counter
-# HELP base:classloader_total_loaded_class_count Displays the total number of classes that have been loaded since the Java virtual machine has started execution.
-base:classloader_total_loaded_class_count 10616
+# TYPE base_classloader_loadedClasses_count gauge
+# HELP base_classloader_loadedClasses_count Displays the number of classes that are currently loaded in the Java virtual machine.
+base_classloader_loadedClasses_count 14053
 ...
 ```
 This doesn't contain the metrics you added because the service hasn't been called and so no application metrics have been recorded. Use the OpenAPI UI (http://localhost:9080/openapi/ui/) to send a few requests to the service.
@@ -287,9 +293,9 @@ Reload the metrics page and at the bottom of the metrics results you should see:
 
 ```
 ...
-# TYPE application:com_sebastian_daschner_coffee_shop_boundary_orders_resource_order counter
-# HELP application:com_sebastian_daschner_coffee_shop_boundary_orders_resource_order Number of times orders requested.
-application:com_sebastian_daschner_coffee_shop_boundary_orders_resource_order 3
+# TYPE application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total counter
+# HELP application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total Number of times orders requested.
+application_com_sebastian_daschner_coffee_shop_boundary_OrdersResource_order_total 1
 ```
 Now go to the terminal and type `q` followed by `Enter` to shut down the server.
 
@@ -300,51 +306,9 @@ If you're familiar with the concept of 12-factor applications (see http://12fact
 
 Liberty lets your application pick up configuration from a number of sources, such as environment variables, bootstrap.properties and Kubernetes configuration.
 
-Bootstrap.properties lets you provide simple configuration values to substitute in the server configuration and use within the application.  The following example replaces the hard-coded base URL the `coffee-shop` service uses to talk to the `barista` service, as well as the ports it exposes.
+Stop the **barista** service by pressing **CTRL+C** in the command-line session where you ran it.
 
-In the `open-liberty-masterclass/start/coffee-shop/pom.xml` file, in the existing `<properties/>` element, you will see the following port and URL values:
-
-```XML
-    <properties>
-        ...
-        <testServerHttpPort>9080</testServerHttpPort>
-        <testServerHttpsPort>9443</testServerHttpsPort>
-        <baristaBaseURL>http://localhost:9081</baristaBaseURL>
-        ...
-    </properties>
-```
-This `<properties/>` element is where the property values are set that can then be re-used within the maven project.  
-
-In the `<bootstrapProperties/>` section of the `liberty-maven-plugin` configuration, add the following:
-
-```XML
-    <bootstrapProperties>
-    ...
-    <env.default_http_port>${testServerHttpPort}</env.default_http_port>
-    <env.default_https_port>${testServerHttpsPort}</env.default_https_port>
-    <default_barista_base_url>${baristaBaseURL}</default_barista_base_url>
-    </bootstrapProperties>
-```
-The above takes the properties we defined in the maven project and passes them to Liberty as bootstrap properties.
-
-Note, we're using the `env.` prefix because in the Docker modules of this Masterclass you will set these through environment variables. Note, also the names use underscores (`_`) so they can be passed as environment variables.
-
-Build the project:
-
-```
-mvn install
-```
-
-The `liberty-maven-plugin` generated the following file `target/liberty/wlp/usr/servers/defaultServer/bootstrap.properties` which contains the configuration that will be loaded and applied to the server configuration.  If you view the file you'll see the values you specified:
-
-```YAML
-# Generated by liberty-maven-plugin
-default_barista_base_url=http://localhost:9081
-env.default_http_port=9080
-env.default_https_port=9443
-```
-
-We now need to change the server configuration to use these values.  In the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml` file, change this line:
+We now need to change the server configuration to externalize the ports.  In the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml` file, change this line:
 
 ```XML
     <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
@@ -353,7 +317,24 @@ We now need to change the server configuration to use these values.  In the `ope
 to
 
 ```XML
-    <httpEndpoint host="*" httpPort="${env.default_http_port}" httpsPort="${env.default_https_port}" id="defaultHttpEndpoint"/>
+    <variable name="default.http.port" defaultValue="9081"/>
+    <variable name="default.https.port" defaultValue="9444"/>
+    <httpEndpoint id="defaultHttpEndpoint" host="*" 
+        httpPort="${default.http.port}" 
+        httpsPort="${default.https.port}"/>
+```
+Restart the `barista` service by running the following commands:
+```
+export DEFAULT_HTTP_PORT=9082
+mvn liberty:run
+```
+
+If you take a look at the `barista` server output, you should find out that the `barista` service is running on the port `9082` now:
+```
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/health/
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/openapi/
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/openapi/ui/
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/barista/
 ```
 
 Next we'll use the `default_barista_base_url` in the code to avoid hard-coding the location of the `barista` service.
@@ -381,9 +362,15 @@ import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 ```
 
-This is using the MicroProfile Config specification to inject the configuration value.  Configuration can come from a number of sources, including `bootstrap.properties`.
+This is using the MicroProfile Config specification to inject the configuration value.  Configuration can come from a number of sources.
 
-We also need to make the same changes to the HealthResource of the `coffee-shop` service. Edit the file: `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/HealthResource.java`
+Open the `coffee-shop/src/main/webapp/META-INF/microprofile-config.properties` MicroProfile configuration file. Add the following value:
+```
+default_barista_base_url=http://localhost:9081
+```
+{: codeblock}
+
+We also need to make the same changes to the CoffeeShopReadinessCheck of the `coffee-shop` service. Edit the file: `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/health/CoffeeShopReadinessCheck.java`
 
 Change:
 
@@ -408,7 +395,28 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 For more information on MicroProfile Config see https://openliberty.io/guides/microprofile-config.html.
 
-Rebuild the code, start the `coffee-shop` and `barista` servers and try out the endpoint through the Open API UI.  You can also try out the health endpoint at `http://localhost:9080/health`.
+Rebuild the code, start the `coffee-shop` and `barista` servers and try out the endpoint through the Open API UI.  
+
+You can also try out the health endpoint at `http://localhost:9080/health/ready`.
+
+You'll find out from the `coffee-shop` service is not ready because the `barista` is not running on the port `9081`:
+```
+{"checks":[{"data":{},"name":"CoffeeShopReadinessCheck Readiness Check","status":"DOWN"}],"status":"DOWN"}
+```
+
+Update the `coffee-shop/src/main/webapp/META-INF/microprofile-config.properties` MicroProfile configuration file. Change the port to 9082 as the following:
+```
+default_barista_base_url=http://localhost:9082
+```
+
+Retry the health endpoint at `http://localhost:9080/health/ready`.
+
+You'll find out from the `coffee-shop` service is ready now:
+```
+{"checks":[{"data":{},"name":"CoffeeShopReadinessCheck Readiness Check","status":"UP"}],"status":"UP"}
+```
+
+You can set the `default_barista_base_url` value through the `DEFAULT_BARISTA_BASE_URL` environment variable but you'll need to restart the `coffee-shop` service.
 
 
 ## Module 6: Integration Testing
@@ -420,36 +428,28 @@ Because we're going to be testing a REST `POST` request, we need JAX-RS client s
 ```XML
         <!-- Test dependencies -->  
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.6.2</version>
+            <version>5.7.1</version>
             <scope>test</scope>
         </dependency>     
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-mp-client</artifactId>
-            <version>3.3.0</version>
+            <version>3.4.3</version>
             <scope>test</scope>
         </dependency>      
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>2.9.3</version>
+            <version>2.12.3</version>
             <scope>test</scope>
         </dependency>   
 ```
 
-Note, the later `Testing in Containers` module requires the JUnit 5 Jupiter API so we're adding the API here.
-
 Note the `<scope/>` of the dependencies is set to `test` because we only want the dependencies to be used during testing.
 
-Next add `maven-failsafe-plugin` configuration at the end of the `<plugins/>` section:
+Add the following `<configuration>...</configuration>` to the `maven-failsafe-plugin` plugin:
 
 ```XML
         <plugins>
@@ -457,15 +457,13 @@ Next add `maven-failsafe-plugin` configuration at the end of the `<plugins/>` se
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${version.maven-failsafe-plugin}</version>
+                <version>2.22.2</version>
                 <configuration>
-                    <trimStackTrace>false</trimStackTrace>
-                        <systemProperties>
-                        <liberty.test.port>${testServerHttpPort}</liberty.test.port>
-                        <war.name>${artifactId}.war</war.name>
-                    </systemProperties>
+                    <systemPropertyVariables>
+                        <liberty.test.port>9082</liberty.test.port>
+                    </systemPropertyVariables>
                 </configuration>
-            </plugin>  
+            </plugin> 
         </plugins>                      
 ```
 
@@ -476,14 +474,13 @@ Finally, add the test code.  Create a file called, `open-liberty-masterclass/sta
 ```Java
 package com.sebastian_daschner.barista.it;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.junit.BeforeClass;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import javax.inject.Inject;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;;
+import org.junit.jupiter.api.BeforeAll;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -527,9 +524,9 @@ public class BaristaIT {
 
         try {
             if (response == null) {
-                assertNotNull("GreetingService response must not be NULL", response);
+                assertNotNull(response, "GreetingService response must not be NULL");
             } else {
-                assertEquals("Response must be 200 OK", 200, response.getStatus());
+                assertEquals( 200, response.getStatus(), "Response must be 200 OK");
             }
 
         } finally {
@@ -542,13 +539,14 @@ public class BaristaIT {
 
 This test sends a `json` request to the `barista` service and checks for a `200 OK` response. 
 
-Start the server in Dev Mode and run the tests by pressing `Enter` after the server has started:
-
+You'll see the following information from the `barista` service output:
 ```
-mvn install liberty:dev
+[INFO] Tests compilation was successful.
 ```
 
-In the output of the build, you should see:
+Because you started Open Liberty in dev mode, press the **enter/return** key to run the tests.
+
+If the tests pass, you see a similar output to the following example:
 
 ```
 [INFO] Running unit tests...
@@ -573,7 +571,8 @@ In the output of the build, you should see:
 [INFO] Press the Enter key to run tests on demand. To stop the server and quit dev mode, use Ctrl-C or type 'q' and press the Enter key.
 ```
 
-Once the test has finished, shut down the server by typing `q` then pressing the Enter key.
+When you are done checking out the services, exit dev mode by pressing **CTRL+C** in the command-line sessions
+where you ran the `barista` and `coffee-shop` services, or by typing **q** and then pressing the **enter/return** key.
 
 ## Module 7: Docker
 
@@ -601,12 +600,14 @@ The `RUN` command runs a script that is already located on the image that will a
 Let's build the docker image.  In the `open-liberty-masterclass/start/coffee-shop` directory run: 
 
 ```
+mvn package
 docker build -t masterclass:coffee-shop .
 ```
 
 In the `open-liberty-masterclass/start/barista` directory, run (note the period (`.`) at the end of the line is important):
 
 ```
+mvn package
 docker build -t masterclass:barista .
 ```
 
@@ -621,7 +622,7 @@ You can now run the two Docker containers and get them to join the same bridge n
 Run the `barista` container:
 
 ```
-docker run --network=masterclass-net --name=barista masterclass:barista
+docker run -d --network=masterclass-net --name=barista masterclass:barista
 ```
 
 Note, we don't need to map the `barista` service ports outside the container because the bridge network gives access to the other containers on the same network.
@@ -629,7 +630,10 @@ Note, we don't need to map the `barista` service ports outside the container bec
 Next, we're going to run the `coffee-shop` container.  For it to work,The approach we're going to take is to use a Docker volume we'll need to provide new values for ports and the location of the barista service.  Run the `coffee-shop` container
 
 ```
-docker run -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 masterclass:coffee-shop
+docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop \
+  -e default_barista_base_url='http://barista:9081' \
+  -e default_http_port=9080 \
+  -e default_https_port=9443 masterclass:coffee-shop
 ```
 
 You can take a look at the bridge network using:
@@ -677,13 +681,14 @@ You'll see something like:
     }
 ]
 ```
-If you need to remove a container, use:
 
-```
-docker container rm <container name>
-```
-You should now be able to load the `coffee-shop` service's Open API page and call the service.  Give it a try.
+You should now be able to check the `coffee-shop` health by `http://localhost:9080/health` and load the `coffee-shop`  service's Open API page `http://localhost:9080/openapi/ui` and call the service.  Give it a try.
 
+Now, let stop and remove the **coffee-shop**  container for the following section:
+```
+docker stop coffee-shop
+docker rm coffee-shop
+```
 
 ### Overriding Dev Server Configuration
 
@@ -698,7 +703,7 @@ Take a look at the file `open-liberty-masterclass/start/coffee-shop/configDropin
 <server description="Coffee Shop Server">
 
     <featureManager>
-        <feature>mpMetrics-2.3</feature>
+        <feature>mpMetrics-3.0</feature>
     </featureManager>
     
     <mpMetrics authentication="true" />
@@ -708,10 +713,8 @@ Take a look at the file `open-liberty-masterclass/start/coffee-shop/configDropin
      only and MUST NOT BE USED IN PRODUCTION AS IT 
      IS INSECURE. -->  
     <variable name="admin.password" value="change_it" />
-    <variable name="keystore.password" value="change_it" />
     
     <quickStartSecurity userName="admin" userPassword="${admin.password}"/>
-    <keyStore id="defaultKeyStore" password="${keystore.password}"/>    
      
 </server>
 ```
@@ -721,12 +724,16 @@ You'll see that this turns metrics authentication on and sets up some simple sec
 If you're on a unix-based OS, in the `open-liberty-masterclass/start/coffee-shop` directory, run the `coffee-shop` container:
 
 ```
-docker run -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop -e default_barista_base_url='http://barista:9081' -e default_http_port=9080 -e default_https_port=9443 -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides  masterclass:coffee-shop
+docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop \
+  -e default_barista_base_url='http://barista:9081' \
+  -e default_http_port=9080 \
+  -e default_https_port=9443 \
+  -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides masterclass:coffee-shop
 ```
 
 The above relies on `pwd` to fill in the docker volume source path.  If you're on Windows, replace `$(pwd)` with the absolute path to the `open-liberty-masterclass/start/coffee-shop` directory in the above command.
 
-You should see the following message as the server is starting:
+Run the `docker logs coffee-shop` command. You should see the following message as the server is starting:
 
 ```
 [AUDIT   ] CWWKG0102I: Found conflicting settings for mpMetrics configuration.
@@ -742,6 +749,13 @@ Access the metrics endpoint at: `https://localhost:9445/metrics`
 
 You will see that the browser complains about the certificate.  This is a self-signed certificate generated by Liberty for test purposes.  Accept the exception (note,  Firefox may not allow you to do this in which case you'll need to use a different browser).  You'll be presented with a login prompt.  Sign in with userid `admin` and password `change_it` (the values in the `metrics-prod.xml`).
 
+Now, let stop and remove the **barista** and **coffee-shop** containers and the network:
+
+```
+docker stop barista coffee-shop
+docker rm barista coffee-shop
+docker network rm masterclass-net
+```
 
 ## Module 8: Testing in Containers
 
@@ -758,7 +772,7 @@ Now let's create a new Integration Test that will perform the same test, but ins
         <dependency>
             <groupId>org.microshed</groupId>
             <artifactId>microshed-testing-liberty</artifactId>
-            <version>0.8</version>
+            <version>0.9.1</version>
         <scope>test</scope>
         </dependency>
         <dependency>
@@ -774,8 +788,8 @@ Create a new Integration Test called `BaristaContainerIT.java` in the directory 
 ```Java
 package com.sebastian_daschner.barista.it;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import javax.ws.rs.core.Response;
 
@@ -809,9 +823,9 @@ public class BaristaContainerIT {
 
         try {
             if (response == null) {
-                assertNotNull("GreetingService response must not be NULL", response);
+                assertNotNull(response, "GreetingService response must not be NULL");
             } else {
-                assertEquals("Response must be 200 OK", 200, response.getStatus());
+                assertEquals( 200, response.getStatus(), "Response must be 200 OK");
             }
         } finally {
             response.close();
@@ -830,7 +844,7 @@ The test also contains the following Container configuration:
     public static MicroProfileApplication app = new MicroProfileApplication()
                     .withAppContextRoot("/barista")
                     .withExposedPorts(9081)
-                    .withReadinessPath("/health");
+                    .withReadinessPath("/health/ready");
 ```
 
 
@@ -851,10 +865,11 @@ log4j.appender.stdout.layout.ConversionPattern=%r %p %c %x - %m%n
 log4j.logger.org.microshed=DEBUG
 ```
 
-Start the server in Dev Mode and run the tests by pressing `Enter` after the server has started:
+Rebuild and run the test:
 
 ```
-mvn install liberty:dev
+mvn clean package
+mvn failsafe:integration-test
 ```
 
 You should see the following output:
@@ -903,24 +918,40 @@ WebSphere Liberty is also available in [Maven Central](https://search.maven.org/
 
 You can use WebSphere Liberty for development even if you haven't purchased it, but if you have production entitlement you can easily change to use it, as follows:
 
-In the `open-liberty-masterclass/start/coffee-shop/pom.xml` change these two lines from:
+In the `open-liberty-masterclass/start/barista/pom.xml` and `open-liberty-masterclass/start/coffee-shop/pom.xml`, add the `<configuration>...</configuration>` as the following:
 
 ```XML
-                        <groupId>io.openliberty</groupId>
-                        <artifactId>openliberty-kernel</artifactId>
+            <plugin>
+                <groupId>io.openliberty.tools</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <version>3.3.4</version>
+                <configuration>
+                  <runtimeArtifact>
+                      <groupId>com.ibm.websphere.appserver.runtime</groupId>
+                      <artifactId>wlp-kernel</artifactId>
+                      <version>[21.0.0.4,)</version>
+                      <type>zip</type>
+                  </runtimeArtifact>
+                </configuration>
+            </plugin>
 ```
 
-To:
-
-```XML
-                        <groupId>com.ibm.websphere.appserver.runtime</groupId>
-                        <artifactId>wlp-kernel</artifactId>
-```
-
-Rebuild and re-start the `coffee-shop` service:
+Rebuild and re-start the `barista` service:
 
 ```
-mvn install liberty:dev
+cd open-liberty-masterclass/start/barista
+export DEFAULT_HTTP_PORT=9082
+mvn clean
+mvn liberty:dev
+```
+{: codeblock}
+
+and the `coffee-shop` service:
+```
+cd open-liberty-masterclass/start/coffee-shop
+export DEFAULT_HTTP_PORT=
+mvn clean
+mvn liberty:dev
 ```
 
 Try the service out using the Open API Web page and you should see the behavior is identical.  Not surprising since the code is identical, from the same build, just built into WebSphere Liberty.
