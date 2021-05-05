@@ -46,7 +46,7 @@ docker build -t masterclass:coffee-shop .
 cd ../barista
 mvn package
 docker build -t masterclass:barista .
-cd ..
+cd ../..
 ```
 ## The Application
 
