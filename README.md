@@ -102,7 +102,7 @@ Under `Example Value` specify:
 
 Click on `Execute`
 
-Scroll down and you should see the server response code of `200`.  This says that the barista request to make an `ESPRESSO` was successfully `Created`. If you go back to the terminal you will also see the message `starting to brew: EXPRESSO`. Now leave this Open Liberty server running and open a new terminal to continue this masterclass from there.
+Scroll down and you should see the server response code of `200`.  This says that the barista request to make an `ESPRESSO` was successfully `Created`. If you go back to the terminal you will also see the message `starting to brew: EXPRESSO`. Now leave this terminal with the Open Liberty server running and open up a new terminal to continue this masterclass from the same directory.
 
 
 ## Module 2: Dev Mode
@@ -123,14 +123,29 @@ Take a look at the Maven build file for the coffee-shop project: `open-liberty-m
 The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We define the versions of our plugins at the top of our pom:
 
 ```XML
-    <!-- Plugin Versions-->
-       <version.liberty-maven-plugin>3.3.4</version.liberty-maven-plugin>
-       <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
-       <version.maven-failsafe-plugin>3.0.0-M4</version.maven-failsafe-plugin>
-       <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.1</version>
+    </plugin>
+    <plugin>
+        <groupId>io.openliberty.tools</groupId>
+        <artifactId>liberty-maven-plugin</artifactId>
+        <version>3.3.4</version>
+    </plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.22.2</version>
+    </plugin>   
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.2</version>
+    </plugin>
 ```
  
-In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  All the features we are using in this Masterclass are part of Jakarta EE and MicroProfile. By having the two dependencies below means that at build time these are available for Maven to use and then it will install any of the features you requests in your server.xml but we will get to that shortly.
+In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section. All the features we are using in this Masterclass are part of Jakarta EE and MicroProfile. By having the two dependencies below means that at build time these are available for Maven to use and then it will install any of the features you requests in your server.xml but we will get to that shortly.
 
 ``` XML
     <dependencies>
@@ -144,7 +159,7 @@ In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  All the
         <dependency>
             <groupId>org.eclipse.microprofile</groupId>
             <artifactId>microprofile</artifactId>
-            <version>3.3</version>
+            <version>4.0.1</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency> 
@@ -154,7 +169,7 @@ In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section.  All the
 
 Let's add the dependency on the `MicroProfile OpenAPI` feature so we can try the `coffee-shop` service out.
 
-We have already loaded the MicroProfile 3.3 feature in the pom that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Liberty server.
+We have already loaded the MicroProfile 4.0 feature in the pom that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Liberty server.
 
 Open the file `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml`
 
@@ -168,16 +183,16 @@ Near the top of the file, you'll see the following `<featureManager/>` entry:
         <feature>ejbLite-3.2</feature>
         <feature>cdi-2.0</feature>
         <feature>beanValidation-2.0</feature>
-        <feature>mpHealth-2.2</feature>
-        <feature>mpConfig-1.4</feature>
-        <feature>mpRestClient-1.4</feature>
+        <feature>mpHealth-3.0</feature>
+        <feature>mpConfig-2.0</feature>
+        <feature>mpRestClient-2.0</feature>
         <feature>jsonp-1.1</feature>
     </featureManager>
 ```
 This entry lists all the features to be loaded by the server.  Add the following entry inside the `<featureManager/>` element:
 
 ```XML
-        <feature>mpOpenAPI-1.1</feature>
+        <feature>mpOpenAPI-2.0</feature>
 ```
 
 If you now go back to your terminal you should notice Open Liberty installing the new features without shutting down. You can also re-run tests by simply pressing enter in the Terminal. 
@@ -201,11 +216,11 @@ Then, we need to enable the corresponding features in Liberty's server configura
 We're now going to add Metrics to the `coffee-shop`.  Edit the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml` file and add the following dependency in the featureManager section like we did above:
 
 ```XML
-        <feature>mpMetrics-2.3</feature>
+        <feature>mpMetrics-3.0</feature>
 ```
 {: codeblock}
 
-You should see that the server has been automatically updates, the following features are installed, and include mpMetrics-2.3:
+You should see that the server has been automatically updates, the following features are installed, and include mpMetrics-3.0:
 
 ```
 [INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [beanValidation-2.0, cdi-2.0, distributedMap-1.0, ejbLite-3.2, el-3.0, jaxrs-2.1, jaxrsClient-2.1, jndi-1.0, json-1.0, jsonp-1.1, mpConfig-1.3, mpHealth-2.2, mpMetrics-2.0, mpOpenAPI-1.1, mpRestClient-1.3, servlet-4.0, ssl-1.0].
@@ -240,17 +255,12 @@ From your previous addition of the MicroProfile Metrics feature in the server.xm
 
 ```
 
-Open the metrics endpoint in your browser.  You should see a message like this:
+Open the metrics endpoint in your browser http://localhost:9080/metrics/.  You should see a message like this:
 
 ```
 Error 403: Resource must be accessed with a secure connection try again using an HTTPS connection.
 ```
-
-If you take a look at the server output, you should see the following error:
-
-```
-[INFO] [ERROR   ] CWWKS9113E: The SSL port is not active. The incoming http request cannot be redirected to a secure port. Check the server.xml file for configuration errors. The https port may be disabled. The keyStore element may be missing or incorrectly specified. The SSL feature may not be enabled.
-```
+or a **Username** and **Password** will be required
 
 It's one thing to configure the server to load a feature, but many Liberty features require additional configuration.  The complete set of Liberty features and their configuration can be found here: https://openliberty.io/docs/ref/config/.
 
@@ -262,9 +272,9 @@ Add the following below the `</featureManager>` in the `open-liberty-masterclass
     <mpMetrics authentication="false" />
 ```
 
-Start the server and visit the metrics endpoint:
+Now restart your server and visit the metrics endpoint:
 
-`http://localhost:9080/metrics/`
+http://localhost:9080/metrics/
 
 You should see a number of metrics automatically generated by the JVM:
 
