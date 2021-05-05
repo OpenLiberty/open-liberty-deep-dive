@@ -2,6 +2,8 @@
 
 These instructions contain the hands-on lab modules for the Open Liberty Masterclass.  It is intended to be used in conjunction with taught materials, however, feel free to give it a try, even if you're not in a Masterclass.
 
+We strongly recommend using Google Chrome for the purpose of these labs.
+
 ## The Application
 
 To open a new command-line session, select **Terminal** > **New Terminal** from the menu of the IDE.

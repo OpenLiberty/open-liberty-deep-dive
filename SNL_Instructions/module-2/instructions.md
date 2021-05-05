@@ -48,7 +48,7 @@ The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We d
 ```
  
 
-In the same **coffee-shop/pom.xml** locate the **<dependencies/>** section.  All the features we are using in this Masterclass are part of Jakarta EE and MicroProfile. By having the two dependencies below means that at build time these are available for Maven to use and then it will install any of the features you request in your **server.xml,** but we will get to that shortly.
+In the same **coffee-shop/pom.xml** locate the **`<dependencies/>`** section.  All the features we are using in this Masterclass are part of Jakarta EE and MicroProfile. By having the two dependencies below means that at build time these are available for Maven to use and then it will install any of the features you request in your **server.xml,** but we will get to that shortly.
 
 ``` XML
     <dependencies>
@@ -79,7 +79,7 @@ Open the **server.xml**
 > [File -> Open]open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml
 
 
-This file is the configuration for the `coffee-shop` server.
+This file is the configuration for the **coffee-shop** server.
 
 Near the top of the file, you'll see the following `<featureManager/>` entry:
 

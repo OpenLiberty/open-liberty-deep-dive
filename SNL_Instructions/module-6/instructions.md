@@ -29,7 +29,7 @@ Because we're going to be testing a **REST POST** request, we need JAX-RS client
 ```
 {: codeblock}
 
-Note the **<scope/>** of the dependencies is set to **test** because we only want the dependencies to be used during testing.
+Note: the **`<scope/>`** of the dependencies is set to **test** because we only want the dependencies to be used during testing.
 
 Add the following `<configuration>...</configuration>` to the `maven-failsafe-plugin` plugin:
 ```
@@ -46,7 +46,7 @@ Add the following `<configuration>...</configuration>` to the `maven-failsafe-pl
 ```
 {: codeblock}
 
-Note, this configuration makes the port of the server available to the test as a system property called **liberty.test.port**.
+Note: this configuration makes the port of the server available to the test as a system property called `liberty.test.port`.
 
 Finally, add the test code.  Create a file called **BaristaIT.java**.
 Open a new Terminal
