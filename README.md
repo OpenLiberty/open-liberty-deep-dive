@@ -114,7 +114,7 @@ We are going to make changes to the coffee-shop project.
 Navigate to the coffee-shop project and start the server up in dev mode and make some changes to the configuration. This will need to install new features while the server is still running:
 
 ```
-cd ../coffee-shop
+cd open-liberty-masterclass/start/coffee-shop
 mvn liberty:dev
 ```
 
