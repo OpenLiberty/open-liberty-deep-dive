@@ -83,7 +83,7 @@ cd start/barista
 Build and run the barista service:
 
 ```
-mvn liberty:run
+mvn liberty:dev
 ```
 
 Visit: http://localhost:9081/openapi/ui
@@ -323,7 +323,7 @@ to
 Restart the `barista` service by running the following commands:
 ```
 export DEFAULT_HTTP_PORT=9082
-mvn liberty:run
+mvn liberty:dev
 ```
 
 If you take a look at the `barista` server output, you should find out that the `barista` service is running on the port `9082` now:
