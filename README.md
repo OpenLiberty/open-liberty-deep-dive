@@ -433,9 +433,9 @@ You can set the `default_barista_base_url` value through the `DEFAULT_BARISTA_BA
 
 ## Module 6: Integration Testing
 
-Tests are essential for developing maintainable code.  Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging.  In this section you'll add a `barista` service integration test using the `maven-failsafe-plugin`.  During the build, the Liberty server will be started along with the `barista` application deployed, the test will be run and then the server will be stopped.
+Tests are essential for developing maintainable code. Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging. In this section you'll add a `barista` service integration test using the `maven-failsafe-plugin`. During the build, the Liberty server will be started along with the `barista` application deployed, the test will be run and then the server will be stopped.
 
-Because we're going to be testing a REST `POST` request, we need JAX-RS client support and also support for serializing `json` into the request.  We also need `junit` for writing the test.  Add these dependencies to the `open-liberty-masterclass/start/barista/pom.xml`:
+Because we're going to be testing a REST `POST` request, we need JAX-RS client support and also support for serializing `json` into the request. We also need `junit` for writing the test. Add these dependencies to the `open-liberty-masterclass/start/barista/pom.xml`:
 
 ```XML
         <!-- Test dependencies -->  
@@ -477,67 +477,52 @@ Add the following `<configuration>...</configuration>` to the `maven-failsafe-pl
 
 Note, this configuration makes the port of the server available to the test as a system property called `liberty.test.port`.
 
-Finally, add the test code.  Create a file called, `open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java` and add the following:
+Finally, add the test code.  Create a file called, `open-liberty-masterclass/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristaIT.java` and add the following:
 
 ```Java
 package com.sebastian_daschner.barista.it;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.junit.BeforeClass;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import javax.inject.Inject;
+import java.time.Duration;
+
+import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.MediaType;
-
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import org.microshed.testing.jaxrs.RESTClient;
+import org.microshed.testing.jupiter.MicroShedTest;
+import org.microshed.testing.testcontainers.ApplicationContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import com.sebastian_daschner.barista.boundary.BrewsResource;
 import com.sebastian_daschner.barista.entity.CoffeeBrew;
 import com.sebastian_daschner.barista.entity.CoffeeType;
 
-public class BaristaIT {
-    private static String URL;
+@MicroShedTest
+public class BaristaContainerIT {
 
-    @BeforeAll
-    public static void init() {
-        String port = System.getProperty("liberty.test.port");
-        URL = "http://localhost:" + port + "/barista/resources/brews";
-    }
+    @Container
+    public static ApplicationContainer app = new ApplicationContainer()
+                    .withAppContextRoot("/barista")
+                    .withExposedPorts(9081)
+                    .withReadinessPath("/health/ready");
+    
+    @RESTClient
+    public static BrewsResource brews;
+
     @Test
     public void testService() throws Exception {
-
-        Client client = null;
-        WebTarget target = null;
-        try {
-            client = ClientBuilder.newClient().register(JacksonJsonProvider.class);
-            target = client.target(URL);
-
-        } catch (Exception e) {
-            client.close();
-            throw e;
-        }
-
         CoffeeBrew brew = new CoffeeBrew();
         brew.setType(CoffeeType.POUR_OVER);
-
-        Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.json(brew));
+        Response response = brews.startCoffeeBrew(brew);
 
         try {
             if (response == null) {
-                assertNotNull("GreetingService response must not be NULL", response);
+            	assertNotNull(response, "GreetingService response must not be NULL");
             } else {
-                assertEquals("Response must be 200 OK", 200, response.getStatus());
+            	assertEquals( 200, response.getStatus(), "Response must be 200 OK");
             }
-
         } finally {
             response.close();
         }
@@ -551,7 +536,7 @@ This test sends a `json` request to the `barista` service and checks for a `200 
 Start the server in Dev Mode and run the tests by pressing `Enter` after the server has started:
 
 ```
-mvn install liberty:dev
+mvn liberty:dev
 ```
 
 In the output of the build, you should see:
@@ -568,7 +553,7 @@ Results :
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
 
-Once the test has finished, shut down the server by typing `q` then pressing the Enter key.
+Once the test has finished, shut down both microservices by typing `q` in both terminals, then press the Enter key.
 
 ## Module 7: Docker
 
@@ -596,12 +581,14 @@ The `RUN` command runs a script that is already located on the image that will a
 Let's build the docker image.  In the `open-liberty-masterclass/start/coffee-shop` directory run: 
 
 ```
+mvn package
 docker build -t masterclass:coffee-shop .
 ```
 
 In the `open-liberty-masterclass/start/barista` directory, run (note the period (`.`) at the end of the line is important):
 
 ```
+mvn package
 docker build -t masterclass:barista .
 ```
 
@@ -616,7 +603,7 @@ You can now run the two Docker containers and get them to join the same bridge n
 Run the `barista` container:
 
 ```
-docker run --network=masterclass-net --name=barista masterclass:barista
+docker run -d --network=masterclass-net --name=barista masterclass:barista
 ```
 
 Note, we don't need to map the `barista` service ports outside the container because the bridge network gives access to the other containers on the same network.
@@ -678,7 +665,7 @@ You'll see something like:
 
 You should now be able to load the `coffee-shop` service's Open API page and call the service.  Give it a try.
 
-curl http://localhost:9080/health
+http://localhost:9080/openapi/ui
 
 Now, let's stop and remove the **coffee-shop**  container for the following section:
 
@@ -730,7 +717,11 @@ docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-
 
 The above relies on `pwd` to fill in the docker volume source path.  If you're on Windows, replace `$(pwd)` with the absolute path to the `open-liberty-masterclass/start/coffee-shop` directory in the above command.
 
-You should see the following message as the server is starting:
+You should see the following message as the server is starting if you look at the logs:
+
+```
+docker logs coffee-shop
+```
 
 ```
 [AUDIT   ] CWWKG0102I: Found conflicting settings for mpMetrics configuration.
@@ -742,7 +733,7 @@ You should see the following message as the server is starting:
 
 This shows that we have turned metrics authentication back on.
 
-Access the metrics endpoint at: `https://localhost:9445/metrics`
+Access the metrics endpoint at: https://localhost:9445/metrics
 
 You will see that the browser complains about the certificate.  This is a self-signed certificate generated by Liberty for test purposes.  Accept the exception (note,  Firefox may not allow you to do this in which case you'll need to use a different browser).  You'll be presented with a login prompt.  Sign in with userid `admin` and password `change_it` (the values in the `metrics-prod.xml`).
 
