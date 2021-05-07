@@ -41,10 +41,10 @@ If you will be taking the Masterclass at a location with limited network bandwid
 ```
 git clone https://github.com/OpenLiberty/open-liberty-masterclass.git
 cd open-liberty-masterclass/finish/coffee-shop
-mvn install
+mvn package liberty:create liberty:install-feature
 docker build -t masterclass:coffee-shop .
 cd ../barista
-mvn install
+mvn package liberty:create liberty:install-feature
 docker build -t masterclass:barista .
 cd ..
 ```
@@ -83,7 +83,7 @@ cd start/barista
 Build and run the barista service:
 
 ```
-mvn install liberty:run
+mvn liberty:run
 ```
 
 Visit: http://localhost:9081/openapi/ui
@@ -120,7 +120,7 @@ mvn liberty:dev
 
 Take a look at the Maven build file for the coffee-shop project: `open-liberty-masterclass/start/coffee-shop/pom.xml`
 
-The Open Liberty Maven plugin must be version 3.x or above to use dev mode. We define the versions of our plugins at the top of our pom:
+The Open Liberty Maven plugin must be version 3.x or above to use dev mode. 
 
 ```XML
     <plugin>
@@ -218,7 +218,6 @@ We're now going to add Metrics to the `coffee-shop`.  Edit the `open-liberty-mas
 ```XML
         <feature>mpMetrics-3.0</feature>
 ```
-{: codeblock}
 
 You should see that the server has been automatically updates, the following features are installed, and include mpMetrics-3.0:
 
@@ -404,9 +403,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 For more information on MicroProfile Config see https://openliberty.io/guides/microprofile-config.html.
 
-Run the following curl command:
+Visit the following URL to check the health of your service:
 ```
-curl http://localhost:9080/health/ready
+http://localhost:9080/health/ready
 ```
 
 You'll find out from the **coffee-shop** service is not ready because the **barista** is not running on the port `9081`:
