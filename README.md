@@ -751,9 +751,9 @@ We saw in an earlier module, how to perform Integration Tests against the applic
 
 Firstly let's start by deleting the tests we created earlier. We would not normally have integration tests done with MicroShed testing and the way we previously looked at. This can be achieved but it is not best practice. The reason for deleting the old tests is because without extra configuration maven will try to run those tests against MicroShed but as these tests run in a container the configuration for connecting to our application will be different.
 
-Delete the file `open-liberty-masterclass/start/barista/src/test/java/com/sebastian-daschner/barista/it/BaristaIT.java`
+Delete the file `open-liberty-masterclass/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristaIT.java`
 
-Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the following dependencies to the `pom.xml` file in the `<dependencies>` element:
+Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the following dependencies to the `open-liberty-masterclass/start/barista/pom.xml` file in the `<dependencies>` element:
 
 ```XML
           <!-- For MicroShed Testing -->      
@@ -774,10 +774,12 @@ Now let's create a new Integration Test that will perform the same test, but ins
 Create a new Integration Test called `BaristaContainerIT.java` in the directory `start/barista/src/test/java/com/sebastian_daschner/barista/it` and add the following code:
 
 ```Java
-package com.sebastian_daschner.barista.it;
+ppackage com.sebastian_daschner.barista.it;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.time.Duration;
 
 import javax.ws.rs.core.Response;
 
@@ -811,15 +813,16 @@ public class BaristaContainerIT {
 
         try {
             if (response == null) {
-                assertNotNull("GreetingService response must not be NULL", response);
+            	assertNotNull(response, "GreetingService response must not be NULL");
             } else {
-                assertEquals("Response must be 200 OK", 200, response.getStatus());
+            	assertEquals( 200, response.getStatus(), "Response must be 200 OK");
             }
         } finally {
             response.close();
         }
     }
 }
+
 
 ```
 
@@ -933,7 +936,7 @@ In the `open-liberty-masterclass/start/barista/pom.xml` and `open-liberty-master
 Rebuild and re-start the `coffee-shop` and the `basrista` services from bother terminals:
 
 ```
-mvn install liberty:dev
+mvn clean liberty:dev
 ```
 
 Try the service out using the Open API Web page and you should see the behavior is identical.  Not surprising since the code is identical, from the same build, just built into WebSphere Liberty.
