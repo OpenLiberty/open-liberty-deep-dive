@@ -12,6 +12,8 @@
         <feature>jsonp-1.1</feature>
     </featureManager>
 
+    <webContainer trusted="false"/>
+
     <variable name="default.http.port" defaultValue="9080"/>
     <variable name="default.https.port" defaultValue="9443"/>
   
