@@ -672,6 +672,17 @@ You should now be able to load the `coffee-shop` service's Open API page and cal
 
 http://localhost:9080/openapi/ui
 
+Or, you can run the following curl commands to try out the services running in containers:
+
+```
+curl http://localhost:9080/health
+curl -X POST "http://localhost:9080/coffee-shop/resources/orders" \
+     -H  "accept: */*" -H  "Content-Type: application/json" \
+     -d "{\"status\":\"FINISHED\",\"type\":\"ESPRESSO\"}"
+curl http://localhost:9080/coffee-shop/resources/orders
+
+```
+
 Now, let's stop and remove the **coffee-shop**  container for the following section:
 
 ```
