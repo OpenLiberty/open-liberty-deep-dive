@@ -314,10 +314,12 @@ Stop the **barista** service by pressing **CTRL+C** in the command-line session 
 
 We now need to change the server configuration to externalize the ports.  
 
-Open the **open-liberty-masterclass/start/barista/src/main/liberty/config/server.xml** file, change this line:
+Open the **open-liberty-masterclass/start/barista/src/main/liberty/config/server.xml** file, change these lines:
 
 ```XML
-    <httpEndpoint host="*" httpPort="9081" httpsPort="9444" id="defaultHttpEndpoint"/>
+   <httpEndpoint id="defaultHttpEndpoint" host="*" 
+        httpPort="9081" 
+        httpsPort="9444"/>
 ```
 to 
 
@@ -338,10 +340,10 @@ mvn liberty:dev
 
 If you take a look at the **barista** server output, you should find out that the **barista** service is running on the port `9082` now:
 ```
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/health/
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/openapi/
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/openapi/ui/
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://theiadocker-accountname:9082/barista/
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://192.000.0.00:9082/openapi/
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://192.000.0.00:9082/health/
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://192.000.0.00:9082/openapi/ui/
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://192.000.0.00:9082/barista/
 ```
 
 Next we'll use the `default_barista_base_url` in the code to avoid hard-coding the location of the **barista** service for the **coffee-shop** service.
@@ -435,7 +437,10 @@ You can set the `default_barista_base_url` value through the `DEFAULT_BARISTA_BA
 
 Tests are essential for developing maintainable code. Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging. In this section you'll add a `barista` service integration test using the `maven-failsafe-plugin`. During the build, the Liberty server will be started along with the `barista` application deployed, the test will be run and then the server will be stopped.
 
-Because we're going to be testing a REST `POST` request, we need JAX-RS client support and also support for serializing `json` into the request. We also need `junit` for writing the test. Add these dependencies to the `open-liberty-masterclass/start/barista/pom.xml`:
+Because we're going to be testing a REST `POST` request, we need JAX-RS client support and also support for serializing `json` into the request. We also need `junit` for writing the test. 
+
+
+Add these dependencies to the `open-liberty-masterclass/start/barista/pom.xml`:
 
 ```XML
         <!-- Test dependencies -->  
@@ -774,7 +779,7 @@ Now let's create a new Integration Test that will perform the same test, but ins
 Create a new Integration Test called `BaristaContainerIT.java` in the directory `start/barista/src/test/java/com/sebastian_daschner/barista/it` and add the following code:
 
 ```Java
-ppackage com.sebastian_daschner.barista.it;
+package com.sebastian_daschner.barista.it;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -933,7 +938,7 @@ In the `open-liberty-masterclass/start/barista/pom.xml` and `open-liberty-master
             </plugin>
 ```
 
-Rebuild and re-start the `coffee-shop` and the `basrista` services from bother terminals:
+Rebuild and re-start the `coffee-shop` and the `basrista` services from both terminals:
 
 ```
 mvn clean liberty:dev
