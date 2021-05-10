@@ -745,6 +745,8 @@ Take a look at the file **open-liberty-masterclass/start/coffee-shop/configDropi
      
 </server>
 ```
+{: codeblock}
+
 You'll see that this turns metrics authentication on and sets up some simple security required for securing/accessing the metrics endpoint.  Note, this configuration really is **NOT FOR PRODUCTION**, it's simply aiming to show how to override, or provide new, server configuration.
 
 In the `open-liberty-masterclass/start/coffee-shop` directory, run the **coffee-shop** container:
