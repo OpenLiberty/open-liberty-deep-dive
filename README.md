@@ -303,7 +303,6 @@ Liberty lets your application pick up configuration from a number of sources, su
 
 Bootstrap.properties lets you provide simple configuration values to substitute in the server configuration and use within the application.  The following example replaces the hard-coded base URL the `coffee-shop` service uses to talk to the `barista` service, as well as the ports it exposes.
 
-<<<<<<< Updated upstream
 In the `open-liberty-masterclass/start/coffee-shop/pom.xml` file, in the existing `<properties/>` element, you will see the following port and URL values:
 
 ```XML
@@ -314,17 +313,7 @@ In the `open-liberty-masterclass/start/coffee-shop/pom.xml` file, in the existin
         <baristaBaseURL>http://localhost:9081</baristaBaseURL>
         ...
     </properties>
-=======
-We now need to change the server configuration to externalize the ports.  
 
-Open the **open-liberty-masterclass/start/barista/src/main/liberty/config/server.xml** file, change these lines:
-
-```XML
-   <httpEndpoint id="defaultHttpEndpoint" host="*" 
-        httpPort="9081" 
-        httpsPort="9444"/>
->>>>>>> Stashed changes
-```
 This `<properties/>` element is where the property values are set that can then be re-used within the maven project.  
 
 In the `<bootstrapProperties/>` section of the `liberty-maven-plugin` configuration, add the following:
@@ -356,23 +345,20 @@ env.default_http_port=9080
 env.default_https_port=9443
 ```
 
-We now need to change the server configuration to use these values.  In the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml` file, change this line:
+We now need to change the server configuration to externalize the ports.  
+
+Open the **open-liberty-masterclass/start/barista/src/main/liberty/config/server.xml** file, change these lines:
 
 ```XML
-    <httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
+   <httpEndpoint id="defaultHttpEndpoint" host="*" 
+        httpPort="9081" 
+        httpsPort="9444"/>
 ```
-<<<<<<< Updated upstream
 
 to
 
 ```XML
     <httpEndpoint host="*" httpPort="${env.default_http_port}" httpsPort="${env.default_https_port}" id="defaultHttpEndpoint"/>
-=======
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://192.000.0.00:9082/openapi/
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://192.000.0.00:9082/health/
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://192.000.0.00:9082/openapi/ui/
-[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://192.000.0.00:9082/barista/
->>>>>>> Stashed changes
 ```
 
 Next we'll use the `default_barista_base_url` in the code to avoid hard-coding the location of the `barista` service.
@@ -434,14 +420,10 @@ Rebuild the code, start the `coffee-shop` and `barista` servers and try out the 
 
 Tests are essential for developing maintainable code.  Developing your application using bean-based component models like CDI makes your code easily unit-testable. Integration Tests are a little more challenging.  In this section you'll add a `barista` service integration test using the `maven-failsafe-plugin`.  During the build, the Liberty server will be started along with the `barista` application deployed, the test will be run and then the server will be stopped.
 
-<<<<<<< Updated upstream
-Because we're going to be testing a REST `POST` request, we need JAX-RS client support and also support for serializing `json` into the request.  We also need `junit` for writing the test.  Add these dependencies to the `open-liberty-masterclass/start/barista/pom.xml`:
-=======
 Because we're going to be testing a REST `POST` request, we need JAX-RS client support and also support for serializing `json` into the request. We also need `junit` for writing the test. 
 
 
 Add these dependencies to the `open-liberty-masterclass/start/barista/pom.xml`:
->>>>>>> Stashed changes
 
 ```XML
         <!-- Test dependencies -->  
@@ -799,12 +781,6 @@ Create a new Integration Test called `BaristaContainerIT.java` in the directory 
 
 ```Java
 package com.sebastian_daschner.barista.it;
-<<<<<<< Updated upstream
-=======
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
->>>>>>> Stashed changes
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -942,7 +918,6 @@ In the `open-liberty-masterclass/start/coffee-shop/pom.xml` change these two lin
                         <artifactId>openliberty-kernel</artifactId>
 ```
 
-<<<<<<< Updated upstream
 To:
 
 ```XML
@@ -950,10 +925,7 @@ To:
                         <artifactId>wlp-kernel</artifactId>
 ```
 
-Rebuild and re-start the `coffee-shop` service:
-=======
 Rebuild and re-start the `coffee-shop` and the `basrista` services from both terminals:
->>>>>>> Stashed changes
 
 ```
 mvn install liberty:dev
