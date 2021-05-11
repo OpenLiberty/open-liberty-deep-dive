@@ -227,7 +227,6 @@ From your previous addition of the MicroProfile Metrics feature in the server.xm
 
 ```
 [INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://ACCOUNTNAME-9080.theiadocker-1.proxy.cognitiveclass.ai/metrics/
-
 ```
 
 Open the metrics endpoint in your browser. To do this select **Launch Application**, a box will appear where the port number is required. The application is running on port **9080**. The Open Liberty homepage will load. To access the **metrics** endpoint at the end of the URL type **/metrics**. The URL should look like: 
@@ -235,12 +234,15 @@ Open the metrics endpoint in your browser. To do this select **Launch Applicatio
 ```
 http://ACCOUNTNAME-9080.theiadocker-1.proxy.cognitiveclass.ai/metrics
 ```
-You should see a message like this:
+Skills Network Labs will automatically try to redirect you over to **localhost** because it can not reach the launched application. When you are redirected you should see a message like this:
 
 ```
-Error 403: Resource must be accessed with a secure connection try again using an HTTPS connection.
+This site can’t be reached
 ```
-or a **Username** and **Password** will be required
+
+This message can vary depending on your browser.
+
+or a **Username** and **Password** will be required.
 
 If you take a look at the server output, you should see the following error:
 
