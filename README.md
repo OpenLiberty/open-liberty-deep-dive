@@ -406,9 +406,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 For more information on MicroProfile Config see https://openliberty.io/guides/microprofile-config.html.
 
 Visit the following URL to check the health of your service:
-```
+
 http://localhost:9080/health/ready
-```
 
 You'll find out from the **coffee-shop** service is not ready because the **barista** is not running on the port `9081`:
 ```
@@ -490,44 +489,58 @@ package com.sebastian_daschner.barista.it;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.time.Duration;
-
-import javax.ws.rs.core.Response;
+import javax.inject.Inject;
 
 import org.junit.jupiter.api.Test;
-import org.microshed.testing.jaxrs.RESTClient;
-import org.microshed.testing.jupiter.MicroShedTest;
-import org.microshed.testing.testcontainers.ApplicationContainer;
-import org.testcontainers.junit.jupiter.Container;
+import org.junit.jupiter.api.BeforeAll;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.MediaType;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 import com.sebastian_daschner.barista.boundary.BrewsResource;
 import com.sebastian_daschner.barista.entity.CoffeeBrew;
 import com.sebastian_daschner.barista.entity.CoffeeType;
 
-@MicroShedTest
-public class BaristaContainerIT {
+public class BaristaIT {
+    private static String URL;
 
-    @Container
-    public static ApplicationContainer app = new ApplicationContainer()
-                    .withAppContextRoot("/barista")
-                    .withExposedPorts(9081)
-                    .withReadinessPath("/health/ready");
-    
-    @RESTClient
-    public static BrewsResource brews;
-
+    @BeforeAll
+    public static void init() {
+        String port = System.getProperty("liberty.test.port");
+        URL = "http://localhost:" + port + "/barista/resources/brews";
+    }
     @Test
     public void testService() throws Exception {
+
+        Client client = null;
+        WebTarget target = null;
+        try {
+            client = ClientBuilder.newClient().register(JacksonJsonProvider.class);
+            target = client.target(URL);
+
+        } catch (Exception e) {
+            client.close();
+            throw e;
+        }
+
         CoffeeBrew brew = new CoffeeBrew();
         brew.setType(CoffeeType.POUR_OVER);
-        Response response = brews.startCoffeeBrew(brew);
+
+        Response response = target.request(MediaType.APPLICATION_JSON).post(Entity.json(brew));
 
         try {
             if (response == null) {
-            	assertNotNull(response, "GreetingService response must not be NULL");
+                assertNotNull(response, "GreetingService response must not be NULL");
             } else {
-            	assertEquals( 200, response.getStatus(), "Response must be 200 OK");
+                assertEquals( 200, response.getStatus(), "Response must be 200 OK");
             }
+
         } finally {
             response.close();
         }
@@ -739,11 +752,7 @@ docker logs coffee-shop
 ```
 
 ```
-[AUDIT   ] CWWKG0102I: Found conflicting settings for mpMetrics configuration.
-  Property authentication has conflicting values:
-    Value false is set in file:/opt/ol/wlp/usr/servers/defaultServer/server.xml.
-    Value true is set in file:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/metrics-prod.xml.
-  Property authentication will be set to true.
+[AUDIT ] CWWKG0093A: Processing configuration drop-ins resource: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/metrics-prod.xml
 ```
 
 This shows that we have turned metrics authentication back on.
