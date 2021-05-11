@@ -739,11 +739,7 @@ docker logs coffee-shop
 ```
 
 ```
-[AUDIT   ] CWWKG0102I: Found conflicting settings for mpMetrics configuration.
-  Property authentication has conflicting values:
-    Value false is set in file:/opt/ol/wlp/usr/servers/defaultServer/server.xml.
-    Value true is set in file:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/metrics-prod.xml.
-  Property authentication will be set to true.
+[AUDIT ] CWWKG0093A: Processing configuration drop-ins resource: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/metrics-prod.xml
 ```
 
 This shows that we have turned metrics authentication back on.
