@@ -567,7 +567,7 @@ Results :
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
 
-Once the test has finished, shut down both microservices by typing `q` in both terminals, then press the Enter key.
+Once the test has finished, shut down both microservices by typing `q` in both terminals, then press the Enter key and restart the terminal to pick up any environmental changes you have previously set.
 
 ## Module 7: Docker
 
