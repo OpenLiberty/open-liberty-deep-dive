@@ -304,10 +304,12 @@ Stop the **barista** service by pressing **CTRL+C** in the command-line session 
 
 We now need to change the server configuration to externalize the ports.  
 
-Open the **open-liberty-masterclass/start/barista/src/main/liberty/config/server.xml** file, change this line:
+Open the **open-liberty-masterclass/start/barista/src/main/liberty/config/server.xml** file, change these lines:
 
 ```XML
-    <httpEndpoint host="*" httpPort="9081" httpsPort="9444" id="defaultHttpEndpoint"/>
+        <httpEndpoint id="defaultHttpEndpoint" host="*" 
+        httpPort="9081" 
+        httpsPort="9444"/>
 ```
 to 
 
