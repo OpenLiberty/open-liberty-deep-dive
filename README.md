@@ -419,10 +419,10 @@ Update the `coffee-shop/src/main/webapp/META-INF/microprofile-config.properties`
 default_barista_base_url=http://localhost:9082
 ```
 
-Run the following curl command again:
-```
-curl http://localhost:9080/health/ready
-```
+Visit the following url again:
+
+http://localhost:9080/health/ready
+
 
 You'll find out from the **coffee-shop** service is ready now:
 ```
