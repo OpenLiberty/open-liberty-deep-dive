@@ -680,7 +680,6 @@ curl -X POST "http://localhost:9080/coffee-shop/resources/orders" \
      -H  "accept: */*" -H  "Content-Type: application/json" \
      -d "{\"status\":\"FINISHED\",\"type\":\"ESPRESSO\"}"
 curl http://localhost:9080/coffee-shop/resources/orders
-
 ```
 
 Now, let's stop and remove the **coffee-shop**  container for the following section:
