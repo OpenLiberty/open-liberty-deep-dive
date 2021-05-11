@@ -896,7 +896,7 @@ The test also contains the following Container configuration:
                     .withExposedPorts(9081)
                     .withReadinessPath("/health/ready");
 ```
-{: codeblock}
+
 
 You'll see that the unit test is like any other.
 
@@ -921,6 +921,7 @@ log4j.appender.stdout.layout.ConversionPattern=%r %p %c %x - %m%n
 
 log4j.logger.org.microshed=DEBUG
 ```
+{: codeblock}
 
 Rebuild and run the test:
 
