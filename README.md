@@ -551,7 +551,7 @@ public class BaristaIT {
 
 This test sends a `json` request to the `barista` service and checks for a `200 OK` response. 
 
-Start the server in Dev Mode and run the tests by pressing `Enter` after the server has started:
+Run the tests by pressing `Enter` after the server has started:
 
 ```
 mvn liberty:dev
