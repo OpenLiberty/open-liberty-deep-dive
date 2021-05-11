@@ -419,10 +419,10 @@ Update the `coffee-shop/src/main/webapp/META-INF/microprofile-config.properties`
 default_barista_base_url=http://localhost:9082
 ```
 
-Run the following curl command again:
-```
-curl http://localhost:9080/health/ready
-```
+Visit the following url again:
+
+http://localhost:9080/health/ready
+
 
 You'll find out from the **coffee-shop** service is ready now:
 ```
@@ -551,11 +551,7 @@ public class BaristaIT {
 
 This test sends a `json` request to the `barista` service and checks for a `200 OK` response. 
 
-Start the server in Dev Mode and run the tests by pressing `Enter` after the server has started:
-
-```
-mvn liberty:dev
-```
+Run the tests by pressing `Enter` on your running server terminal.
 
 In the output of the build, you should see:
 
@@ -571,7 +567,7 @@ Results :
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
 
-Once the test has finished, shut down both microservices by typing `q` in both terminals, then press the Enter key.
+Once the test has finished, shut down both microservices by typing `q` in both terminals, then press the Enter key and restart the terminal to pick up any environmental changes you have previously set.
 
 ## Module 7: Docker
 
