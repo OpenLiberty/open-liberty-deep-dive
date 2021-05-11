@@ -551,7 +551,7 @@ public class BaristaIT {
 
 This test sends a `json` request to the `barista` service and checks for a `200 OK` response. 
 
-Run the tests by pressing `Enter` on the terminal which is running your server.
+Run the tests by pressing `Enter` on your running server terminal.
 
 In the output of the build, you should see:
 
