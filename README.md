@@ -958,13 +958,23 @@ In the `open-liberty-masterclass/start/barista/pom.xml` and `open-liberty-master
             </plugin>
 ```
 
-Rebuild and re-start the `coffee-shop` and the `basrista` services from both terminals:
+Rebuild and re-start the **barista** service:
 
 ```
-mvn clean liberty:dev
+export DEFAULT_HTTP_PORT=9082
+mvn clean
+mvn liberty:dev
 ```
 
-Try the service out using the Open API Web page and you should see the behavior is identical.  Not surprising since the code is identical, from the same build, just built into WebSphere Liberty.
+and the **coffee-shop** service:
+```
+export DEFAULT_HTTP_PORT=9080
+mvn clean
+mvn liberty:dev
+```
+
+The **barista** service should be started at the port `9082` and the **coffee-shop** service at the port `9080`. 
+Then, try the service out using the Open API Web page and you should see the behavior is identical.  Not surprising since the code is identical, from the same build, just built into WebSphere Liberty.
 
 
 ## Conclusion

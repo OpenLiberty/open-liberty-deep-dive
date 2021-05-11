@@ -1015,7 +1015,7 @@ mvn liberty:dev
 and the **coffee-shop** service:
 ```
 cd /home/project/open-liberty-masterclass/start/coffee-shop
-export DEFAULT_HTTP_PORT=
+export DEFAULT_HTTP_PORT=9080
 mvn clean
 mvn liberty:dev
 ```
