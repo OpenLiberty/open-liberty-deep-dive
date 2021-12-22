@@ -102,7 +102,7 @@ Under `Example Value` specify:
 
 Click on `Execute`
 
-Scroll down and you should see the server response code of `200`.  This says that the barista request to make an `ESPRESSO` was successfully `Created`. If you go back to the terminal you will also see the message `starting to brew: EXPRESSO`. Now leave this terminal with the Open Liberty server running and open up a new terminal to continue this masterclass from the same directory.
+Scroll down and you should see the server response code of `200`.  This says that the barista request to make an `ESPRESSO` was successfully `Created`. If you go back to the terminal you will also see the message `starting to brew: EXPRESSO`. Now leave this terminal with the Open Liberty server running and open up a new terminal to continue this class from the same directory.
 
 
 ## Module 2: Dev Mode
@@ -118,7 +118,7 @@ cd ../coffee-shop
 mvn liberty:dev
 ```
 
-Take a look at the Maven build file for the coffee-shop project: `open-liberty-masterclass/start/coffee-shop/pom.xml`
+Take a look at the Maven build file for the coffee-shop project: `open-liberty-deep-dive/start/coffee-shop/pom.xml`
 
 The Open Liberty Maven plugin must be version 3.x or above to use dev mode. 
 
@@ -171,7 +171,7 @@ Let's add the dependency on the `MicroProfile OpenAPI` feature so we can try the
 
 We have already loaded the MicroProfile 4.0 feature in the pom that will include the latest version of MicroProfile OpenAPI so we just need to configure the Open Liberty server.
 
-Open the file `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml`
+Open the file `open-liberty-deep-dive/start/coffee-shop/src/main/liberty/config/server.xml`
 
 This file is the configuration for the `coffee-shop` server.
 
@@ -213,7 +213,7 @@ As you have seen in the previous section, the API dependencies that you need to 
 
 Then, we need to enable the corresponding features in Liberty's server configuration for Liberty to load and use what you have chosen for your application. With Liberty's modular and composable architecture, only the features specified in the server configuration will be loaded giving you a lightweight and performant runtime.
 
-We're now going to add Metrics to the `coffee-shop`.  Edit the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml` file and add the following dependency in the featureManager section like we did above:
+We're now going to add Metrics to the `coffee-shop`.  Edit the `open-liberty-deep-dive/start/coffee-shop/src/main/liberty/config/server.xml` file and add the following dependency in the featureManager section like we did above:
 
 ```XML
         <feature>mpMetrics-3.0</feature>
@@ -224,7 +224,7 @@ You should see that the server has been automatically updates, the following fea
 ```
 [INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [beanValidation-2.0, cdi-2.0, distributedMap-1.0, ejbLite-3.2, el-3.0, jaxrs-2.1, jaxrsClient-2.1, jndi-1.0, json-1.0, jsonp-1.1, mpConfig-1.3, mpHealth-2.2, mpMetrics-2.0, mpOpenAPI-1.1, mpRestClient-1.3, servlet-4.0, ssl-1.0].
 ```
-Now we have the API available, we can update the application to include a metric which will count the number of times a coffee order is requested. In the file `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/OrdersResource.java`, add the following `@Counted` annotation to the `orderCoffee` method:
+Now we have the API available, we can update the application to include a metric which will count the number of times a coffee order is requested. In the file `open-liberty-deep-dive/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/boundary/OrdersResource.java`, add the following `@Counted` annotation to the `orderCoffee` method:
 
 ```java
 @Counted(name="order", displayName="Order count", description="Number of times orders requested.")
@@ -265,7 +265,7 @@ It's one thing to configure the server to load a feature, but many Liberty featu
 
 The error message suggests we need to add a `keyStore` and one route to solve this would be to add a `keyStore` and user registry (e.g. a `basicRegistry` for test purposes).  However, if we take a look at the configuration for [mpMetrics](https://openliberty.io/docs/ref/config/#mpMetrics.html) we can see that it has an option to turn the metrics endpoint authentication off.
 
-Add the following below the `</featureManager>` in the `open-liberty-masterclass/start/coffee-shop/src/main/liberty/config/server.xml`
+Add the following below the `</featureManager>` in the `open-liberty-deep-dive/start/coffee-shop/src/main/liberty/config/server.xml`
 
 ```XML
     <mpMetrics authentication="false" />
@@ -314,7 +314,7 @@ Stop the **barista** service by pressing **CTRL+C** in the command-line session 
 
 We now need to change the server configuration to externalize the ports.  
 
-Open the **open-liberty-masterclass/start/barista/src/main/liberty/config/server.xml** file, change these lines:
+Open the **open-liberty-deep-dive/start/barista/src/main/liberty/config/server.xml** file, change these lines:
 
 ```XML
    <httpEndpoint id="defaultHttpEndpoint" host="*" 
@@ -348,7 +348,7 @@ If you take a look at the **barista** server output, you should find out that th
 
 Next we'll use the `default_barista_base_url` in the code to avoid hard-coding the location of the **barista** service for the **coffee-shop** service.
 
-Edit the file `open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/control/Barista.java`
+Edit the file `open-liberty-deep-dive/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/control/Barista.java`
 
 Change:
 
@@ -380,7 +380,7 @@ default_barista_base_url=http://localhost:9081
 
 We also need to make the same changes to the CoffeeShopReadinessCheck of the **coffee-shop** service. 
 
-Edit the file: **open-liberty-masterclass/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/health/CoffeeShopReadinessCheck.java**
+Edit the file: **open-liberty-deep-dive/start/coffee-shop/src/main/java/com/sebastian_daschner/coffee_shop/health/CoffeeShopReadinessCheck.java**
 
 Change:
 
@@ -439,7 +439,7 @@ Tests are essential for developing maintainable code. Developing your applicatio
 Because we're going to be testing a REST `POST` request, we need JAX-RS client support and also support for serializing `json` into the request. We also need `junit` for writing the test. 
 
 
-Add these dependencies to the `open-liberty-masterclass/start/barista/pom.xml`:
+Add these dependencies to the `open-liberty-deep-dive/start/barista/pom.xml`:
 
 ```XML
         <!-- Test dependencies -->  
@@ -481,7 +481,7 @@ Add the following `<configuration>...</configuration>` to the `maven-failsafe-pl
 
 Note, this configuration makes the port of the server available to the test as a system property called `liberty.test.port`.
 
-Finally, add the test code.  Create a file called, `open-liberty-masterclass/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristaIT.java` and add the following:
+Finally, add the test code.  Create a file called, `open-liberty-deep-dive/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristaIT.java` and add the following:
 
 ```Java
 package com.sebastian_daschner.barista.it;
@@ -573,7 +573,7 @@ Once the test has finished, shut down both microservices by typing `q` in both t
 
 We're now going to dockerize the two services and show how we can override the defaults to re-wire the two services.  We're going to use a Docker user-defined network (see https://docs.docker.com/network/network-tutorial-standalone/#use-user-defined-bridge-networks) because by using Docker user-defined networks we are able to connect the two containers to the same network and have them communicate using only the others IP address or name.  For real-world production deployments you would use a Kubernetes environment, such as Red Hat OpenShift or IBM Cloud Kubernetes Service.
 
-Take a look at the `open-liberty-masterclass/start/coffee-shop/Dockerfile`:
+Take a look at the `open-liberty-deep-dive/start/coffee-shop/Dockerfile`:
 
 ```Dockerfile
 FROM openliberty/open-liberty:full-java8-openj9-ubi
@@ -592,24 +592,24 @@ The `ADD` statement is copying our application into the Docker image.
 
 The `RUN` command runs a script that is already located on the image that will add the requested XML snippets, grow the image to be fit-for-purpose and apply interim fixes.
 
-Let's build the docker image.  In the `open-liberty-masterclass/start/coffee-shop` directory run: 
+Let's build the docker image.  In the `open-liberty-deep-dive/start/coffee-shop` directory run: 
 
 ```
 mvn package
-docker build -t masterclass:coffee-shop .
+docker build -t deep-dive:coffee-shop .
 ```
 
-In the `open-liberty-masterclass/start/barista` directory, run (note the period (`.`) at the end of the line is important):
+In the `open-liberty-deep-dive/start/barista` directory, run (note the period (`.`) at the end of the line is important):
 
 ```
 mvn package
-docker build -t masterclass:barista .
+docker build -t deep-dive:barista .
 ```
 
 Next, create the user-defined bridge network:
 
 ```
-docker network create --driver bridge masterclass-net
+docker network create --driver bridge deep-dive-net
 ```
 
 You can now run the two Docker containers and get them to join the same bridge network.  Providing names to the containers makes those names available for DNS resolution within the bridge network so there's no need to use IP addresses.
@@ -617,7 +617,7 @@ You can now run the two Docker containers and get them to join the same bridge n
 Run the `barista` container:
 
 ```
-docker run -d --network=masterclass-net --name=barista masterclass:barista
+docker run -d --network=deep-dive-net --name=barista deep-dive:barista
 ```
 
 Note, we don't need to map the `barista` service ports outside the container because the bridge network gives access to the other containers on the same network.
@@ -625,16 +625,16 @@ Note, we don't need to map the `barista` service ports outside the container bec
 Next, we're going to run the `coffee-shop` container.  For it to work,The approach we're going to take is to use a Docker volume we'll need to provide new values for ports and the location of the barista service.  Run the `coffee-shop` container
 
 ```
-docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop \
+docker run -d -p 9080:9080 -p 9445:9443 --network=deep-dive-net --name=coffee-shop \
   -e default_barista_base_url='http://barista:9081' \
   -e default_http_port=9080 \
-  -e default_https_port=9443 masterclass:coffee-shop
+  -e default_https_port=9443 deep-dive:coffee-shop
 ```
 
 You can take a look at the bridge network using:
 
 ```
-docker network inspect masterclass-net
+docker network inspect deep-dive-net
 ```
 
 You'll see something like:
@@ -642,7 +642,7 @@ You'll see something like:
 ```JSON
 [
     {
-        "Name": "masterclass-net",
+        "Name": "deep-dive-net",
         ...
         "IPAM": {
             "Driver": "default",
@@ -704,7 +704,7 @@ The above works fine, but still has a metrics endpoint with authentication turne
 
 In fact, unlike what we have done here, the best practice is to build an image that does not contain any environment specific configuration (such as the unsecured endpoint in our example) and then add those things through external configuration in the development, staging and production environments.  The goal is to ensure deployment of the image without configuration doesn't not cause undesirable results such as security vulnerabilities or talking to the wrong data sources.
 
-Take a look at the file `open-liberty-masterclass/start/coffee-shop/configDropins/overrides/metrics-prod.xml`:
+Take a look at the file `open-liberty-deep-dive/start/coffee-shop/configDropins/overrides/metrics-prod.xml`:
 
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -729,17 +729,17 @@ Take a look at the file `open-liberty-masterclass/start/coffee-shop/configDropin
 
 You'll see that this turns metrics authentication on and sets up some simple security required for securing/accessing the metrics endpoint.  Note, this configuration really is **NOT FOR PRODUCTION**, it's simply aiming to show how to override, or provide new, server configuration.
 
-If you're on a unix-based OS, in the `open-liberty-masterclass/start/coffee-shop` directory, run the `coffee-shop` container:
+If you're on a unix-based OS, in the `open-liberty-deep-dive/start/coffee-shop` directory, run the `coffee-shop` container:
 
 ```
-docker run -d -p 9080:9080 -p 9445:9443 --network=masterclass-net --name=coffee-shop \
+docker run -d -p 9080:9080 -p 9445:9443 --network=deep-dive-net --name=coffee-shop \
   -e default_barista_base_url='http://barista:9081' \
   -e default_http_port=9080 \
   -e default_https_port=9443 \
-  -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides masterclass:coffee-shop
+  -v $(pwd)/configDropins/overrides:/opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides deep-dive:coffee-shop
 ```
 
-The above relies on `pwd` to fill in the docker volume source path.  If you're on Windows, replace `$(pwd)` with the absolute path to the `open-liberty-masterclass/start/coffee-shop` directory in the above command.
+The above relies on `pwd` to fill in the docker volume source path.  If you're on Windows, replace `$(pwd)` with the absolute path to the `open-liberty-deep-dive/start/coffee-shop` directory in the above command.
 
 You should see the following message as the server is starting if you look at the logs:
 
@@ -767,7 +767,7 @@ Now, let's stop and remove the **barista** and **coffee-shop** containers and th
 ```
 docker stop barista coffee-shop
 docker rm barista coffee-shop
-docker network rm masterclass-net
+docker network rm deep-dive-net
 ```
 
 ## Module 8: Testing in Containers
@@ -776,9 +776,9 @@ We saw in an earlier module, how to perform Integration Tests against the applic
 
 Firstly let's start by deleting the tests we created earlier. We would not normally have integration tests done with MicroShed testing and the way we previously looked at. This can be achieved but it is not best practice. The reason for deleting the old tests is because without extra configuration maven will try to run those tests against MicroShed but as these tests run in a container the configuration for connecting to our application will be different.
 
-Delete the file `open-liberty-masterclass/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristaIT.java`
+Delete the file `open-liberty-deep-dive/start/barista/src/test/java/com/sebastian_daschner/barista/it/BaristaIT.java`
 
-Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the following dependencies to the `open-liberty-masterclass/start/barista/pom.xml` file in the `<dependencies>` element:
+Now let's create a new Integration Test that will perform the same test, but inside a running container.  In the Barista project, add the following dependencies to the `open-liberty-deep-dive/start/barista/pom.xml` file in the `<dependencies>` element:
 
 ```XML
           <!-- For MicroShed Testing -->      
@@ -940,7 +940,7 @@ WebSphere Liberty is also available in [Maven Central](https://search.maven.org/
 
 You can use WebSphere Liberty for development even if you haven't purchased it, but if you have production entitlement you can easily change to use it, as follows:
 
-In the `open-liberty-masterclass/start/barista/pom.xml` and `open-liberty-masterclass/start/coffee-shop/pom.xml`, add the `<configuration>...</configuration>` as the following:
+In the `open-liberty-deep-dive/start/barista/pom.xml` and `open-liberty-masterclass/start/coffee-shop/pom.xml`, add the `<configuration>...</configuration>` as the following:
 
 ```XML
             <plugin>
