@@ -940,7 +940,7 @@ WebSphere Liberty is also available in [Maven Central](https://search.maven.org/
 
 You can use WebSphere Liberty for development even if you haven't purchased it, but if you have production entitlement you can easily change to use it, as follows:
 
-In the `open-liberty-deep-dive/start/barista/pom.xml` and `open-liberty-masterclass/start/coffee-shop/pom.xml`, add the `<configuration>...</configuration>` as the following:
+In the `open-liberty-deep-dive/start/barista/pom.xml` and `open-liberty-deep-dive/start/coffee-shop/pom.xml`, add the `<configuration>...</configuration>` as the following:
 
 ```XML
             <plugin>
