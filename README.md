@@ -1,10 +1,10 @@
-# Open Liberty Masterclass
+# Open Liberty deep dive class 
 
-This document contains the hands-on lab modules for the Open Liberty Masterclass.  It is intended to be used in conjunction with taught materials, however, feel free to give it a try, even if you're not in a Masterclass.
+This document contains the hands-on lab modules for the Open Liberty deep dive class.  It is intended to be used in conjunction with taught materials, however, feel free to give it a try, even if you're not in this class.
 
 ## Table of Contents
 
-- [Open Liberty Masterclass](#open-liberty-masterclass)
+- [Open Liberty Deep Dive](#open-liberty-deep-dive)
   - [Table of Contents](#table-of-contents)
   - [Before you begin](#before-you-begin)
     - [Install Pre-requisites](#install-pre-requisites)
@@ -36,16 +36,16 @@ This document contains the hands-on lab modules for the Open Liberty Masterclass
 
 ### Prime Maven and Docker Caches
 
-If you will be taking the Masterclass at a location with limited network bandwidth, it is recommended you do the following beforehand in order to populate your local .m2 repo and Docker cache.
+If you will be taking this class at a location with limited network bandwidth, it is recommended you do the following beforehand in order to populate your local .m2 repo and Docker cache.
 
 ```
-git clone https://github.com/OpenLiberty/open-liberty-masterclass.git
-cd open-liberty-masterclass/finish/coffee-shop
+git clone https://github.com/OpenLiberty/open-liberty-deep-dive.git
+cd open-liberty-deep-dive/finish/coffee-shop
 mvn package liberty:create liberty:install-feature
-docker build -t masterclass:coffee-shop .
+docker build -t deep-dive:coffee-shop .
 cd ../barista
 mvn package liberty:create liberty:install-feature
-docker build -t masterclass:barista .
+docker build -t deep-dive:barista .
 cd ..
 ```
 ## The Application
@@ -61,7 +61,7 @@ The application consists of two Microservices; `coffee-shop` and `barista`.  The
             │ coffee-shop │---------------------->│   barista   │
             └─────────────┘<----------------------└─────────────┘
 ```
-The completed code for the Masterclass is provided in the `open-liberty-masterclass/finish` directory.  To work through the Masterclass you will develop in the `open-liberty-masterclass/start` directory.
+The completed code for this class is provided in the `open-liberty-deep-dive/finish` directory.  To work through this class you will develop in the `open-liberty-deep-dive/start` directory.
 
 
 ## Module 1: Build
@@ -70,9 +70,9 @@ Liberty has support for building and deploying applications using Maven and Grad
 * https://github.com/OpenLiberty/ci.maven
 * https://github.com/OpenLiberty/ci.gradle
 
-The Masterclass will make use of the `liberty-maven-plugin`.
+This class will make use of the `liberty-maven-plugin`.
 
-Take a look at the Maven build file for the coffee-shop project: `open-liberty-masterclass/start/barista/pom.xml`
+Take a look at the Maven build file for the coffee-shop project: `open-liberty-deep-dive/start/barista/pom.xml`
 
 Go to the barista project:
 
@@ -145,7 +145,7 @@ The Open Liberty Maven plugin must be version 3.x or above to use dev mode.
     </plugin>
 ```
  
-In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section. All the features we are using in this Masterclass are part of Jakarta EE and MicroProfile. By having the two dependencies below means that at build time these are available for Maven to use and then it will install any of the features you requests in your server.xml but we will get to that shortly.
+In the same `coffee-shop/pom.xml` locate the `<dependencies/>` section. All the features we are using in this class are part of Jakarta EE and MicroProfile. By having the two dependencies below means that at build time these are available for Maven to use and then it will install any of the features you requests in your server.xml but we will get to that shortly.
 
 ``` XML
     <dependencies>
@@ -978,5 +978,5 @@ Then, try the service out using the Open API Web page and you should see the beh
 
 
 ## Conclusion
-Thanks for trying the Open Liberty Masterclass. If you're interested in finding out more, please visit the [Open Liberty website](http://openliberty.io), and for more hands-on experience, why not try the [Open Liberty Guides](http://openliberty.io/guides).
+Thanks for trying the Open Liberty deep dive class. If you're interested in finding out more, please visit the [Open Liberty website](http://openliberty.io), and for more hands-on experience, why not try the [Open Liberty Guides](http://openliberty.io/guides).
 
